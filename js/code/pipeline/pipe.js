@@ -1,0 +1,1138 @@
+// Global vars
+var ML_options;
+var flex_pipe_pieces = ['imputers', 'scalers', 'transformers', 'feature_selectors'];
+var static_pipe_pieces = ['model', 'parameter_search', 'feature_importances'];
+
+////////////
+// Utils //
+//////////
+
+function getMLOptions() {
+    
+    jQuery.getJSON('php/get_json_in_cache.php', {'loc': 'ML_options.json'}, function(data) {
+        ML_options = data;
+    });
+}
+
+function getDocsLink(doc_str) {
+
+    if (doc_str.includes('sklearn')) {
+        return 'https://scikit-learn.org/stable/modules/generated/' + doc_str + '.html';
+    }
+
+    if (doc_str.includes('xgboost')) {
+        return 'https://xgboost.readthedocs.io/en/latest/python/python_api.html#' + doc_str;
+    }
+
+    if (doc_str.includes('lightgbm')) {
+        return 'https://lightgbm.readthedocs.io/en/latest/pythonapi/' + doc_str + '.html';
+    }
+
+    if (doc_str.includes('deslib')) {
+        var base = 'https://deslib.readthedocs.io/en/latest/modules/';
+        var end = '#' + doc_str;
+
+        var split = doc_str.split('.');
+        var middle = '';
+
+        for (var i = 1; i < split.length - 2; i++) {
+            middle = middle + split[i] + '/';
+        }
+        middle = middle + split[split.length-2] + '.html';
+        return base + middle + end;
+    }
+
+    // Special cases
+    if (doc_str == 'ABCD_ML.extensions.MLP.MLPClassifier_Wrapper') {
+        return 'https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html';
+    }
+
+    if (doc_str == 'ABCD_ML.extensions.MLP.MLPRegressor_Wrapper') {
+        return 'https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html';
+    }
+
+    console.log(doc_str);
+
+    // If nothing else found, just link to the ABCD ML docs, better than nothing
+    return 'https://abcd-ml.readthedocs.io/en/latest/options.html'
+
+}
+
+function updatePieceCardName(key) {
+
+    var obj_name = jQuery('#'+key+'-obj-input').find('option:selected').html();
+    if (obj_name == undefined) {
+        return;
+    }
+
+    jQuery('#'+key+'-header-text').empty();
+
+    if (obj_name.length > 0) {
+        jQuery('#'+key+'-header-text').append(':  <i>' + obj_name + '</i>');
+        jQuery('#'+key+'-header-text').append('&nbsp;&nbsp;&nbsp;<b>Dist</b>: <i>' + jQuery('#'+key+'-param-dist').val() + '</i>');
+    }
+
+}
+
+function registerUpdatePieceCardName(key) {
+
+    // Set card name on change
+    jQuery('#'+key+'-obj-input').on('change', function() {
+        updatePieceCardName(key);
+    });
+}
+
+function getSpaceName(key, piece) {
+
+    var space_name = key+'-'+piece+'-space';
+    return space_name;
+}
+
+function getDisplayFlexPieceName(p) {
+
+    // Special cases
+    if (p == 'model') {
+        return 'Model'
+    }
+    
+    // Make first letter uppercase
+    var name = p[0].toUpperCase();
+        
+    // Add rest, but w/o last plural s
+    name = name + p.slice(1, p.length-1);
+
+    // If any _'s, replace w/ space and capitilize next letter
+    var ind = name.indexOf('_');
+    if (ind !== -1) {
+        name = name.slice(0, ind) + ' ' + name[ind+1].toUpperCase() + name.slice(ind+2);
+    }
+
+    return name;
+}
+
+////////////////////////////
+// Obj Choices / By Type //
+//////////////////////////
+
+function getTypeFromScope(key, project) {
+
+    //TODO, if possible should add extra checks for custom combos
+    //of variables - but for now just do regression for any custom
+
+    var scope = project['data'][key]['-scope-input'];
+    if (JSON.stringify(scope) == JSON.stringify(['cat'])) {
+        return 'categorical';
+    }
+
+    //if ((scope.includes('all')) || (scope.includes('float'))) {
+    //    return 'regression';
+    //}
+
+    return 'regression';
+}
+
+function getType(project, key) {
+
+    // Get type of base pipeline
+    var base_key = key.split('-').splice(0, 3).join('-');
+    var type = project['data'][base_key]['-type'];
+
+    // If type is undefined, use proj default based on target
+    if (type == undefined) {
+        type = getDefaultType(project) 
+    }
+
+    // If imputer, set type by scope instead
+    if (key.includes('imputers-space')) {
+            type = getTypeFromScope(key, project);
+    }
+
+    return type;
+}
+
+function getByTypeOptions(project, obj, key) {
+
+    var type = getType(project, key);
+    return ML_options[obj][type];
+
+}
+
+function getByTypeChoices(project, obj, firstEmpty=true, key=undefined) {
+
+    var obj_options = getByTypeOptions(project, obj, key);
+    return getObjChoices(obj_options, firstEmpty);
+}
+
+function getObjChoices(obj_options, firstEmpty=true, duplicates=undefined) {
+
+    var options = Array();
+
+    if (firstEmpty) {
+        options.push({"id": '', "text": ''});
+    }
+
+    Object.keys(obj_options).forEach(name => {
+
+        var text = obj_options[name]['docs_name'].split('.');
+        text = text[text.length-1];
+        text = text.replace('_Wrapper', '');
+
+        if (duplicates !== undefined) {
+            if (duplicates.includes(text)) {
+                text = text + ' (' + name + ')';
+            }
+        }
+
+        options.push({
+            "id": name,
+            "text": text
+        });
+    });
+
+    // If any duplicate names, add the extra unique identifier to those names
+    if (duplicates == undefined) {
+        var just_names = options.map(x => x['text']);
+        var duplicates = findDuplicates(just_names);
+        
+        if (duplicates.length > 0) {
+            return getObjChoices(obj_options, firstEmpty=firstEmpty, duplicates=duplicates);
+        }
+    }
+
+    return options;
+}
+
+//////////////////////
+// Scope functions //
+////////////////////
+
+function mirrorParentScope(model_key, key) {
+    var model_scope = jQuery('#' + model_key + '-scope-input');
+    model_scope.prop('disabled', true);
+
+    jQuery('#' + key + '-scope-input').on('change', function () {
+        model_scope.val($(this).val()).trigger('change');
+    });
+}
+
+//////////////////////
+// On Select Funcs //
+////////////////////
+
+function onSelectEnsemble(key, options, project) {
+    
+    // Base on select behavior
+    onSelectObj(key, options, project);
+    
+    // Show add model + model space
+    jQuery('#'+key+'-show-ensemble').css('display', 'block');
+    jQuery('#'+key+'-ensemble-space').css('display', 'block');
+
+
+    if (options['docs_name'].includes('deslib')) {
+        project['data'][key]['is_des'] = true;
+    }
+    else {
+        project['data'][key]['is_des'] = false;
+    }
+
+    // TODO - should determine if single_estimator or not
+    // want to develop the backend Ensemble object a bit more
+    // first though, as i.e., might need different options for
+    // final estimator vs estimators
+
+    //'base_estimator'
+    //'estimators'
+    //'final_estimator'
+    //'pool_classifiers'
+
+    if (options['param_names'].includes('base_estimator')) {
+        project['data'][key]['single_estimator'] = true;
+    }
+    else {
+        project['data'][key]['single_estimator'] = false;
+    }
+
+    
+}
+
+function onSelectImputer(key, options, project) {
+
+    showModelCheck(key, 'iterative');
+    onSelectObj(key, options, project);
+
+}
+
+function onSelectFeatureSelector(key, options, project) {
+    showModelCheck(key, 'rfe')
+    onSelectObj(key, options, project);
+}
+
+function onSelectObj(key, options, project) {
+
+    // Show docs link + edit params
+    jQuery('#'+key+'-if-obj').css('display', 'block');
+
+    var docs_link = getDocsLink(options['docs_name']);
+    jQuery('#'+key+'-open-docs').attr('href', docs_link);
+
+    // Only show scikit-learn logo if scikit learn based
+    if (docs_link.includes('scikit-learn')) {
+        jQuery('#'+key+'-sklearn-logo').css('display', 'inline-block');
+    }
+    else {
+        jQuery('#'+key+'-sklearn-logo').css('display', 'none');
+    }
+
+    // Update params modal
+    registerParamsModal(key, options, project);
+}
+
+////////////
+// Model //
+//////////
+
+function showModelCheck(key, key_word) {
+
+    var model_space = key + '-model-space';
+
+    // Check for iterative imputer
+    if (jQuery('#' + key + '-obj-input').val() == key_word) {
+        jQuery('#' + model_space).css('display', 'block');
+    }
+    else {
+        jQuery('#' + model_space).css('display', 'none');
+    }
+
+}
+
+function registerModelChoices(key, project) {
+
+    // Get model + ensemble choices
+    var model_options = [
+        {"id": '',
+         "text": ''
+        },
+        {'text': 'Models',
+        'children': getByTypeChoices(project, 'model', firstEmpty=false, key=key)
+        },
+        {'text': 'Ensembles',
+        'children': getByTypeChoices(project, 'ensembles', firstEmpty=false, key=key)
+        }
+    ];
+    
+    // Set model choices in select2
+    jQuery('#'+key+'-obj-input').empty().select2({
+        placeholder: "Model",
+        data:  model_options
+    });
+
+}
+
+function registerModel(key, project) {
+
+    // Register is call at init, and also when type may have changed
+    // so check first if already loaded + type didnt change, and return if so
+    var obj_type = getType(project, key=key);
+    var prev_type = jQuery('#'+key+'-space').data('prev_type');
+    if (obj_type == prev_type) {return;}
+    else {jQuery('#'+key+'-space').data('prev_type', obj_type);}
+
+    // Remove any previous registers
+    jQuery('#'+key+'-obj-input').off('change select2:select');
+    
+    // Register the select2 model obj choices
+    registerModelChoices(key, project);
+
+    // Based on selection of model, make necc. changes
+    jQuery('#'+key+'-obj-input').on('change', function() {
+
+        var model = $(this).val();
+        var model_options = getByTypeOptions(project, 'model', key=key);
+        var ensembles_options = getByTypeOptions(project, 'ensembles', key=key);
+
+        // If select model
+        if (Object.keys(model_options).includes(model)) {
+            var options = model_options[model];
+            onSelectObj(key, options, project);
+
+            jQuery('#'+key+'-show-ensemble').css('display', 'none');
+            jQuery('#'+key+'-ensemble-space').css('display', 'none');
+            project['data'][key]['ensemble'] = false;
+        }
+        else if (Object.keys(ensembles_options).includes(model)) {
+            var options = ensembles_options[model];
+            onSelectEnsemble(key, options, project);
+            project['data'][key]['ensemble'] = true;
+        }
+        else {
+            jQuery('#'+key+'-obj-input').val('');
+            jQuery('#'+key+'-show-ensemble').css('display', 'none');
+            jQuery('#'+key+'-ensemble-space').css('display', 'none');
+            project['data'][key]['ensemble'] = false;
+        }
+    });
+
+    // Register add ensemble base model
+    jQuery('#add-'+key+'-ensemble').off('click');
+    jQuery('#add-'+key+'-ensemble').on('click', function() {
+        var k = addEnsembleModel(project, key+'-ensemble-space');
+        addScrollTo(k, 'add-'+key+'-ensemble');
+    });
+
+    // Base register for select obj input
+    registerBaseObjInput(key, project);
+}
+
+///////////////////
+// Param Search //
+/////////////////
+
+function registerNumField(key, project, id, def_val) {
+
+    // Register n_iter
+    jQuery('#'+key+id).on('change', function() {
+        project['data'][key][id] = $(this).val();
+    });
+
+    // set default / saved
+    if (project['data'][key][id] !== undefined) {
+        def_val = project['data'][key][id];
+    }
+    jQuery('#'+key+id).val(def_val).trigger('change');
+}
+
+function registerSearchType(key, project) {
+
+    var search_type = jQuery('#'+key+'-search-type');
+
+    // Register select choices
+    search_type.select2({
+        'placeholder': 'Select a search type',
+        'data': getSearchTypeChoices()
+    });
+
+    // Trigger show rest of search params
+    search_type.on('change', function() {
+        if ($(this).val() !== 'None') {
+            jQuery('.'+key+'-show-splits').css('display', 'block');
+        }
+        else {
+            jQuery('.'+key+'-show-splits').css('display', 'none');
+        }
+    });
+
+    // Set card title
+    search_type.on('change', function() {
+        jQuery('#'+key+'-header-text').empty().append(':  <i>' + $(this).val() + '</i>');
+    });
+
+    // Save to project
+    search_type.on('change', function() {
+        project['data'][key]['-search-type'] = $(this).val();
+    });
+
+    // Set default / saved val
+    var val = 'None';
+    if (project['data'][key]['-search-type'] !== undefined) {
+        val = project['data'][key]['-search-type']
+    }
+    search_type.val(val).trigger('change');
+}
+
+function getSearchTypeChoices() {
+
+    var choices = Array();
+    choices.push({"id": '', "text": ''});
+    choices.push({"id": 'None', "text": 'None'});
+
+    ML_options['parameter_search'].forEach(search_type => {
+        choices.push({
+            "id": search_type,
+            "text": search_type
+            });
+    });
+
+    return choices;
+}
+
+function getDefaultMetric(pipe_type) {
+    
+    var default_vals = {
+        'binary': 'roc_auc',
+        'regression': 'r2',
+        'categorical': 'matthews'
+    };
+
+    return default_vals[pipe_type];
+}
+
+function registerMetric(key, project) {
+
+    var pipe_type = getType(project, key);
+    var metric = jQuery('#'+key+'-metric');
+
+    // Remove any previous
+    metric.off('change');
+
+    // Set choices
+    metric.empty().select2({
+        'placeholder': 'Select Metrics',
+        'data': getMetricChoices(pipe_type)
+    });
+
+    // Save to project
+    registerProjectVal(key, project, '-metric', '');
+
+    // Set default based on type
+    if ((metric.val() == undefined) || (metric.val().length == 0)) {
+        metric.val(getDefaultMetric(pipe_type)).trigger('change');
+    }
+}
+
+//////////////////////////
+// Piece registrations //
+////////////////////////
+
+function registerTypeObjInput(key, piece_name, onSelect, project) {
+
+    var obj_type = getType(project, key=key);
+    var prev_type = jQuery('#'+key+'-space').data('prev_type');
+    if (obj_type == prev_type) {return;}
+    else {jQuery('#'+key+'-space').data('prev_type', obj_type);}
+
+    // Remove any previous registers
+    jQuery('#'+key+'-obj-input').off('change select2:select');
+
+    // Register obj choices
+    jQuery('#'+key+'-obj-input').empty().select2({
+        placeholder: getDisplayFlexPieceName(piece_name),
+        data: getByTypeChoices(project, piece_name, firstEmpty=true, key=key)
+    });
+
+    // Based on selection of obj
+    jQuery('#'+key+'-obj-input').on('change', function () {
+
+        // Set on select
+        var choice = $(this).val();
+        var options = getByTypeOptions(project, piece_name, key=key)[choice];
+        onSelect(key, options, project);
+    });
+
+    // Base register for select obj input
+    registerBaseObjInput(key, project);
+}
+
+function registerNoTypeObjInput(key, piece_name, onSelect, project) {
+
+    // Remove any previous registers
+    jQuery('#'+key+'-obj-input').off('change select2:select');
+    
+    // Register obj choices
+    jQuery('#'+key+'-obj-input').empty().select2({
+        placeholder: getDisplayFlexPieceName(piece_name),
+        data: getObjChoices(ML_options[piece_name])
+    });
+
+    // Based on selection of obj
+    jQuery('#'+key+'-obj-input').on('change', function () {
+
+        // Set on select
+        var choice = $(this).val();
+        var options = ML_options[piece_name][choice];
+        onSelect(key, options, project);
+    });
+
+    // Base register for select obj input
+    registerBaseObjInput(key, project);
+}
+
+function registerBaseObjInput(key, project) {
+
+    // Register updates to card name
+    registerUpdatePieceCardName(key);
+
+    // Set to save previous selection
+    jQuery('#'+key+'-obj-input').on('select2:select', function() {
+        $(this).data('val', $(this).val());
+    });
+
+    // Saves values on change
+    jQuery('#'+key+'-obj-input').on('change', function () {
+        project['data'][key]['-obj-input'] = $(this).val();
+    });
+
+    // Set saved
+    if (project['data'][key]['-obj-input'] !== undefined) {
+        jQuery('#'+key+'-obj-input').val(project['data'][key]['-obj-input']).trigger('change').trigger('select2:select');
+    }
+
+    // Register track index changes
+    registerCard(key, project['data'][key]);
+}
+
+function registerFlexPieceClose(space, key, n, project) {
+    var cnt_id = space + '-count';
+    var cnt_field = 'n';
+    registerCloseButton(space, key, n, cnt_field, cnt_id, project);
+    updateCnt(project, space, cnt_field, cnt_id);
+}
+
+/////////////////
+// Add Pieces //
+///////////////
+
+function addEnsembleModel(project, space, key=undefined) {
+    var key = addFlexPiece(project, space, 'model',
+                           getEnsembleModelHTML, true, onSelectObj,
+                           ['all'], key=key);
+    return key;
+}
+
+function addModel(project, space, prepend='') {
+
+    // Just one model, and forced, so no delete option
+    // or add more option, fixed key
+    var key = space + '-model';
+
+    // If undefined
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {};
+    }
+    
+    // Init loading space
+    project['loading_spaces'][key+'-ensemble-space'] = {
+            'data_fields': Array(),
+            'n': 0
+    }
+
+    // Get and set model html
+    var card_html = getModelHTML(key, prepend);
+    jQuery('#'+space).append(card_html);
+
+    // Add any existing sub ensemble pieces
+    var ensemble_space = key+'-ensemble-space'
+
+    getAllKeys(project).forEach(k => {
+        if (k.startsWith(ensemble_space)) {
+            addEnsembleModel(project, ensemble_space, k);
+        }
+    });
+
+    // If no previous base ensemble models, add new one
+    if (project['loading_spaces'][key+'-ensemble-space']['n'] == 0) {
+        addEnsembleModel(project, ensemble_space);
+    }
+
+    // Make the first ensemble base model un-removable
+    var base_model = key+'-ensemble-space-0';
+    jQuery('#'+base_model+'-remove').css('display', 'none');
+
+    // Un-roll if only one 
+    if (project['loading_spaces'][key+'-ensemble-space']['n'] == 1) {
+        jQuery('#'+base_model+'-collapse').collapse("show");
+    }
+
+    // Add param model
+    jQuery('#params-modals').append(getEditParamsHTML(key));
+
+    // Register scope
+    registerScope(key, project, ['all']);
+
+    // Register model;
+    registerModel(key, project);
+
+    registerPopovers();
+
+    return key;
+}
+
+function addFeatureSelector(project, space, key) {
+
+    var key = addFlexPiece(project, space, 'feature_selectors',
+                           getFeatSelectorHTML, true, onSelectFeatureSelector,
+                           ['all'], key=key);
+
+    // Add base model
+    var model_key = addModel(project, key+'-model-space', prepend='RFE ');
+
+    // Set scope to be disabled + mirror parent imputer
+    mirrorParentScope(model_key, key);
+
+    // Show if iterative
+    showModelCheck(key, 'rfe');
+
+    return key;
+}
+
+function addImputer(project, space, key=undefined) {
+
+    var key = addFlexPiece(project, space, 'imputers',
+                           getImputerHTML, false, onSelectImputer,
+                           ['all'], key=key);
+
+    // Add base model
+    var model_key = addModel(project, key+'-model-space', prepend='Iterative Imputer ');
+    
+    // Set scope to be disabled + mirror parent imputer
+    mirrorParentScope(model_key, key);
+
+    // Also re-register the base imputer model on each scope change
+    jQuery('#'+key+'-scope-input').on('change', function() {
+        registerModel(model_key, project);
+    });
+
+    // Show if iterative
+    showModelCheck(key, 'iterative');
+    
+    return key;
+}
+
+function addScaler(project, space, key=undefined) {
+    var key = addFlexPiece(project, space, 'scalers',
+                           getScalerHTML, false, onSelectObj,
+                           ['float'], key=key);
+    return key;
+}
+
+function addTransformer(project, space, key=undefined) {
+    var key = addFlexPiece(project, space, 'transformers',
+                           getTransformerHTML, false, onSelectObj,
+                           ['all'], key=key);
+    return key;
+}
+
+function addFlexPiece(project, space, piece_name, getPieceHTML,
+                      typeDep, onSelect, default_scope, key=undefined) {
+
+    // Add new or existing space
+    if (key !== undefined) {
+        var n = addExistingSpace(space, project, key, 1);
+    }
+    else {
+        var initInfo = initNewSpace(space, project);
+        var key = initInfo[0];
+        var n = initInfo[1];
+    }
+
+    // Init if not already defined
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {};
+    }
+
+    // Add HTML
+    var card_html = getPieceHTML(key);
+    jQuery('#'+space).append(card_html);
+
+    // Add param model
+    jQuery('#params-modals').append(getEditParamsHTML(key));
+
+    // Register obj choices
+    if (typeDep == true) {
+        registerTypeObjInput(key, piece_name, onSelect, project);
+    }
+    else {
+        registerNoTypeObjInput(key, piece_name, onSelect, project);
+    }
+
+    // Register scope
+    registerScope(key, project, default_scope);
+
+    // Register close button
+    registerFlexPieceClose(space, key, n, project);
+
+    // Popovers
+    registerPopovers();
+
+    return key;
+}
+
+function addParameterSearch(project, space) {
+
+    var key = space + '-parameter_search';
+
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {}
+    }
+
+    var obj_descr = 'Selection of which hyper-parameter search type to use';
+    var obj_label = getPopLabel(key, 'Search Type ', obj_descr, '-search-type');
+
+    var n_iter_descr = 'Placeholder';
+    var n_iter_label = getPopLabel(key, 'Search Budget ', n_iter_descr, '-n-iter');
+
+    var splits_descr = 'Placeholder';
+    var splits_label = getPopLabel(key, 'Splits ', splits_descr, '-splits');
+
+    var metric_content = 'Select a hyper-parameter metric to use!'
+    var metric_label = getPopLabel(key, 'Metric ', metric_content);
+
+    var vs_label = "Select a validation strategy to use for these splits";
+    var val_strat_label = getPopLabel(key, "Validation Strategy ", vs_label);
+
+    var html = '' + 
+    '<div class="form-row">' +
+
+    '<div class="form-group col-md-6">' +
+    obj_label +
+    '<select id="'+key+'-search-type" class="form-control" data-width="100%"></select>' +
+    '</div>' +
+
+    '<div class="form-group col-md-6 '+key+'-show-splits" style="display: none;">' +
+    n_iter_label + 
+    '<input class="form-control" type="number" id="'+key+'-n-iter">' +
+    '</div>' +
+    '</div>' +
+    
+    '<div class="'+key+'-show-splits" style="display: none;">'+
+    '<div class="form-row">' +
+    
+    '<div class="form-group col-md-6">' +
+    getSplitsHTML(key, splits_label) + 
+    '</div>' +
+
+    '<div class="form-group col-md-6">' +
+    metric_label +
+    '<select id="'+key+'-metric" class="form-control" data-width="100%"></select>' +
+    '<div id="'+key+'-metric-val" class="invalid-feedback">' +
+    'You must select a metric!' +
+    '</div>' +
+    '</div>' +
+
+    '</div>' +
+
+    '<div class="form-row">' +
+    '<div class="form-group col-md-6">' +
+    getValStratHTML(key, val_strat_label) +
+    '</div>' +
+    '</div>' +
+    
+    '</div>';
+
+    var card_html = cardWrapHTML('<b>Parameter Search</b>', key, html, true);
+    jQuery('#'+space).append(card_html);
+    jQuery('#'+space).css('padding-top', '10px');
+
+    // Set search type choices
+    registerSearchType(key, project);
+
+    // Register n iter
+    registerNumField(key, project, '-n-iter', '10');
+
+    // Register full splits row, type, vals, validation
+    registerSplitsRow(key, project);
+
+    // Register metric
+    registerMetric(key, project)
+
+    // Register card
+    registerCard(key, project['data'][key])
+
+    return key;
+}
+
+function addFeatureImportance(project, space) {
+
+    var key = space + '-feature_importances';
+    
+    return key;
+}
+
+///////////////
+// Pipeline //
+/////////////
+
+function getDefaultType(project) {
+
+    // Grab the type of the first target
+    // This one is unremovable !
+    return getTargetType('target-space-0', project);
+}
+
+function checkDefaultPipeType(key, project) {
+
+    // This is only applicable when no type is already set
+    if (project['data'][key]['-type'] !== undefined) {
+        return;
+    }
+
+    // In case where this is first time opening
+    // ML Pipeline, want to set to be first target datatype
+
+    // Make sure only one pipeline
+    var first = true;
+   
+    // If any model obj defined, then not first
+    if (project['data'][key+'-model-space-model']['-obj-input'] !== undefined) {
+        first = false;
+    }
+
+    // If any flex pieces added, then not first
+    flex_pipe_pieces.forEach(piece => {
+        var space_name = getSpaceName(key, piece);
+
+        if (project['loading_spaces'][space_name]['n'] !== 0) {
+            first = false;
+        }
+    });
+
+    // If first, set ML pipeline type - and actually save
+    // The idea is, once ML pipeline has been visited, then
+    // the type should not seemingly randomly change
+    if (first) {
+        jQuery('#'+key+'-type').html(getDefaultType(project));
+        project['data'][key]['-type'] = getDefaultType(project);
+    }
+}
+
+function registerMLPipeType(key, project) {
+
+    // Stop trigger card un-wrap
+    jQuery('#'+key+'-type').on('click', function(e) {
+        e.stopPropagation();
+    });
+    
+    // Register on click actions
+    jQuery('#'+key+'-type').on('click', function () {
+
+        // Set to next type
+        var p_types = ['regression', 'binary', 'categorical'];
+        var current_ind = p_types.indexOf($(this).html());
+        var new_ind = (current_ind + 1) % p_types.length;
+        var new_val = p_types[new_ind];
+        $(this).html(new_val);
+
+        // Save to project
+        project['data'][key]['-type'] = new_val;
+
+        // Re-register type dep pieces
+        reRegisterTypeDep(project);
+    });
+
+    // If undefined, set to target type
+    if (project['data'][key]['-type'] == undefined) {
+        jQuery('#'+key+'-type').html(getDefaultType(project));
+    }
+
+    // Otherwise set to saved
+    else {
+        jQuery('#'+key+'-type').html(project['data'][key]['-type']);
+    }
+}
+
+function addMLPipe(project, key=undefined) {
+
+    var space = 'pipe-space'
+
+    if (key !== undefined) {
+        var n = addExistingSpace(space, project, key, 1);
+    }
+    else {
+        var initInfo = initNewSpace(space, project);
+        var key = initInfo[0];
+        var n = initInfo[1];
+    }
+
+    // Init if not already defined
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {};
+    }
+
+    // Adds a unique id if there isn't one defined already
+    addUniqueID(key, project);
+
+    // Generate MLPipe html
+    var html = getMLPipeHTML(key);
+
+    // Add special input within card name
+    var card_name = getCardNameHTML(key, "ML Pipeline name") +
+    '<div class="col col-md-2" style="padding-left: 0px;">' +
+    '<button class="btn btn-outline-dark btn-block"' +
+    ' style="padding: 6 0px;" id="'+key+'-type"></button></div>';
+    var card_html = cardWrapHTML(card_name, key, html, false, row_wrap=true);
+
+    // Add to space
+    jQuery('#'+space).append(card_html);
+
+    // Register model pipeline type
+    registerMLPipeType(key, project);
+
+    // Add the static pipeline pieces
+    addModel(project, getSpaceName(key, 'model'));
+    addParameterSearch(project, getSpaceName(key, 'parameter_search'));
+
+    var add_mapping = {
+        'imputers': addImputer, 
+        'scalers': addScaler,
+        'transformers': addTransformer,
+        'feature_selectors': addFeatureSelector
+    }
+
+    // Go through all the flex/optional pipelines pieces, and make sure loading_spaces
+    // are init'ed and then fill in any already defined project pieces
+    flex_pipe_pieces.forEach(piece => {
+        var space_name = getSpaceName(key, piece);
+
+        // Loading space init
+        project['loading_spaces'][space_name] = {
+            'data_fields': Array(),
+            'n': 0
+        }
+
+        // Register click add, add for each flex piece
+        jQuery('#add-'+space_name).on('click', function() {
+            var k = add_mapping[piece](project, space_name);
+            addScrollTo(k, 'add-'+space_name);
+        });
+    });
+
+    // Add any existing from project
+    getAllKeys(project).forEach(k => {
+        flex_pipe_pieces.forEach(piece => {
+            var space_name = getSpaceName(key, piece);
+            if ((k.includes(space_name)) && (!k.includes('model-space'))) {
+                add_mapping[piece](project, space_name, k);
+            }
+        });
+    });
+
+    // Register changable card name assoc. functions
+    registerName(key, project);
+
+    // Register card
+    registerCard(key, project['data'][key]);
+
+    // Register close button
+    var cnt_id = 'pipe-count';
+    var cnt_field = 'n_pipe';
+    registerCloseButton(space, key, n, cnt_field, cnt_id, project);
+    updateCnt(project, space, cnt_field, cnt_id);
+
+    return key;
+}
+
+///////////
+// Page //
+/////////
+
+function reRegisterTypeDep(project) {
+    
+    // If no change to type, they will just return empty
+    getAllKeys(project).forEach(key => {
+
+        var split_key = key.split('-');
+        var indicator = split_key[split_key.length - 3];
+
+        if (key.endsWith('model-space-model')) {
+            registerModel(key, project);
+        }
+        else if (indicator == 'feature_selectors') {
+            registerTypeObjInput(key, 'feature_selectors',
+                onSelectFeatureSelector, project);
+        }
+        else if (indicator == 'ensemble') {
+            registerTypeObjInput(key, 'model', onSelectObj, project);
+        }
+        // If parameter search refresh changable val strats + loaded strat vals
+        else if (indicator == 'parameter_search') {
+            registerBaseValidationSelect(project, key);
+            registerMetric(key, project);
+            registerVals(project, key, '-group');
+            jQuery('#' + key + '-' + project['data'][key]['split-type']).click();
+        }
+
+        // Refresh scope choices - if piece has scope
+        if (project['data'][key]['-scope-input'] !== undefined) {
+            refreshScopeChoices(key, project);
+        }
+    });
+}
+
+function displayMLPipe(project) {
+
+    // Hide everything
+    hideAllProjSteps()
+
+    // If already loaded
+    if (jQuery('#body-ml-pipe').html().length > 100) {
+
+        // Display
+        jQuery('#body-ml-pipe').css('display', 'block');
+
+        // Check for initial default type change - i.e., if only one pipe
+        if (project['loading_spaces']['pipe-space']['n_pipe'] == 1) {
+            var n = project['loading_spaces']['pipe-space']['data_fields'][0];
+            var key = 'pipe-space-' + n;
+            checkDefaultPipeType(key, project);
+        }
+        
+        // Re-register any type dep pieces
+        reRegisterTypeDep(project);
+        return;
+    }
+
+    // Reset loading pipe space
+    project['loading_spaces']['pipe-space'] = {
+        'data_fields': Array(),
+        'n_pipe': 0
+    }
+
+    var html = '' +
+    '<br>' +
+    '<div id="pipe-space"></div>' +
+    '<br>' +
+    '<div class="form-row">' +
+    '<div class="col-md-12">' +
+        '<label style="padding-left: 5px">Add New:&nbsp</label>' +
+        '<button class="btn btn-outline-secondary" id="add-pipe">ML Pipeline <span id="pipe-count" class="badge badge-light">0</span></button>' +
+    '</div>' +
+    '</div>';
+
+    // Add + Display
+    jQuery('#body-ml-pipe').append(html);
+    jQuery('#body-ml-pipe').css('display', 'block');
+
+    // Add any existing
+    getAllKeys(project).forEach(key => {
+        if (key.includes('pipe-space')) {
+            var split_key = key.split('-');
+            if (split_key.length == 3) {
+                addMLPipe(project, key);
+            }
+        }
+    });
+
+    // If no previous
+    if (project['loading_spaces']['pipe-space']['n_pipe'] == 0) {
+        var key = addMLPipe(project);
+        jQuery('#'+key+'-collapse').collapse("show");
+        jQuery('#'+key+'-name').focus();
+    }
+
+    // If just 1 ML pipeline, unroll it by default
+    if (project['loading_spaces']['pipe-space']['n_pipe'] == 1) {
+        var n = project['loading_spaces']['pipe-space']['data_fields'][0];
+        var key = 'pipe-space-' + n;
+        jQuery('#'+key+'-collapse').collapse("show");
+    }
+
+    jQuery('#'+key+'-collapse').collapse("show");
+    jQuery('#'+key+'-name').focus();
+
+    // Add new pipe
+    jQuery('#add-pipe').on('click', function() {
+        var key = addMLPipe(project);
+        addScrollTo(key, 'add-pipe');
+        jQuery('#'+key+'-name').focus();
+    });    
+}
+
+// On document load
+jQuery(document).ready(function() {
+
+    // Load the ML options
+    getMLOptions();
+
+});
+
+
