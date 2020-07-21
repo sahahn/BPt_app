@@ -176,7 +176,7 @@ function getSplitsHTML(key, splits_label) {
         '</select>' +
 
         '<input id="'+key+'-repeats" type="number" aria-label="Repeats" ' +
-        'class="form-control '+key+'-show-repeats" step="1" min="2"></input>' + 
+        'class="form-control '+key+'-show-repeats" step="1" min="1"></input>' + 
         '<div class="input-group-append select2-bootstrap-append '+key+'-show-repeats">' +
             '<span class="input-group-text">Repeats</span>' +
         '</div>' +
