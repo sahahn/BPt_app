@@ -230,59 +230,67 @@ function setTestResults(output, key, project) {
     $('#'+key+'-real-table').on('draw.dt', function() {
         jQuery('.test-view').off('click');
 
-        // On view dist
-        jQuery('.test-view').on('click', function() {
-
-            var data = $(this).data();
-            var n_key = data['key'] + '-view';
-
-            if (jQuery('#'+n_key+'-space').html() == undefined) {
-
-                var card_body = '' +
-                '<p id="'+n_key+'-loading">Loading...</p>' +
-                '<div class="form-row">' +
-                '<div class="col-sm-auto" id="'+n_key+'-table"></div>' +
-                '<div class="col-sm-auto" id="'+n_key+'-dist"></div>' +
-                '</div>';
-
-                var card_name = '<b>'+data['source']+'</b>: <i>'+data['name']+'</i>';
-                var card_html = cardWrapHTML(card_name, n_key, card_body, false);
-                jQuery('#'+key+'-extra-dist-space').append(card_html);
-                jQuery('#'+n_key+'-space').prop('draggable', false);
-
-                // Load and show the dist of interest            
-                var params = {}
-                params['loading_params'] = getAllLoadedDataParams(project);
-                params['test_params'] = getTestParams(key, project);
-                params['show_params'] = data;
-                params['script'] = 'show_test_split.py';
-
-                // Change show params if set
-                if (data['source'] == 'Set') {
-                    var set_var_names = [];
-                    var set_vars = getSetVarsFromId(project['data'][data['key']]['-data-sets']);
-                    set_vars.forEach(v => {
-                        set_var_names.push(getReprName(v, project['data'][data['key']]['-eventname']))
-                    });
-
-                    params['show_params']['name'] = set_var_names;
-                }
-
-                
-                runQuickPy(params, n_key, setShowTestResults, project);
-
-                // Register remove
-                jQuery('#'+n_key+'-remove').on('click', function() {
-                    jQuery('#'+n_key+'-space').remove();
-                });
-
-                jQuery('#'+n_key+'-collapse').collapse("show");
-            }
-        });
+        // On view dist registers
+        onShowTest(key, project);
     });
 
     // Trigger the draw one @ start
     $('#'+key+'-real-table').trigger('draw.dt');
+}
+
+function onShowTest(key, project) {
+
+    // Register the show buttons
+    jQuery('.test-view').on('click', function () {
+
+        var data = $(this).data();
+        var n_key = data['key'] + '-view';
+
+        if (jQuery('#'+n_key+'-space').html() == undefined) {
+
+            var card_body = '' +
+                '<p id="' + n_key + '-loading">Loading...</p>' +
+                '<div class="form-row">' +
+                '<div class="col-sm-auto" id="' + n_key + '-table"></div>' +
+                '<div class="col-sm-auto" id="' + n_key + '-dist"></div>' +
+                '</div>';
+
+            var card_name = '<b>' + data['source'] + '</b>: <i>' + data['name'] + '</i>';
+            var card_html = cardWrapHTML(card_name, n_key, card_body, false);
+            jQuery('#' + key + '-extra-dist-space').append(card_html);
+            
+            // Make un-draggable
+            jQuery('#' + n_key + '-space').prop('draggable', false);
+
+            // Load and show the dist of interest            
+            var params = {};
+            params['loading_params'] = getAllLoadedDataParams(project);
+            params['test_params'] = getTestParams(key, project);
+            params['show_params'] = data;
+            params['script'] = 'show_test_split.py';
+
+            // Change show params if set
+            if (data['source'] == 'Set') {
+                var set_var_names = [];
+                var set_vars = getSetVarsFromId(project['data'][data['key']]['-data-sets']);
+                set_vars.forEach(v => {
+                    set_var_names.push(getReprName(v, project['data'][data['key']]['-eventname']));
+                });
+
+                params['show_params']['name'] = set_var_names;
+            }
+
+            // Run func
+            runQuickPy(params, n_key, setShowTestResults, project);
+
+            // Register remove
+            jQuery('#' + n_key + '-remove').on('click', function () {
+                jQuery('#' + n_key + '-space').remove();
+            });
+
+            jQuery('#' + n_key + '-collapse').collapse("show");
+        }
+    });
 }
 
 function getTestParams(key, project) {
