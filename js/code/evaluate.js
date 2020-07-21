@@ -170,7 +170,9 @@ function addSubmitButtonHTML(key) {
     '<div class="form-group col-md-12">' +
 
         '<div class="col text-center" style="padding-left: 30%; padding-right: 30%; padding-top: 10px;">' +
-        '<button class="btn btn-primary btn-lg btn-block" id="'+key+'-job-submit">Submit Job</button>' +
+        '<button class="btn btn-primary btn-lg btn-block" id="'+key+'-job-submit">Submit Job' +
+        '<img id="'+key+'-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 30px;"></img>' +
+        '</button>' +
 
     '</div>' +
     '</div>';
@@ -579,6 +581,9 @@ function registerSubmitEval(key, project) {
 
         if (validateSubmitJob(key, project)) {
 
+            // Set to loading
+            jQuery('#'+key+'-loading').css('display', 'inline-block');
+
             // Get the params
             var params = getSumbitJobParams(key, project);
             params['script'] = 'evaluate.py';
@@ -606,29 +611,25 @@ function registerSubmitEval(key, project) {
                             'params': params
                         };
 
-                        $('.modal').modal('hide');
-                        clearInterval(interval_var);
+                        atEndSubmit(interval_var, key);
                     }
             
                     else if (output["error"] !== undefined) {
                         alert('Error with job:' + output["error"]);
-                        $('.modal').modal('hide');
-                        clearInterval(interval_var);
+                        atEndSubmit(interval_var, key);
                     }
 
                     // If job hasn't been confirmed as started after 10 seconds
                     cnt += 1
                     if (cnt == 20) {
                         alert('Unknown error!');
-                        $('.modal').modal('hide');
-                        clearInterval(interval_var);
+                        atEndSubmit(interval_var, key);
                     }
             
             
                 }).fail(function (xhr, textStatus, errorThrown) {
                     alert('Error checking submission ' + textStatus + xhr + errorThrown);
-                    $('.modal').modal('hide');
-                    clearInterval(interval_var);
+                    atEndSubmit(interval_var, key);
                 });
             }
 
@@ -638,6 +639,12 @@ function registerSubmitEval(key, project) {
 
         }
     });
+}
+
+function atEndSubmit(interval_var, key) {
+    $('.modal').modal('hide');
+    clearInterval(interval_var);
+    jQuery('#' + key + '-loading').css('display', 'none');
 }
 
 function registerSubmitTest(key) {
