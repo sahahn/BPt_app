@@ -20,7 +20,6 @@ if (is_dir($job_dr)) {
     // If an error return the contents then delete the job_dr
     if (file_exists($error_file)) {
         echo file_get_contents($error_file);
-        removeDirectory($job_dr);
     }
 
     // If results, return done
