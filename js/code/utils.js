@@ -426,19 +426,15 @@ function onDragOver(ev) {
 function registerCard(key, data) {
 
     registerTrackIndex(key, data);
-    registerCardDrag(key);
+    registerCardDragBehavior(key);
 }
 
-function registerCardDrag(key) {
+function registerCardDragBehavior(key) {
 
-    // Remove any old
-    jQuery('#'+key+'-collapse').off('show.bs.collapse shown.bs.collapse hide.bs.collapse hidden.bs.collapse');
+    // Remove any old registers
+    jQuery('#'+key+'-collapse').off('show.bs.collapse hide.bs.collapse hidden.bs.collapse');
 
     jQuery('#'+key+'-collapse').on('show.bs.collapse', function() {
-        jQuery('#'+key+'-space').prop('draggable', false);
-    });
-
-    jQuery('#'+key+'-collapse').on('shown.bs.collapse', function() {
         jQuery('#'+key+'-space').prop('draggable', false);
     });
 
@@ -453,7 +449,7 @@ function registerCardDrag(key) {
 
 function registerTrackIndex(key, data) {
 
-    // Remove any old
+    // Remove any old registers
     jQuery('#'+key+'-space').off('changeIndex');
 
     jQuery('#'+key+'-space').on('changeIndex', function() {
