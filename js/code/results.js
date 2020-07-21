@@ -514,7 +514,7 @@ function registerJobsShow(project) {
     
 
             // Make sure updated
-            refreshJobProgress();
+            refreshJobProgress(project);
         }
     });
 
