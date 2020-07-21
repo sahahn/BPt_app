@@ -1116,15 +1116,13 @@ function displayMLPipe(project) {
         jQuery('#'+key+'-collapse').collapse("show");
     }
 
-    jQuery('#'+key+'-collapse').collapse("show");
-    jQuery('#'+key+'-name').focus();
-
     // Add new pipe
     jQuery('#add-pipe').on('click', function() {
         var key = addMLPipe(project);
         addScrollTo(key, 'add-pipe');
         jQuery('#'+key+'-name').focus();
     });    
+
 }
 
 // On document load
