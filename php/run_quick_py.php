@@ -15,7 +15,7 @@ file_put_contents($user_directory.'/ML_Params'.$_POST['params']['n'].'.json', js
 // Pass subject directory to python script and run, waiting to finish
 $cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ABCD_ML; ";
 $cmd_p2 = "/opt/conda/envs/ABCD_ML/bin/python /var/www/html/applications/Example-ABCD_ML/python/".$_POST['params']['script']." ";
-$cmd = $cmd_p1.$cmd_p2.$user_directory." ".$_POST['params']['n'].'"';
+$cmd = $cmd_p1.$cmd_p2.$user_directory." '".$_POST['params']['n']."'".'"';
 exec($cmd);
 
 // Once done, echo the contents of the output file
