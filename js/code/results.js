@@ -1,93 +1,157 @@
-function displayResults(project) {
 
-    // Hide everything
-    hideAllProjSteps()
+/////////////////////
+// Get HTML funcs //
+///////////////////
 
-    // If already loaded
-    if (jQuery('#body-results').html().length > 100) {
-        jQuery('#body-results').css('display', 'block');
-        refreshTable(project);
-        return;
-    }
+function getResultsTableHTML(project) {
 
-    // Init key
-    var key = 'results'
-    if (project['data'][key] == undefined) {
-        project['data'][key] = {};
-    }
-    
-    var html = '<div id="results-table-space"></div>';
-    jQuery('#body-results').append(html);
-    jQuery('#body-results').css('display', 'block');
+    var table_html = '' +
+    '<table id="results-table" class="table table-striped" style="width:100%">' +
+    '<thead><tr>' + 
+    '<th scope="col">Job Name</th>' +
+    '<th scope="col">Status</th>' +
+    '<th scope="col">Type</th>' + 
+    '<th scope="col">Target</th>' + 
+    '<th scope="col">Pipeline</th>' + 
+    '<th scope="col">Submitted</th>' + 
+    '<th scope="col"></th>' +
+    '<th scope="col"></th>' +
+    '</tr></thead>' +
+    '<tbody>';
 
-    // Add table
-    refreshTable(project);
+    Object.keys(project['jobs']).forEach(job_name => {
 
-    // Get initial status
-    updateJobs(project);
-
-    // Start loop to check for active jobs
-    active_jobs_interval = setInterval(function() {
-        updateJobs(project);
-    }, 1000);
-}
-
-function refreshTable(project) {
-
-    // Clear and add table html
-    var table_html = getResultsTableHTML(project);
-    jQuery('#results-table-space').empty().append(table_html);
-
-    // Create data table
-    $('#results-table').DataTable({
-        "scrollX": true,
-        "searching": true,
-        "paging": true,
-        "info": true,
-        "autoWidth": true,
-        "order": [[ 5, "desc"]],
-        "columnDefs": [
-            {"orderable": false, "targets": [-1, -2]},
-        ]
-    });
-
-    // Register refresh status on each re-draw
-    $('#results-table').on('draw.dt', function() {
+        var job_params = project['jobs'][job_name]['params'];
+        var eval_params = job_params['eval_params'];
         
-        // Refresh each status
-        refreshAll(project);
+        table_html +=
+        '<tr>' +
+        '<th scope="row" class="align-bottom">' + job_name + '</th>' +
+        '<td class="align-bottom" data-sort="'+project['jobs'][job_name]['status']+'">' +
+        '<div class="results-status" data-jobName="'+job_name+'"></div></td>' +
+        '<td class="align-bottom">';
 
-        // Re-register delete jobs
-        jQuery('.results-delete').off('click');
-        jQuery('.results-delete').on('click', function() {
-            var job_name = $(this).data()['jobname'];
-            console.log('delete ' + job_name);
+        if (job_params['script'] == 'evaluate.py') {
+            table_html += 'Evaluate';
+        }
+        else {
+            table_html += 'Test';
+        }
+        table_html += '</td>' +
+        '<td class="align-bottom">' + eval_params['-target'] + '</td>' +
+        '<td class="align-bottom">' + eval_params['pipeline_name'] + '</td>' +
 
+        '<td class="align-bottom" data-sort="' + moment(eval_params['created']).valueOf() + '">' +
+        moment(eval_params['created']).calendar() + '</td>' +
 
-            // Delete from project
-            delete project['jobs'][job_name];
+        '<td class="align-bottom"><button class="btn btn btn-primary results-view" ' +
+        'data-jobName="'+job_name+'">' +
+        'Show</button></td>' +
 
-            // Delete from saved
-            jQuery.post('php/delete_job.php', {
-                'project_id': project['id'],
-                'job_name': job_name
-            });
-
-            // Delete row
-            $(this).parent().parent().remove();
-
-        }); 
-
+        '<td class="align-bottom"><button class="btn btn btn-danger results-delete" ' +
+        'data-jobName="'+job_name+'">' +
+        'Delete</button></td>' +
+        '</tr>';
     });
-    
-    // Trigger once to init
-    $('#results-table').trigger('draw.dt');
+
+    table_html += '</tbody></table>';
+
+    return table_html;
 }
 
-function refreshAll(project) {
-    jQuery('.results-status').each(function () {
-        refreshStatus($(this), project);
-    });
+function getBarHTML(key, ext, label, job_name) {
+
+    var html = '' +
+
+    '<div class="job-progress-bar" ' +
+    'data-jobName="'+job_name+'" data-key="'+key+'" data-ext="'+ext+'">' +
+    
+    '<div class ="form-row">' +
+    '<div style="padding: 2px;">' + label + '</div>' +
+    '</div>' +
+
+    '<div class="form-row">' +
+    '<div id="'+key+'-bar-'+ext+'"></div>' +
+    '<span id="'+key+'-text-'+ext+'"></span>' + 
+    '</div>' +
+
+    '</div>';
+
+    return html;
+}
+
+function getJobStatusHTML(key, job_name) {
+
+    var html = '' +
+    '<div id="'+key+'-progress" class="container-fluid">' +
+
+    getBarHTML(key, 'repeats', 'Repeats', job_name) +
+    getBarHTML(key, 'folds', 'Folds', job_name) +
+    getBarHTML(key, 'search-iter', 'Search Params', job_name) +
+
+    '</div>';
+
+    return html;
+}
+///////////////////
+// Update funcs //
+/////////////////
+
+function parseProgress(output, job) {
+
+    // Parse the progress
+    // returns the percent done, but also
+    // saves more detailed progress info
+
+    if (job['progress'] == undefined) {
+        job['progress'] = {};
+    }
+
+    var eval_params = job['params']['eval_params'];
+
+    // Check if this job has a hyper-param search
+    var n_search_iter = 1;
+    if (eval_params['search-iter'] !== undefined){
+        n_search_iter = parseInt(eval_params['search-iter']);
+    }
+
+    // If evaluate - test case only progress is params
+    var n_repeats = 1;
+    var n_folds = 1;
+    var by_line = output.split('\n');
+
+    if (by_line[0] !== 'test') {
+        var first_line = by_line[0].split(',');
+        n_repeats = parseInt(first_line[0]);
+        n_folds = parseInt(first_line[1]);
+    }
+
+    // Save detailed out of info to progress
+    job['progress']['n-search-iter'] = n_search_iter;
+    job['progress']['n-repeats'] = n_repeats;
+    job['progress']['n-folds'] = n_folds;
+
+    // Total is n_repeats * n_folds * n_search_iter
+    total_folds = n_repeats * n_folds;
+    var total = (total_folds * n_search_iter);
+
+    // Calculate current progress percent
+    var last_line = by_line.length - 1;
+    var search_iter = by_line[last_line].split(',').length - 1;
+    var current = ((last_line-1) * n_search_iter) + search_iter;
+
+    // Save current detailed progress
+    var folds = (last_line-1) % n_folds ;
+    var repeats = Math.floor((last_line-1) / n_folds);
+    job['progress']['folds'] = folds;
+    job['progress']['repeats'] = repeats;
+    job['progress']['search-iter'] = search_iter;
+
+    var percent_done = current / total
+    job['progress']['percent_done'] = percent_done;
+
+    // Return percent done out of 1
+    return percent_done;
 }
 
 function updateJobs(project) {
@@ -103,126 +167,54 @@ function updateJobs(project) {
         var job = project['jobs'][jobName];
         var status = job['status'];
 
-        if ((status !== "1") && (status != "error")) {
+        if ((status !== "1") && (status != "-1")) {
             
             jQuery.getJSON('php/check_job_status.php', {
                 'project_id': project['id'],
                 'job_name': jobName 
             }, function (output) {
 
-                // If done, set to done / 1
-                if (output == 'done') {
-                    job['status'] = "1";
-                }
-
                 // Check for error
-                else if (output["error"] !== undefined) {
+                if (output["error"] !== undefined) {
                     job['status'] = "-1";
                     job['error_msg'] = output["error"];
                 }
 
+                // If done, set to done / 1
+                else if (output == 'done') {
+                    job['status'] = "1";
+                }
+
+                else if (status == 'NaN') {
+                    job['status'] = "-1";
+                    console.log(output);
+                }
+
                 // Otherwise set status as percent progress
                 else {
-                    job['status'] = parseProgressPercent(output, job['params']['eval_params']);
+                    job['status'] = parseProgress(output, job);
                 }
             });  
         }
     });
 
-    // Trigger update status
-    refreshAll(project);
-}
+    // Trigger update status on table
+    refreshJobsStatus(project);
 
-function parseProgressPercent(output, eval_params) {
+    // Also trigger update any open (Show) job's progress
+    refreshJobProgress(project);
 
-    // Check if this job has a hyper-param search
-    var search_iter = 1;
-    if (eval_params['search-iter'] !== undefined){
-        search_iter = parseInt(eval_params['search-iter']);
-    }
-
-    var by_line = output.split('\n');
-    var total_folds = 1;
-
-    // Dif cases for test vs. evaluate
-    if (by_line[0] == 'test') {
-        console.log('test');
-    }
-
-    // Evaluate case
-    else {
-        var first_line = by_line[0].split(',');
-        var n_repeats = parseInt(first_line[0]);
-        var n_folds = parseInt(first_line[1]);
-        total_folds = n_repeats * n_folds;
-    }
-    var total = (total_folds * search_iter);
-
-    // Calculate current progress
-    var last_line = by_line.length - 1;
-    var params_done = by_line[last_line].split(',').length - 1;
-    var current = ((last_line-1) * search_iter) + params_done;
-
-    // Return % done out of 1
-    return current / total;
-}
-
-function refreshStatus(entry, project) {
-
-    var data = entry.data();
-
-    // Init progress bar only if not yet init'ed
-    if (data['bar'] == undefined) {
-        data['bar'] = initProgressBar(entry[0]);
-    }
-
-    // Grab assoc. job
-    var job_name = data['jobname'];
-    var job = project['jobs'][job_name];
-
-    // Want to update bar only if last_status is either undefined or
-    // different from the current status
-    if ((data['laststatus'] == undefined) || (data['laststatus'] !== job['status'])) {
-
-        if ((job['status'] == "1") || (job['status'] == "-1")) {
-
-            var color;
-            var txt;
-
-            if (job['status'] == "1") {
-                color = '#28a745';
-                txt = 'Done';
-            } 
-    
-            else if (job['status'] == "-1") {
-                color = '#dc3545';
-                txt = 'Error';
-            }
-
-            data['bar'].animate(parseFloat(job['status']), {
-                    duration: 0,
-                    from: { color: '#add8e6' },
-                    to: { color: color },
-            });
-            data['bar'].setText(txt);
-        } 
-        else {
-            data['bar'].animate(parseFloat(job['status']), {duration: 1000});
-        }
-
-        // Update the sort status
-        entry.parent().data('sort', job['status']);
-
-        // Set last status
-        data['laststatus'] = job['status'];
-    }
 
 }
+
+//////////////////
+// Status bars //
+////////////////
 
 function initProgressBar(container) {
     
     var bar = new ProgressBar.SemiCircle(container, {
-        strokeWidth: 4,
+        strokeWidth: 5,
         color: '#add8e6',
         trailColor: '#eee',
         trailWidth: 1,
@@ -261,59 +253,409 @@ function initProgressBar(container) {
     return bar;
 }
 
-function getResultsTableHTML(project) {
+function initSingleProgressBar(container, txt) {
 
-    var table_html = '' +
-    '<table id="results-table" class="table table-striped">' +
-    '<thead><tr>' + 
-    '<th scope="col">Job Name</th>' +
-    '<th scope="col">Status</th>' +
-    '<th scope="col">Type</th>' + 
-    '<th scope="col">Target</th>' + 
-    '<th scope="col">Pipeline</th>' + 
-    '<th scope="col">Submitted</th>' + 
-    '<th scope="col"></th>' +
-    '<th scope="col"></th>' +
-    '</tr></thead>' +
-    '<tbody>';
-
-    Object.keys(project['jobs']).forEach(job_name => {
-
-        var job_params = project['jobs'][job_name]['params'];
-        var eval_params = job_params['eval_params'];
+    var bar = new ProgressBar.Line(container, {
+        strokeWidth: 4,
+        easing: 'easeInOut',
+        duration: 1000,
+        color: '#add8e6',
+        trailColor: '#eee',
+        trailWidth: 1,
+        svgStyle: { width: '95%', height: '100%' },
+        from: { color: '#add8e6' },
+        to: { color: '#007bff' },
         
-        table_html +=
-        '<tr>' +
-        '<th scope="row" class="align-bottom">' + job_name + '</th>' +
-        '<td class="align-bottom" data-sort="'+project['jobs'][job_name]['status']+'">' +
-        '<div class="results-status" data-jobName="'+job_name+'"></div></td>' +
-        '<td class="align-bottom">';
-
-        if (job_params['script'] == 'evaluate.py') {
-            table_html += 'Evaluate';
-        }
-        else {
-            table_html += 'Test';
-        }
-        table_html += '</td>' +
-        '<td class="align-bottom">' + eval_params['-target'] + '</td>' +
-        '<td class="align-bottom">' + eval_params['pipeline_name'] + '</td>' +
-
-        '<td class="align-bottom" data-sort="' + moment(eval_params['created']).valueOf() + '">' +
-        moment(eval_params['created']).calendar() + '</td>' +
-
-        '<td class="align-bottom"><button class="btn btn-sm btn-primary results-view" ' +
-        'data-jobName="'+job_name+'">' +
-        'Show</button></td>' +
-
-        '<td class="align-bottom"><button class="btn btn-sm btn-danger results-delete" ' +
-        'data-jobName="'+job_name+'">' +
-        'Delete</button></td>' +
-        '</tr>';
+        step: (state, bar) => {
+            bar.path.setAttribute('stroke', state.color);
+            txt.css('color', state.color)
+          }
     });
 
-    table_html += '</tbody></table>';
-
-    return table_html;
+    return bar;
 }
 
+function refreshStatus(entry, project) {
+
+    var data = entry.data();
+
+    // Init progress bar only if not yet init'ed
+    if (data['bar'] == undefined) {
+        data['bar'] = initProgressBar(entry[0]);
+    }
+
+    // Grab assoc. job
+    var job_name = data['jobname'];
+    var job = project['jobs'][job_name];
+
+    // Want to update bar only if last_status is either undefined or
+    // different from the current status
+    if ((data['laststatus'] == undefined) || (data['laststatus'] !== job['status'])) {
+
+        // Special cases for already done or error
+        if ((job['status'] == "1") || (job['status'] == "-1")) {
+
+            var color;
+            var txt;
+
+            if (job['status'] == "1") {
+                color = '#28a745';
+                txt = 'Done';
+            } 
+    
+            else if (job['status'] == "-1") {
+                color = '#dc3545';
+                txt = 'Error';
+            }
+
+            data['bar'].animate(parseFloat(job['status']), {
+                    duration: 0,
+                    from: { color: '#add8e6' },
+                    to: { color: color },
+            });
+            data['bar'].setText(txt);
+        } 
+        else {
+            data['bar'].animate(parseFloat(job['status']), {duration: 1000});
+        }
+
+        // Update the sort status
+        entry.parent().data('sort', job['status']);
+
+        // Set last status
+        data['laststatus'] = job['status'];
+    }
+
+}
+
+function refreshJobsStatus(project) {
+    jQuery('.results-status').each(function () {
+        refreshStatus($(this), project);
+    });
+}
+
+function refreshBar(entry, project) {
+
+    var data = entry.data();
+
+    // Grab assoc. job
+    var job_name = data['jobname'];
+    var job = project['jobs'][job_name];
+
+    var progress = job['progress'];
+    var ext = data['ext'];
+    var key = data['key'];
+
+    // If already done / error, remove progress.
+    if (job['status'] == "1") {
+        jQuery('#'+key+'-progress').remove();
+        loadResults(job_name, key, project);
+    }
+    else if (job['status'] == "-1") {
+        jQuery('#'+key+'-progress').remove();
+        showError(job_name, key, project);
+    }
+
+    // Skip + remove if out of 1
+    if (progress['n-' + ext] == 1) {
+        entry.remove();
+        return;
+    }
+
+    // Proc potential init/update otherwise
+    var bar_e = jQuery('#'+key+'-bar-'+ext);
+    var text_e = jQuery('#'+key+'-text-'+ext);
+    var bar_data = bar_e.data();
+    
+    // If not init'ed, init
+    if (bar_data['bar'] == undefined) {
+        bar_data['bar'] = initSingleProgressBar(bar_e[0], text_e);
+    }
+
+    // Check for change
+    var out_of =  progress['n-' + ext];
+    var current = progress[ext];
+
+    if ((bar_data['laststatus'] == undefined) || (bar_data['laststatus'] !== current)) {
+
+        // Update bar
+        bar_data['bar'].animate(current / out_of);
+
+        // Update text
+        text_e.empty().append(current + '/' + out_of);
+
+        // Save to element
+        bar_data['laststatus'] = current;
+    }
+}
+
+function refreshJobProgress(project) {
+
+    jQuery('.job-progress-bar').each(function () {
+        refreshBar($(this), project);
+    });
+}
+
+////////////////
+// Registers //
+//////////////
+
+function registerTable(project) {
+
+    // Clear and add table html
+    var table_html = getResultsTableHTML(project);
+    jQuery('#results-table-space').empty().append(table_html);
+
+    // Create data table
+    $('#results-table').DataTable({
+        "scrollX": true,
+        "searching": true,
+        "paging": true,
+        "info": true,
+        "autoWidth": true,
+        "order": [[ 5, "desc"]],
+        "columnDefs": [
+            {"orderable": false, "targets": [-1, -2]},
+        ]
+    });
+
+    // Register refresh status on each re-draw
+    $('#results-table').on('draw.dt', function() {
+        
+        // Refresh each status
+        refreshJobsStatus(project);
+
+        // Re-register show jobs
+        registerJobsShow(project);
+
+        // Re-register delete jobs
+        registerJobsDelete(project); 
+    });
+    
+    // Trigger once to init
+    $('#results-table').trigger('draw.dt');
+}
+
+function registerJobsShow(project) {
+
+    // Remove any previous registers
+    jQuery('.results-view').off('click');
+
+    // Add remove job register to each shown button
+    jQuery('.results-view').on('click', function() {
+
+        var job_name = $(this).data()['jobname'];
+        console.log('show ' + job_name);
+
+        var job_params = project['jobs'][job_name];
+        var eval_params = job_params['params']['eval_params'];
+
+        // Set unique id / key as time created
+        var key = moment(eval_params['created']).valueOf().toString();
+        var space_name = key + '-space';
+
+        // If not already open - show space
+        if (jQuery('#'+space_name).html() == undefined) {
+
+            var card_body = '' +
+                '<p id="'+key+'-error" style="display: none;"></p>' +
+                '<p id="'+key+'-loading" style="display: none;">Loading Job Results...</p>' +
+                
+                '<div class="form-row">' +
+                
+                '<div class="col col-md-6" id="'+key+'-progress">' +
+                getJobStatusHTML(key, job_name) +
+                '</div>' +
+
+                '<div class="col-sm-auto" id="'+key+'-logs"></div>' +
+                '<div class="col-sm-auto" id="'+key+'-output"></div>' +
+
+                '</div>';
+
+            // Add the card
+            var card_name = '<b>Show</b>: <i>' + job_name + '</i>';
+            var card_html = cardWrapHTML(card_name, key, card_body, false);
+            jQuery('#results-show-space').append(card_html);
+
+            // Make un-draggable
+            jQuery('#'+key+'-space').prop('draggable', false);
+
+            // If already done / error, remove progress.
+            if (job_params['status'] == "1") {
+                jQuery('#'+key+'-progress').remove();
+                loadResults(job_name, key, project);
+            }
+            else if (job_params['status'] == "-1") {
+                jQuery('#'+key+'-progress').remove();
+                showError(job_name, key, project);
+            }
+
+            // Register remove
+            jQuery('#'+key+'-remove').on('click', function () {
+                jQuery('#'+key+'-space').remove();
+            });
+
+            // Unwrap on show
+            jQuery('#'+key+'-collapse').collapse("show");
+    
+
+            // Make sure updated
+            refreshJobProgress(project);
+        }
+    });
+
+}
+
+function registerJobsDelete(project) {
+
+    // Remove any previous registers
+    jQuery('.results-delete').off('click');
+
+    // Add remove job register to each shown button
+    jQuery('.results-delete').on('click', function() {
+        var job_name = $(this).data()['jobname'];
+        console.log('delete ' + job_name);
+
+
+        // Delete from project
+        delete project['jobs'][job_name];
+
+        // Delete from saved
+        jQuery.post('php/delete_job.php', {
+            'project_id': project['id'],
+            'job_name': job_name
+        });
+
+        // Delete row
+        $(this).parent().parent().remove();
+    });
+}
+
+function showError(job_name, key, project) {
+
+    jQuery('#'+key+'-error').css('display', 'block');
+    jQuery('#'+key+'-error').empty().append(project['jobs'][job_name]['error_msg']);
+}
+
+function loadResults(job_name, key, project) {
+
+    // If already loading, stop
+    if (jQuery('#'+key+'-loading').css('display') == 'block') {
+        return;
+    }
+    jQuery('#'+key+'-loading').css('display', 'block');
+
+    var params = {};
+    params['n'] = job_name;
+    params['script'] = 'show_results.py';
+    params['project_id'] =  project['id'];
+
+    jQuery.post('php/run_quick_py.php', {
+        'params': params
+    }, function (output) {
+
+        // Remove loading indicator
+        jQuery('#'+key+'-loading').css('display', 'none');
+
+        var sum_table_key = key +'-summary-table';
+        var table_html = output['table_html'].replace('TEMP-ID', sum_table_key);
+
+        var summary_descr = 'placeholder';
+        var summary_label = getPopLabel(key, "Summary Scores ", summary_descr);
+
+        var summary_html = '' +
+        '<div class="form-row">' +
+        '<div class="col">' +
+        '<div class="d-flex justify-content-center">' +
+        '<h5><b>' + summary_label + '</b></h5>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+
+        '<div class="form-row">' +
+        table_html + 
+        '</div>' +
+
+        '<div class="form-row" style="padding-top: 5px;">' +
+        '<div class="col">' +
+        '<div class="d-flex justify-content-center">' +
+        '<div id="'+key+'-buttons"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+        jQuery('#'+key+'-output').append(summary_html);
+
+
+        var table = $('#'+sum_table_key).DataTable({
+            dom: 'lfBfrtip',
+            buttons: [
+                'copyHtml5',
+                'csvHtml5',
+                {
+                    extend: 'excelHtml5',
+                    title: 'Job: ' + job_name + ' Evaluate Summary Scores'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: 'Job: ' + job_name + ' Evaluate Summary Scores'
+                }
+            ],
+            searching: false,
+            paging: false,
+            info: false,
+            autoWidth: true,
+        });
+
+        table.buttons().container().appendTo($('#'+key+'-buttons'));
+
+
+        registerPopovers();
+
+
+    }, "json");
+
+}
+
+///////////////////
+// Main display //
+/////////////////
+
+
+function displayResults(project) {
+
+    // Hide everything
+    hideAllProjSteps()
+
+    // If already loaded
+    if (jQuery('#body-results').html().length > 100) {
+        jQuery('#body-results').css('display', 'block');
+        registerTable(project);
+        return;
+    }
+
+    // Init key
+    var key = 'results'
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {};
+    }
+    
+    var html = '' +
+    '<div id="results-table-space"></div>' +
+    '<hr><br>' + 
+    '<div id="results-show-space"></div>';
+
+    jQuery('#body-results').append(html);
+    jQuery('#body-results').css('display', 'block');
+
+    // Add table
+    registerTable(project);
+
+    // Get initial status
+    updateJobs(project);
+
+    // Start loop to check for active jobs
+    active_jobs_interval = setInterval(function() {
+        updateJobs(project);
+    }, 1000);
+}
