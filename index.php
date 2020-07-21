@@ -11,17 +11,19 @@
   <!-- Base bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
-  <link href="css/bootstrap-editable.css" rel="stylesheet" />
+  <link href="css/bootstrap-editable.css" rel="stylesheet">
 
   <!-- Select2 -->
   <link href="css/select2-bootstrap4.min.css" rel="stylesheet" type="text/css">
-  <link href="css/select2.min.css" rel="stylesheet" type="text/css" />
+  <link href="css/select2.min.css" rel="stylesheet" type="text/css">
 
   <!-- Font awesome icons -->
   <link href="../NewDataExpo/css/fontawesome-all.min.css" rel="stylesheet">
 
   <!-- Datatables -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="css/buttons.bootstrap4.min.css">
+
 
   <!-- Custom styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -138,6 +140,17 @@
   <script type="text/javascript" src="js/libraries/datatables.min.js"></script>
   <script type="text/javascript" src="js/libraries/progressbar.min.js"></script>
   <script type="text/javascript" src="js/libraries/moment.min.js"></script>
+  <script type="text/javascript" src="js/libraries/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="js/libraries/buttons.flash.min.js"></script>
+  <script type="text/javascript" src="js/libraries/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="js/libraries/jszip.min.js"></script>
+  <script type="text/javascript" src="js/libraries/buttons.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="js/libraries/pdfmake.min.js"></script>
+  <script type="text/javascript" src="js/libraries/vfs_fonts.js"></script>
+  
+
+  
+  
 
 
 
