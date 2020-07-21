@@ -207,6 +207,20 @@ function updateJobs(project) {
 
 }
 
+////////////
+// Utils //
+//////////
+
+function getJobKey(job_name, project) {
+
+    // Get job key as unique id / key as time created
+    var job_params = project['jobs'][job_name];
+    var eval_params = job_params['params']['eval_params'];
+    var key = moment(eval_params['created']).valueOf().toString();
+
+    return key;
+}
+
 //////////////////
 // Status bars //
 ////////////////
@@ -430,6 +444,9 @@ function registerTable(project) {
 
         // Re-register delete jobs
         registerJobsDelete(project); 
+
+        // Rerefresh confirm delete
+        refreshConfirmDelete();
     });
     
     // Trigger once to init
@@ -445,13 +462,10 @@ function registerJobsShow(project) {
     jQuery('.results-view').on('click', function() {
 
         var job_name = $(this).data()['jobname'];
-        console.log('show ' + job_name);
-
         var job_params = project['jobs'][job_name];
-        var eval_params = job_params['params']['eval_params'];
 
         // Set unique id / key as time created
-        var key = moment(eval_params['created']).valueOf().toString();
+        var key = getJobKey(job_name, project);
         var space_name = key + '-space';
 
         // If not already open - show space
@@ -500,7 +514,7 @@ function registerJobsShow(project) {
     
 
             // Make sure updated
-            refreshJobProgress(project);
+            refreshJobProgress();
         }
     });
 
@@ -513,21 +527,47 @@ function registerJobsDelete(project) {
 
     // Add remove job register to each shown button
     jQuery('.results-delete').on('click', function() {
-        var job_name = $(this).data()['jobname'];
-        console.log('delete ' + job_name);
 
+        // On first click, set to confirm
+        if ($(this).data('clicked') == undefined) {
+            $(this).data('clicked', 'true');
+            $(this).html('Confirm');
+        }
 
-        // Delete from project
-        delete project['jobs'][job_name];
+        // Only delete if already set to confirm
+        else {
+            var job_name = $(this).data()['jobname'];
 
-        // Delete from saved
-        jQuery.post('php/delete_job.php', {
-            'project_id': project['id'],
-            'job_name': job_name
-        });
+            // Check if open/shown, and delete if so
+            var job_space = getJobKey(job_name, project) + '-space';
+            if (jQuery('#'+job_space).html() !== undefined) {
+                jQuery('#'+job_space).remove();
+            }
 
-        // Delete row
-        $(this).parent().parent().remove();
+            // Delete from project
+            delete project['jobs'][job_name];
+
+            // Delete from saved
+            jQuery.post('php/delete_job.php', {
+                'project_id': project['id'],
+                'job_name': job_name
+            });
+
+            // Delete row
+            $(this).parent().parent().remove();
+        }
+    });
+}
+
+function refreshConfirmDelete() {
+
+    // This function is called on every table re-draw
+    // as a way of resetting the confirm back to delete
+    jQuery('.results-delete').each(function () {
+        if ($(this).data('clicked') !== undefined) {
+            delete $(this).data('clicked');
+            $(this).html('Delete');
+        }
     });
 }
 
