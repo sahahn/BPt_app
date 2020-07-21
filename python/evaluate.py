@@ -407,7 +407,7 @@ def main(user_dr, job_name):
 
     # Perform base test load - includes loading all data
     # The ML logs are created in temp dr
-    ML = base_test_load(params, temp_dr, error_output_loc, job_name)
+    ML = base_test_load(params, job_dr, error_output_loc, job_name)
     ML._print('Base test load finished.')
 
     # Get the pipeline
@@ -434,7 +434,13 @@ def main(user_dr, job_name):
 
     # Set progress loc
     ML.Set_Default_ML_Verbosity(progress_loc=os.path.join(job_dr,
-                                                          'progress.txt'))
+                                                          'progress.txt'),
+                                fold_name=True,
+                                time_per_fold=True,
+                                score_per_fold=True,
+                                fold_sizes=True,
+                                best_params=True,
+                                save_to_logs=True)
 
     # Run Evaluate
     try:
@@ -444,6 +450,7 @@ def main(user_dr, job_name):
                               n_repeats=n_repeats,
                               CV=CV,
                               train_subjects='train')
+        results['scorer_strs'] = ML.Model_Pipeline.scorer_strs
     except Exception as e:
         save_error('Error starting Evaluate', error_output_loc, e)
 
