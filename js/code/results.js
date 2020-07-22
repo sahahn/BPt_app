@@ -71,7 +71,7 @@ function getBarHTML(key, ext, label, job_name) {
     '</div>' +
 
     '<div class="form-row">' +
-    '<div id="'+key+'-bar-'+ext+'"></div>' +
+    '<div class="col-md-10" id="'+key+'-bar-'+ext+'"></div>' +
     '<span id="'+key+'-text-'+ext+'"></span>' + 
     '</div>' +
 
@@ -167,15 +167,18 @@ function updateJobs(project) {
         var job = project['jobs'][jobName];
         var status = job['status'];
 
-        if ((status !== "1") && (status != "-1")) {
+        if ((status !== "1") && (status != "-1") && (status != 'NaN')) {
             
             jQuery.getJSON('php/check_job_status.php', {
                 'project_id': project['id'],
                 'job_name': jobName 
-            }, function (output) {
+            }, function (return_output) {
+
+                // Handle the returned status as error, done or progress
+                var output = return_output['status'];
 
                 // Check for error
-                if (output["error"] !== undefined) {
+                if ((output["error"] !== undefined) || (status == 'NaN')) {
                     job['status'] = "-1";
                     job['error_msg'] = output["error"];
                 }
@@ -185,15 +188,13 @@ function updateJobs(project) {
                     job['status'] = "1";
                 }
 
-                else if (status == 'NaN') {
-                    job['status'] = "-1";
-                    console.log(output);
-                }
-
                 // Otherwise set status as percent progress
                 else {
                     job['status'] = parseProgress(output, job);
                 }
+
+                // Add the logs
+                job['logs'] = return_output['logs'];
             });  
         }
     });
@@ -204,6 +205,8 @@ function updateJobs(project) {
     // Also trigger update any open (Show) job's progress
     refreshJobProgress(project);
 
+    // Refresh job logs
+    refreshJobLogs(project);
 
 }
 
@@ -245,20 +248,29 @@ function initProgressBar(container) {
 
         step: (state, bar) => {
 
-            bar.path.setAttribute('stroke', state.color);
-
-            if (bar.value() == 1) {
-                bar.setText('Done');
-            }
-            else if (bar.value() == -1) {
+            if (isNaN(bar.value())) {
                 bar.setText('Error');
-            }
-            else {
-                bar.path.setAttribute('stroke', state.color);
-                bar.setText(Math.round((bar.value() * 100)) + '%');
+                bar.path.setAttribute('stroke', '#dc3545');
+                bar.text.style.color = '#dc3545';
             }
 
-            bar.text.style.color = state.color;
+            else {
+
+                bar.path.setAttribute('stroke', state.color);
+
+                if (bar.value() == 1) {
+                    bar.setText('Done');
+                }
+                else if (bar.value() === -1) {
+                    bar.setText('Error');
+                }
+                else {
+                    bar.path.setAttribute('stroke', state.color);
+                    bar.setText(Math.round((bar.value() * 100)) + '%');
+                }
+
+                bar.text.style.color = state.color;
+            }
         }
     });
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
@@ -276,7 +288,7 @@ function initSingleProgressBar(container, txt) {
         color: '#add8e6',
         trailColor: '#eee',
         trailWidth: 1,
-        svgStyle: { width: '95%', height: '100%' },
+        svgStyle: { width: '100%', height: '100%' },
         from: { color: '#add8e6' },
         to: { color: '#007bff' },
         
@@ -302,6 +314,12 @@ function refreshStatus(entry, project) {
     var job_name = data['jobname'];
     var job = project['jobs'][job_name];
 
+    // Make sure status is string
+    job['status'] = job['status'].toString();
+    if (job['status'] == "NaN") {
+        job['status'] = '-1';
+    }
+
     // Want to update bar only if last_status is either undefined or
     // different from the current status
     if ((data['laststatus'] == undefined) || (data['laststatus'] !== job['status'])) {
@@ -317,7 +335,7 @@ function refreshStatus(entry, project) {
                 txt = 'Done';
             } 
     
-            else if (job['status'] == "-1") {
+            else if ((job['status'] == "-1") || (job['status'] == "NaN")) {
                 color = '#dc3545';
                 txt = 'Error';
             }
@@ -327,7 +345,11 @@ function refreshStatus(entry, project) {
                     from: { color: '#add8e6' },
                     to: { color: color },
             });
-            data['bar'].setText(txt);
+
+            // Have it wait before setting error text;
+            window.setTimeout(function () {
+                data['bar'].setText(txt);
+            }, 300);
         } 
         else {
             data['bar'].animate(parseFloat(job['status']), {duration: 1000});
@@ -362,12 +384,17 @@ function refreshBar(entry, project) {
 
     // If already done / error, remove progress.
     if (job['status'] == "1") {
+        console.log(job_name)
+        console.log(data['jobname'])
+        console.log(key);
+        loadResults(data['jobname'], key, project);
         jQuery('#'+key+'-progress').remove();
-        loadResults(job_name, key, project);
+        return;
     }
-    else if (job['status'] == "-1") {
+    else if ((job['status'] == "-1") || (job['status'] == "NaN")) {
         jQuery('#'+key+'-progress').remove();
         showError(job_name, key, project);
+        return;
     }
 
     // Skip + remove if out of 1
@@ -410,6 +437,43 @@ function refreshJobProgress(project) {
     });
 }
 
+function refreshJobLogs(project) {
+
+    jQuery('.job-logs').each(function() {
+        var data = $(this).data();
+
+        // Grab assoc. job
+        var job_name = data['jobname'];
+        var job = project['jobs'][job_name];
+
+        if ((data['prev_length'] == undefined) || (data['prev_length'] !== job['logs'].length)) {
+            data['prev_length'] = job['logs'].length;
+
+            var scrol_to_bot = false;
+            if (($(this)[0].scrollHeight - $(this)[0].scrollTop) == $(this)[0].offsetHeight) {
+                scrol_to_bot = true;
+            }
+            
+            var parsed = job['logs'].replace(/\n/g, '<br>')
+            $(this).empty().append(parsed);
+
+            // If was scrolled to bottom, smooth scroll to bottom after adding new lines
+            if (scrol_to_bot) {
+                $(this)[0].scrollTo({
+                    top: $(this)[0].scrollHeight + $(this)[0].offsetHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Stop updating if done
+        if ((job['status'] == "1") || (job['status'] == "-1")) {
+            $(this).removeClass('job-logs');
+        }
+    });
+
+}
+
 ////////////////
 // Registers //
 //////////////
@@ -422,7 +486,8 @@ function registerTable(project) {
 
     // Create data table
     $('#results-table').DataTable({
-        "scrollX": true,
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        "scrollX": false,
         "searching": true,
         "paging": true,
         "info": true,
@@ -472,34 +537,56 @@ function registerJobsShow(project) {
         if (jQuery('#'+space_name).html() == undefined) {
 
             var card_body = '' +
-                '<p id="'+key+'-error" style="display: none;"></p>' +
-                '<p id="'+key+'-loading" style="display: none;">Loading Job Results...</p>' +
-                
+
                 '<div class="form-row">' +
+
+                '<div class="col col-md-6" id="'+key+'-error" style="display: none;"></div>' + 
+                '<div class="col col-md-6" id="'+key+'-loading" style="display: none;"><h5 class="text-center">Loading Job Results...</h5></div>' +
                 
                 '<div class="col col-md-6" id="'+key+'-progress">' +
                 getJobStatusHTML(key, job_name) +
                 '</div>' +
 
-                '<div class="col-sm-auto" id="'+key+'-logs"></div>' +
-                '<div class="col-sm-auto" id="'+key+'-output"></div>' +
+                '<div class="col col-md-6" id="'+key+'-output" style="display: none"></div>' +
+
+                '<div class="col-md-6">' +
+                '<div class="text-center">' +
+                '<button class="btn btn-outline-dark" id="'+key+'-toggle-logs" data-toggle="button" aria-pressed="false" autocomplete="off">Toggle Logs</button>' +
+                '</div>' +
+                '<div class="job-logs" id="'+key+'-logs" data-jobName="'+job_name+'" ' +
+                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 10px; padding: 10px; display: none"></div>' +
+                '</div>' +
+
+
+                '<div class="col col-md-12" id="'+key+'-raw-preds" style="padding-top: 20px;"></div>' +
 
                 '</div>';
 
             // Add the card
             var card_name = '<b>Show</b>: <i>' + job_name + '</i>';
             var card_html = cardWrapHTML(card_name, key, card_body, false);
-            jQuery('#results-show-space').append(card_html);
+            jQuery('#results-show-space').prepend(card_html);
+
+
+            // Set logs button to toggle logs visibility
+            jQuery('#'+key+'-toggle-logs').on('click', function() {
+                if (!$(this).hasClass('active')) {
+                    jQuery('#'+key+'-logs').css('display', 'block');
+                } 
+                else {
+                    jQuery('#'+key+'-logs').css('display', 'none');
+                }
+            });
 
             // Make un-draggable
             jQuery('#'+key+'-space').prop('draggable', false);
 
             // If already done / error, remove progress.
             if (job_params['status'] == "1") {
-                jQuery('#'+key+'-progress').remove();
                 loadResults(job_name, key, project);
+                jQuery('#'+key+'-progress').remove();
             }
-            else if (job_params['status'] == "-1") {
+            else if ((job_params['status'] == "-1") || (job_params['status'] == "NaN")) {
                 jQuery('#'+key+'-progress').remove();
                 showError(job_name, key, project);
             }
@@ -577,6 +664,36 @@ function showError(job_name, key, project) {
     jQuery('#'+key+'-error').empty().append(project['jobs'][job_name]['error_msg']);
 }
 
+function procBaseTableResults(table_key, table_results_html, label) {
+
+    var table_html = table_results_html.replace('TEMP-ID', table_key);
+
+    var html = '' +
+    '<div class="form-row">' +
+    '<div class="col">' +
+    '<div class="d-flex justify-content-center">' +
+    '<h5><b>' + label + '</b></h5>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="form-row">' +
+    '<div class="col col-md-12">' +
+    table_html + 
+    '</div>' +
+    '</div>' +
+    
+    '<div class="form-row" style="padding-top: 5px;">' +
+    '<div class="col">' +
+    '<div class="d-flex justify-content-center">' +
+    '<div id="'+table_key+'-buttons"></div>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
+
+    return html;
+}
+
 function loadResults(job_name, key, project) {
 
     // If already loading, stop
@@ -594,52 +711,30 @@ function loadResults(job_name, key, project) {
         'params': params
     }, function (output) {
 
+        console.log(output)
+
         // Remove loading indicator
         jQuery('#'+key+'-loading').css('display', 'none');
 
+        // Add summary table
         var sum_table_key = key +'-summary-table';
-        var table_html = output['table_html'].replace('TEMP-ID', sum_table_key);
-
         var summary_descr = 'placeholder';
         var summary_label = getPopLabel(key, "Summary Scores ", summary_descr);
+        var summary_html = procBaseTableResults(sum_table_key, 
+                                                output['table_html'],
+                                                summary_label);
 
-        var summary_html = '' +
-        '<div class="form-row">' +
-        '<div class="col">' +
-        '<div class="d-flex justify-content-center">' +
-        '<h5><b>' + summary_label + '</b></h5>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-
-        '<div class="form-row">' +
-        table_html + 
-        '</div>' +
-
-        '<div class="form-row" style="padding-top: 5px;">' +
-        '<div class="col">' +
-        '<div class="d-flex justify-content-center">' +
-        '<div id="'+key+'-buttons"></div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-
+        jQuery('#'+key+'-output').css('display', 'block');
         jQuery('#'+key+'-output').append(summary_html);
 
-
+        // Init data table with download buttons
         var table = $('#'+sum_table_key).DataTable({
-            dom: 'lfBfrtip',
+            dom: 'Bfrtip',
             buttons: [
-                'copyHtml5',
+                {extend: 'copyHtml5', title: ''},
                 'csvHtml5',
-                {
-                    extend: 'excelHtml5',
-                    title: 'Job: ' + job_name + ' Evaluate Summary Scores'
-                },
-                {
-                    extend: 'pdfHtml5',
-                    title: 'Job: ' + job_name + ' Evaluate Summary Scores'
-                }
+                {extend: 'excelHtml5', title: ''},
+                {extend: 'pdfHtml5', title: 'Job: '+job_name+' Evaluate Summary Scores'}
             ],
             searching: false,
             paging: false,
@@ -647,13 +742,44 @@ function loadResults(job_name, key, project) {
             autoWidth: true,
         });
 
-        table.buttons().container().appendTo($('#'+key+'-buttons'));
+        // Add buttons to special spot centered under table
+        table.buttons().container().appendTo($('#'+sum_table_key+'-buttons'));
 
+        var raw_table_key = key +'-raw-table'
+        var raw_descr = 'placeholder';
+        var raw_label = getPopLabel(key, "Raw Predictions ", raw_descr);
+        var raw_html = procBaseTableResults(raw_table_key, 
+                                            output['raw_preds'],
+                                            raw_label);
+        jQuery('#'+key+'-raw-preds').append(raw_html);
 
+        var raw_table = $('#'+raw_table_key).DataTable({
+            data: output['pred_rows'],
+            scrollX: false,
+            dom: 'lBfrtip',
+            searching: true,
+            buttons: [
+                'csvHtml5',
+                {extend: 'excelHtml5', title: ''},
+            ],
+            paging: true,
+            info: true,
+            autoWidth: true,
+            lengthChange: true,
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        });
+
+        raw_table.buttons().container().appendTo($('#'+raw_table_key+'-buttons'));
+
+        // Register new popovers
         registerPopovers();
 
+        
+    }, "json").fail(function (xhr, textStatus, errorThrown) {
+        alert('error ' + textStatus + xhr + errorThrown);
+    });
 
-    }, "json");
+
 
 }
 
