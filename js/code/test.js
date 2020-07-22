@@ -257,7 +257,7 @@ function onShowTest(key, project) {
 
             var card_name = '<b>' + data['source'] + '</b>: <i>' + data['name'] + '</i>';
             var card_html = cardWrapHTML(card_name, n_key, card_body, false);
-            jQuery('#' + key + '-extra-dist-space').append(card_html);
+            jQuery('#' + key + '-extra-dist-space').prepend(card_html);
             
             // Make un-draggable
             jQuery('#' + n_key + '-space').prop('draggable', false);
