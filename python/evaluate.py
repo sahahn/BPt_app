@@ -451,6 +451,8 @@ def main(user_dr, job_name):
                               CV=CV,
                               train_subjects='train')
         results['scorer_strs'] = ML.Model_Pipeline.scorer_strs
+        results['n_repeats'] = n_repeats
+        results['n_splits'] = ML.Model_Pipeline.n_splits_
     except Exception as e:
         save_error('Error starting Evaluate', error_output_loc, e)
 
