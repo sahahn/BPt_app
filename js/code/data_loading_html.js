@@ -122,7 +122,7 @@ function inputDataTypeHTML(key, label, target, data_types) {
             html = html + ifFloatHTML(key);
         }
         else if (k == 'cat') {
-            html = html + ifCatHTML(key, target);
+            html = html + ifCatHTML(key);
         }
         else if (k == 'binary') {
             html = html + ifBinaryHTML(key);
@@ -294,47 +294,6 @@ function ifCatHTML(key, target) {
     var html = '' +
     '<!--Display options for categorical -->' +
     '<div class="form-group col-md-6" style="display:none" id="'+key+'-if-cat">'
-
-    if (!target) {
-        html = html +
-        '<label><span data-toggle="popover"' +
-        'title="Categorical Encoding Choices" data-placement="left"' +
-        'data-content="<b>Ordinal Encoding:</b><br> Ordinal' +
-        '<br><b>One Hot Encoding:</b><br>One Hot' +
-        '<br><b>Dummy Encoding:</b><br> some text"' +
-        '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
-
-        '<div class="custom-control custom-radio">' +
-            '<input type="radio" class="custom-control-input"' +
-            'id="'+key+'-cat-encode-ordinal"' +
-            'name="'+key+'-cat-encode-choice"' +
-            'value="ordinal" checked>' +
-            '<label class="custom-control-label"' +
-            'for="'+key+'-cat-encode-ordinal"' +
-            '>Ordinal Encoding</label>' +
-        '</div>' +
-
-        '<div class="custom-control custom-radio">' +
-            '<input type="radio" class="custom-control-input"' +
-            'name="'+key+'-cat-encode-choice"' +
-            'id="'+key+'-cat-encode-onehot"' +
-            'value="one hot">' +
-            '<label class="custom-control-label"' +
-            'for="'+key+'-cat-encode-onehot"' +
-            '>One Hot Encoding</label>' +
-        '</div>' +
-
-        '<div class="custom-control custom-radio">' +
-            '<input type="radio" class="custom-control-input"' +
-            'name="'+key+'-cat-encode-choice"' +
-            'id="'+key+'-cat-encode-dummy"' +
-            'value="dummy">' +
-            '<label class="custom-control-label"' +
-            'for="'+key+'-cat-encode-dummy"' +
-            '>Dummy Encoding</label>' +
-        '</div>' +
-        '<br>';
-    }
 
     html = html +
     '<!--Display under if % pressed -->' +

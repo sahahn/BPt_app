@@ -341,11 +341,6 @@ function updateInputField(key, top_keys) {
         jQuery('input[name=' + key + '-drop-choice][value="' + top_keys['-drop-choice'] + '"]').trigger('click');
     }
 
-    // Cat encode choice
-    if (top_keys['-cat-encode-choice'] !== undefined) {
-        jQuery('input[name=' + key + '-cat-encode-choice][value="' + top_keys['-cat-encode-choice'] + '"]').trigger('click');
-    }
-
     // Binary choices
     if (top_keys['-binary-choice'] !== undefined) {
         jQuery('input[name=' + key + '-binary-choice][value="' + top_keys['-binary-choice'] + '"]').trigger('click');
@@ -559,10 +554,6 @@ function registerInputChoices(key, data) {
 
     jQuery('input[name='+key+'-drop-choice]').on('change', function() {
         data['-drop-choice'] = $(this).val();
-    });
-
-    jQuery('input[name='+key+'-cat-encode-choice]').on('change', function() {
-        data['-cat-encode-choice'] = $(this).val();
     });
 }
 

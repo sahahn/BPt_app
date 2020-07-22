@@ -193,9 +193,6 @@ def check_defaults(params):
     if '-binary-choice' not in params:
         params['-binary-choice'] = 'default'
 
-    if '-cat-encode-choice' not in params:
-        params['-cat-encode-choice'] = 'ordinal'
-
     if '-outlier-percent' not in params:
         params['-outlier-percent'] = 'false'
 
@@ -336,7 +333,7 @@ def _proc_datatype_args(params, output_loc):
         if data_type not in ['float', 'binary', 'cat']:
             save_error('You must select a Data Type', output_loc)
 
-        fop, fos, cdp, cca, binary_thresh = None, None, None, None, None
+        fop, fos, cdp, binary_thresh = None, None, None, None
 
         if data_type == 'float':
 
@@ -350,9 +347,6 @@ def _proc_datatype_args(params, output_loc):
             if params['-outlier-cat'] == 'true':
                 cdp = float(params['-range-cat']) / 100
 
-            if '-cat-encode-choice' in params:
-                cca = params['-cat-encode-choice']
-
         if data_type == 'binary':
             if params['-binary-choice'] == 'threshold':
                 data_type = 'float'
@@ -365,7 +359,7 @@ def _proc_datatype_args(params, output_loc):
     except Exception as e:
         save_error('Error processing data type input args', output_loc, e)
 
-    return data_type, fop, fos, cdp, cca, binary_thresh
+    return data_type, fop, fos, cdp, binary_thresh
 
 
 def _proc_na(params):
@@ -518,7 +512,7 @@ def drop_target_overlap(params, ML, target=False):
 def load_target(ML, params, output_loc, drops=True):
 
     # Proc input args
-    data_type, fop, fos, cdp, _, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh =\
         _proc_datatype_args(params, output_loc)
 
     # Load the target df
@@ -576,7 +570,7 @@ def load_variable(ML, params, output_loc, drops=True):
         return load_set(ML, params_copy, output_loc, drops=True)
 
     # Proc input args
-    data_type, fop, fos, cdp, cca, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh =\
         _proc_datatype_args(params, output_loc)
     drop_na = _proc_na(params)
 
@@ -598,8 +592,7 @@ def load_variable(ML, params, output_loc, drops=True):
                        drop_na=drop_na,
                        filter_outlier_percent=fop,
                        filter_outlier_std=fos,
-                       categorical_drop_percent=cdp,
-                       code_categorical_as=cca)
+                       categorical_drop_percent=cdp)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
@@ -626,7 +619,7 @@ def load_variable(ML, params, output_loc, drops=True):
 def load_strat(ML, params, output_loc, drops=False):
 
     # Proc input args
-    data_type, fop, fos, cdp, cca, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh =\
         _proc_datatype_args(params, output_loc)
 
     # Load df
@@ -676,7 +669,7 @@ def load_strat(ML, params, output_loc, drops=False):
 def load_set(ML, params, output_loc, drops=True):
 
     # Proc input args
-    data_type, fop, fos, cdp, cca, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh =\
         _proc_datatype_args(params, output_loc)
     drop_na = _proc_na(params)
 
@@ -688,7 +681,6 @@ def load_set(ML, params, output_loc, drops=True):
     fop = [fop for i in range(len(col_names))]
     fos = [fos for i in range(len(col_names))]
     cdp = [cdp for i in range(len(col_names))]
-    cca = [cca for i in range(len(col_names))]
     binary_thresh = [binary_thresh for i in range(len(col_names))]
 
     # Check if any set vars passed
@@ -714,7 +706,7 @@ def load_set(ML, params, output_loc, drops=True):
             i = col_names.index(var['-input'])
 
             # Proc input args, and override
-            data_type[i], fop[i], fos[i], cdp[i], cca[i], binary_thresh[i] =\
+            data_type[i], fop[i], fos[i], cdp[i], binary_thresh[i] =\
                 _proc_datatype_args(var, output_loc)
 
     params['all_data_types'] = data_type
@@ -738,8 +730,7 @@ def load_set(ML, params, output_loc, drops=True):
                        drop_na=drop_na,
                        filter_outlier_percent=fop,
                        filter_outlier_std=fos,
-                       categorical_drop_percent=cdp,
-                       code_categorical_as=cca)
+                       categorical_drop_percent=cdp)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
