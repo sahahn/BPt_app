@@ -897,7 +897,7 @@ function registerParamsModal(key, options, project) {
 
     // Update card name on change
     jQuery('#'+key+'-param-dist').on('change', function() {
-        updatePieceCardName(key);
+        updatePieceCardName(key, project);
     })
 
     // Set params name

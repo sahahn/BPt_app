@@ -9,6 +9,9 @@ function removeSpace(key, project) {
     // Remove html
     jQuery('#'+key+'-space').remove();
 
+    // Also try to remove space html
+    jQuery('#'+key+'-tab').remove();
+
     // Remove loading spaces
     Object.keys(project['loading_spaces']).forEach(space => {
         if (space.startsWith(key)) {
@@ -20,8 +23,13 @@ function removeSpace(key, project) {
     getAllKeys(project).forEach(k => {
         if (k.startsWith(key)) {
             delete project['data'][k];
+
+            // Try to remove edit params modal 
+            jQuery('#'+key+'-edit-popup').remove();
         }
     });
+
+
 }
 
 function refreshAllFilterInfo(project) {

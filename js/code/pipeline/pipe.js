@@ -58,28 +58,123 @@ function getDocsLink(doc_str) {
 
 }
 
-function updatePieceCardName(key) {
+function getRemoveTabClose(key) {
 
-    var obj_name = jQuery('#'+key+'-obj-input').find('option:selected').html();
-    if (obj_name == undefined) {
-        return;
+    var close_btn = '&nbsp;<button type="button" class="close float-right" aria-label="Remove" id="'+key+'-remove-tab">' +
+                    '<span aria-hidden="true">&times;</span></button>';
+
+    var split_key = key.split('_');
+    if (split_key.length > 1) {
+        var select_split = split_key[1].split('-');
+        if (select_split.length == 1) {
+            return close_btn;
+        }
     }
 
-    jQuery('#'+key+'-header-text').empty();
-
-    if (obj_name.length > 0) {
-        jQuery('#'+key+'-header-text').append(':  <i>' + obj_name + '</i>');
-        jQuery('#'+key+'-header-text').append('&nbsp;&nbsp;&nbsp;<b>Dist</b>: <i>' + jQuery('#'+key+'-param-dist').val() + '</i>');
-    }
-
+    return '';
 }
 
-function registerUpdatePieceCardName(key) {
+function updatePieceCardName(key, project) {
+
+    // Get current selected obj name
+    var obj_name = jQuery('#'+key+'-obj-input').find('option:selected').html();
+
+    // Two behaviors here, one for if the object has select toggeled, and the other if it doesn't
+    if (isBool(project['data'][key]['select'])) {
+
+        // If obj selected, set tab-name to just obj
+        if ((obj_name !== undefined) && (obj_name.length > 0)) {
+            jQuery('#'+key+'-select-tab').html('<i>' + obj_name + '</i>' + getRemoveTabClose(key));
+            registerRemoveTab(key, project);
+        }
+    }
+
+    else {
+
+        // Clear existing
+        jQuery('#'+key+'-header-text').empty();
+
+        // If obj selected, add to card name + params names
+        if ((obj_name !== undefined) && (obj_name.length > 0)) {
+            jQuery('#'+key+'-header-text').append(':  <i>' + obj_name + '</i>');
+            jQuery('#'+key+'-header-text').append('&nbsp;&nbsp;&nbsp;<b>Dist</b>: <i>' + jQuery('#'+key+'-param-dist').val() + '</i>');
+        }
+    }
+}
+
+function getSelectSubKeys(key, project) {
+
+    var selectSubs = [];
+
+    getAllKeys(project).forEach(k => {
+
+        if (k.startsWith(key)) {
+            var k_split = k.split('_');
+            if (k_split.length > 1) {
+                var select_split = k_split[1].split('-');
+                if (select_split.length == 1) {
+                    selectSubs.push(select_split[0]);
+                }
+            }
+        }
+    });
+
+    return selectSubs;
+}
+
+function getFreeSubKey(key, project) {
+
+    var existing = getSelectSubKeys(key, project);
+    var cnt = 0
+
+    while (existing.includes(cnt.toString())){
+        cnt += 1
+    }
+
+    return cnt.toString();
+}
+
+function registerShowTab(key) {
+
+    $('#'+key+'-select-tab').on('click', function(e) {
+        e.stopPropagation();
+        $(this).tab('show');
+
+        // Toggle card if not toggled
+        // var card_header = $(this).parent().parent().parent().parent();
+        // $(card_header.data("target")).collapse("show");
+
+    });
+
+    $('#'+key+'-select-tab').click();
+}
+
+function registerRemoveTab(key, project) {
+
+    // Register remove tab
+    jQuery('#'+key+'-remove-tab').on('click', function(e) {
+        e.stopPropagation();
+        removeSpace(key, project);
+        jQuery('#'+key+'-select-tab').parent().prev().children().click();
+        jQuery('#'+key+'-select-tab').parent().remove();
+    });
+}
+
+function registerTab(key, project) {
+
+    registerShowTab(key);
+    registerRemoveTab(key, project);
+}
+
+function registerUpdatePieceCardName(key, project) {
 
     // Set card name on change
     jQuery('#'+key+'-obj-input').on('change', function() {
-        updatePieceCardName(key);
+        updatePieceCardName(key, project);
     });
+
+    // Init once at start
+    updatePieceCardName(key, project);
 }
 
 function getSpaceName(key, piece) {
@@ -550,7 +645,7 @@ function registerNoTypeObjInput(key, piece_name, onSelect, project) {
 function registerBaseObjInput(key, project) {
 
     // Register updates to card name
-    registerUpdatePieceCardName(key);
+    registerUpdatePieceCardName(key, project);
 
     // Set to save previous selection
     jQuery('#'+key+'-obj-input').on('select2:select', function() {
@@ -584,9 +679,74 @@ function registerFlexPieceClose(space, key, n, project) {
 
 function addEnsembleModel(project, space, key=undefined) {
     var key = addFlexPiece(project, space, 'model',
-                           getEnsembleModelHTML, true, onSelectObj,
+                           getBaseEnsembleModelHTML, true, onSelectObj,
                            ['all'], key=key);
     return key;
+}
+
+function initProjectNewModel(key, project) {
+
+    // If undefined
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {};
+    }
+
+    // Set select if undefined
+    if (project['data'][key]['select'] == undefined) {
+        project['data'][key]['select'] = false;
+    }
+
+    // Init sub ensemble loading space
+    project['loading_spaces'][key+'-ensemble-space'] = {
+            'data_fields': Array(),
+            'n': 0
+    }
+}
+
+function procEnsembleModels(key, project) {
+
+    // Add any existing sub ensemble pieces
+    var ensemble_space = key + '-ensemble-space';
+    getAllKeys(project).forEach(k => {
+        if (k.startsWith(ensemble_space)) {
+            addEnsembleModel(project, ensemble_space, k);
+        }
+    });
+
+    // If no previous base ensemble models, add new one
+    if (project['loading_spaces'][key + '-ensemble-space']['n'] == 0) {
+        addEnsembleModel(project, ensemble_space);
+    }
+
+    // Make the first ensemble base model un-removable
+    var base_model = key + '-ensemble-space-0';
+    jQuery('#' + base_model + '-remove').css('display', 'none');
+
+    // Un-roll if only one 
+    if (project['loading_spaces'][key + '-ensemble-space']['n'] == 1) {
+        jQuery('#' + base_model + '-collapse').collapse("show");
+    }
+}
+
+function initNewModel(key, project) {
+
+    // Init project + ensemble space
+    initProjectNewModel(key, project);
+
+    // Process any sub-ensembles
+    procEnsembleModels(key, project);
+
+    // Add param model
+    jQuery('#params-modals').append(getEditParamsHTML(key));
+    
+    // Register scope
+    registerScope(key, project, ['all']);
+
+    // Register model;
+    registerModel(key, project);
+
+    // Register popovers
+    registerPopovers();
 }
 
 function addModel(project, space, prepend='') {
@@ -595,62 +755,153 @@ function addModel(project, space, prepend='') {
     // or add more option, fixed key
     var key = space + '-model';
 
-    // If undefined
-    if (project['data'][key] == undefined) {
-        project['data'][key] = {};
-    }
-    
-    // Init loading space
-    project['loading_spaces'][key+'-ensemble-space'] = {
-            'data_fields': Array(),
-            'n': 0
-    }
-
     // Get and set model html
     var card_html = getModelHTML(key, prepend);
     jQuery('#'+space).append(card_html);
 
-    // Add any existing sub ensemble pieces
-    var ensemble_space = key+'-ensemble-space'
+    // Init project +
+    // Add any existing sub ensemble pieces +
+    // Register scope, model + popovers    
+    initNewModel(key, project);
 
-    getAllKeys(project).forEach(k => {
-        if (k.startsWith(ensemble_space)) {
-            addEnsembleModel(project, ensemble_space, k);
-        }
-    });
-
-    // If no previous base ensemble models, add new one
-    if (project['loading_spaces'][key+'-ensemble-space']['n'] == 0) {
-        addEnsembleModel(project, ensemble_space);
+    // If select
+    if (isBool(project['data'][key]['select'])) {
+        switchToSelect(key, project, getBaseModelHTML, initNewModel);
     }
 
-    // Make the first ensemble base model un-removable
-    var base_model = key+'-ensemble-space-0';
-    jQuery('#'+base_model+'-remove').css('display', 'none');
-
-    // Un-roll if only one 
-    if (project['loading_spaces'][key+'-ensemble-space']['n'] == 1) {
-        jQuery('#'+base_model+'-collapse').collapse("show");
+    // If select off
+    else {
+        switchOffSelect(key, project, getBaseModelHTML, initNewModel);
     }
-
-    // Add param model
-    jQuery('#params-modals').append(getEditParamsHTML(key));
-
-    // Register scope
-    registerScope(key, project, ['all']);
-
-    // Register model;
-    registerModel(key, project);
-
-    registerPopovers();
 
     return key;
+}
+
+function switchOffSelect(key, project, getHTML, initNew) {
+
+    // Remove the HTML (+ registers) for all previous opened selects
+    getSelectSubKeys(key, project).forEach(i => {
+        var new_key = key+'_'+i;
+        jQuery('#'+new_key+'-tab').remove();
+        jQuery('#'+new_key+'-select-tab').parent().remove();
+    });
+
+    // Set select flag in project
+    project['data'][key]['select'] = false;
+
+    // Show start text
+    jQuery('#'+key+'-header-text').empty();
+    jQuery('#'+key+'-card-start-text').css('display', 'inline-block');
+
+    // Add select toggle button
+    jQuery('#'+key+'-header-text-extra').empty();
+    addToggleSelectOnBtn(key);
+
+    // Update card name
+    updatePieceCardName(key, project);
+
+    // Register switch to select button (select on toggle)
+    jQuery('#'+key+'-select-toggle').on('click', function (e) {
+        e.stopPropagation();
+        switchToSelect(key, project, getHTML, initNew);
+    });
+}
+
+function addToggleSelectOnBtn(key) {
+    jQuery('#'+key+'-header-text-extra').append('&nbsp;&nbsp;&nbsp;<button type="button" ' +
+           'class="btn btn-outline-success btn-sm" id="' + key + '-select-toggle">Toggle Select</button>');
+}
+
+function getTabHTML(key) {
+
+    var start = '<i>Select Choice</i>';
+    
+    var html = '' +
+    '<li class="nav-item">' +
+    '<span class="nav-link fake-link" id="'+key+'-select-tab" href="#'+key+'-tab" role="tab">' + start + getRemoveTabClose(key) + '</span>' +
+    '</li>';
+
+    return html;
+}
+
+function switchToSelect(key, project, getHTML, initNew) {
+
+    // Set select flag in project
+    project['data'][key]['select'] = true;
+
+    var new_header_html = '' +
+    '<ul class="nav nav-tabs card-header-tabs" role="tablist" id="'+key+'-select-tabs">' +
+
+    '<li class="nav-item">' +  
+    '<span class="nav-link text-success"><b>Select </b>' + jQuery('#'+key+'-card-start-text').html() + '</span></li>' +     
+    
+    getTabHTML(key) +
+
+    '<li class="nav-item">' +
+    '<span class="nav-link fake-link" id="'+key+'-new-select" role="tab"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>' +
+    '</li>' +
+
+    '<li class="nav-item">' +  
+    '<button type="button" class="btn btn-outline-success btn-sm nav-link" id="'+key+'-select-toggle">Toggle Select</button></li>';
+    '</ul>';
+    
+    jQuery('#'+key+'-card-start-text').css('display', 'none');
+    jQuery('#'+key+'-header-text-extra').empty();
+    jQuery('#'+key+'-header-text').empty().append(new_header_html);
+
+    // Register show tab, and trigger update card name
+    // for first obj
+    registerShowTab(key);
+    updatePieceCardName(key, project);
+
+    var add_html_spot = $('#'+key+'-tabs');
+    var add_tab_spot = $('#'+key+'-new-select').parent();
+
+    // Check for any existing selects and add them,
+    getSelectSubKeys(key, project).forEach(i => {
+        addSelect(key+'_'+i, project, getHTML, initNew, add_html_spot, add_tab_spot);
+    });
+
+    // Set to first choice
+    $('#'+key+'-select-tab').click();
+
+    // Register add new select
+    $('#'+key+'-new-select').on('click', function (e) {
+        e.stopPropagation();
+        var new_key = key+'_'+getFreeSubKey(key, project);
+        addSelect(new_key, project, getHTML, initNew, add_html_spot, add_tab_spot);
+    });
+
+    // Register switch to select off button (select off toggle)
+    jQuery('#'+key+'-select-toggle').on('click', function (e) {
+        e.stopPropagation();
+        $('#'+key+'-select-tab').click();
+        switchOffSelect(key, project, getHTML, initNew);
+    });
+}
+
+function addSelect(key, project, getHTML, initNew, add_html_spot, add_tab_spot) {
+
+    // Get new key + html
+    var new_html = getHTML(key);
+    add_html_spot.append(new_html);
+
+    // Add as a new tab
+    var new_tab = $(getTabHTML(key));
+    new_tab.insertBefore(add_tab_spot);
+
+    // Init new registers, etc...
+    initNew(key, project);
+    project['data'][key]['select'] = true;
+
+    // Register showing the tab
+    registerTab(key, project);
 }
 
 function addFeatureSelector(project, space, key) {
 
     var key = addFlexPiece(project, space, 'feature_selectors',
-                           getFeatSelectorHTML, true, onSelectFeatureSelector,
+                           getBaseFeatSelectorHTML, true, onSelectFeatureSelector,
                            ['all'], key=key);
 
     // Add base model
@@ -668,7 +919,7 @@ function addFeatureSelector(project, space, key) {
 function addImputer(project, space, key=undefined) {
 
     var key = addFlexPiece(project, space, 'imputers',
-                           getImputerHTML, false, onSelectImputer,
+                           getBaseImputerHTML, false, onSelectImputer,
                            ['all'], key=key);
 
     // Add base model
@@ -690,14 +941,14 @@ function addImputer(project, space, key=undefined) {
 
 function addScaler(project, space, key=undefined) {
     var key = addFlexPiece(project, space, 'scalers',
-                           getScalerHTML, false, onSelectObj,
+                           getBaseScalerHTML, false, onSelectObj,
                            ['float'], key=key);
     return key;
 }
 
 function addTransformer(project, space, key=undefined) {
     var key = addFlexPiece(project, space, 'transformers',
-                           getTransformerHTML, false, onSelectObj,
+                           getBaseTransformerHTML, false, onSelectObj,
                            ['all'], key=key);
     return key;
 }
@@ -720,15 +971,20 @@ function addFlexPiece(project, space, piece_name, getPieceHTML,
         project['data'][key] = {};
     }
 
+    // Init select
+    if (project['data'][key]['select'] == undefined) {
+        project['data'][key]['select'] = false;
+    }
+
     // Add HTML
-    var card_html = getPieceHTML(key);
+    var card_html = getObjHTML(key, getPieceHTML, getDisplayFlexPieceName(piece_name));
     jQuery('#'+space).append(card_html);
 
     // Add param model
     jQuery('#params-modals').append(getEditParamsHTML(key));
 
     // Register obj choices
-    if (typeDep == true) {
+    if (isBool(typeDep)) {
         registerTypeObjInput(key, piece_name, onSelect, project);
     }
     else {
@@ -1025,7 +1281,13 @@ function reRegisterTypeDep(project) {
 
         if (key.endsWith('model-space-model')) {
             registerModel(key, project);
+
+            // Re-register any sub select models
+            getSelectSubKeys(key, project).forEach(i => {
+                registerModel(key+'_'+i, project);
+            });
         }
+
         else if (indicator == 'feature_selectors') {
             registerTypeObjInput(key, 'feature_selectors',
                 onSelectFeatureSelector, project);

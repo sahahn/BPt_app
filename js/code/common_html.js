@@ -101,7 +101,8 @@ function cardWrapHTML(start_text, key, to_wrap, no_remove, row_wrap=false) {
 
     html = html +
     start_text + '<div id="'+key+'-header-text" style="display:inline">' +
-    '</div>';
+    '</div>' +
+    '<div id="'+key+'-header-text-extra" style="display:inline"></div>';
 
     if (row_wrap) {
         html = html + '<div class="col">';
@@ -110,7 +111,7 @@ function cardWrapHTML(start_text, key, to_wrap, no_remove, row_wrap=false) {
     if (!no_remove) {
         html = html +
         '<button type="button" class="close float-right" aria-label="Remove" id="'+key+'-remove">' +
-        '<span aria-hidden="true">&times;</span>';
+        '<span aria-hidden="true">&times;</span></button>';
     }
 
     if (row_wrap) {

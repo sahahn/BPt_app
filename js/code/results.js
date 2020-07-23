@@ -755,7 +755,7 @@ function loadResults(job_name, key, project) {
 
         var raw_table = $('#'+raw_table_key).DataTable({
             data: output['pred_rows'],
-            scrollX: false,
+            scrollX: true,
             dom: 'lBfrtip',
             searching: true,
             buttons: [

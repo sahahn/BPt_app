@@ -427,6 +427,7 @@ function registerCard(key, data) {
 
     registerTrackIndex(key, data);
     registerCardDragBehavior(key);
+    jQuery('#'+key+'-space').trigger('changeIndex');
 }
 
 function registerCardDragBehavior(key) {
