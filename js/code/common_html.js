@@ -110,8 +110,9 @@ function cardWrapHTML(start_text, key, to_wrap, no_remove, row_wrap=false) {
 
     if (!no_remove) {
         html = html +
+        '<span id="'+key+'-remove-spot">' +
         '<button type="button" class="close float-right" aria-label="Remove" id="'+key+'-remove">' +
-        '<span aria-hidden="true">&times;</span></button>';
+        '<span aria-hidden="true">&times;</span></button></span>';
     }
 
     if (row_wrap) {
