@@ -10,7 +10,7 @@ from ABCD_ML import (Problem_Spec, Model_Pipeline,
                      Imputer, Scaler,
                      Transformer, Feat_Selector,
                      Model, Ensemble,
-                     Param_Search)
+                     Param_Search, Select)
 import nevergrad as ng
 import numpy as np
 from sklearn.feature_selection import (f_regression, f_classif,
@@ -241,6 +241,44 @@ def get_base_obj(obj_params):
     return obj, params, scope
 
 
+def get_select_sub_keys(key, p_params):
+
+    keys = list(p_params)
+
+    sub_keys = []
+    for k in keys:
+        if k.startswith(key) and len(key.split('-')) == len(k.split('-')):
+            k_split = k.split('_')
+            if len(k_split) > 1:
+                select_split = k_split[1].split('-')
+                if len(select_split) == 1:
+                    print(k)
+                    sub_keys.append(select_split[0])
+
+    return [key + '_' + str(s) for s in sub_keys]
+
+
+def get_obj_from_params(name, obj_params, class_obj, p_params, sub_key=None):
+
+    obj, params, scope = get_base_obj(obj_params)
+
+    # If could have a sub model
+    if sub_key is not None:
+
+        base_model = None
+        if obj_params['-obj-input'] == sub_key:
+            sub_params = get_sub_params(name, p_params)
+            base_model = get_model('-model-space-model', sub_params)
+
+        # Add w/ sub model
+        return class_obj(obj=obj, params=params,
+                         scope=scope, base_model=base_model)
+
+    # Otherwise, standard add
+    else:
+        return class_obj(obj=obj, params=params, scope=scope)
+
+
 def get_pipeline_obj(name_key, class_obj, p_params, sub_key=None):
 
     objs = []
@@ -248,28 +286,38 @@ def get_pipeline_obj(name_key, class_obj, p_params, sub_key=None):
     for key in p_params:
 
         split_key = key.split('-')
-        if split_key[1] == name_key and len(split_key) == 4:
+        if split_key[1] == name_key and len(split_key) == 4 and '_' not in key:
+
             name = '-'.join(split_key)
 
             # Get base imputer name
             obj_params = p_params[name]
-            obj, params, scope = get_base_obj(obj_params)
+            obj = get_obj_from_params(name, obj_params, class_obj,
+                                      p_params, sub_key=sub_key)
 
-            # If could have a sub model
-            if sub_key is not None:
+            # If select
+            if obj_params['select'] == 'true':
+                select_objs = [obj]
 
-                base_model = None
-                if obj_params['-obj-input'] == sub_key:
-                    sub_params = get_sub_params(name, p_params)
-                    base_model = get_model('-model-space-model', sub_params)
+                select_names = get_select_sub_keys(key, p_params)
+                for s_name in select_names:
 
-                # Add w/ sub model
-                objs.append(class_obj(obj=obj, params=params,
-                                      scope=scope, base_model=base_model))
+                    # Init select objects with base obj
+                    s_obj_params = p_params[s_name]
 
-            # Otherwise, standard add
+                    # Get rest of select objects
+                    select_objs.append(get_obj_from_params(s_name,
+                                                           s_obj_params,
+                                                           class_obj,
+                                                           p_params,
+                                                           sub_key=sub_key))
+
+                    # Append to objs all of the objects Select wrapped
+                    objs.append(Select(select_objs))
+
+            # Otherwise just add obj
             else:
-                objs.append(class_obj(obj=obj, params=params, scope=scope))
+                objs.append(obj)
 
     if len(objs) == 0:
         return None
@@ -277,9 +325,7 @@ def get_pipeline_obj(name_key, class_obj, p_params, sub_key=None):
     return objs
 
 
-def get_model(model_name, p_params):
-
-    obj_params = p_params[model_name]
+def get_model_from_params(obj_params, model_name, p_params):
 
     if 'ensemble' not in obj_params:
         obj_params['ensemble'] = 'false'
@@ -289,6 +335,34 @@ def get_model(model_name, p_params):
     else:
         obj, params, scope = get_base_obj(obj_params)
         return Model(obj=obj, params=params, scope=scope)
+
+
+def get_model(model_name, p_params):
+
+    obj_params = p_params[model_name]
+    obj = get_model_from_params(obj_params, model_name, p_params)
+
+    # If select
+    if obj_params['select'] == 'true':
+
+        # Init select objects with base obj
+        select_objs = [obj]
+
+        # Get each select model seperate
+        select_names = get_select_sub_keys(model_name, p_params)
+        for s_name in select_names:
+            s_obj_params = p_params[s_name]
+
+            select_objs.append(get_model_from_params(s_obj_params,
+                                                     s_name,
+                                                     p_params))
+
+            # Wrap in Select
+            return Select(select_objs)
+
+    # If not select, just return model
+    else:
+        return obj
 
 
 def get_ensemble(model_name, p_params):

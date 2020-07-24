@@ -86,13 +86,24 @@ function updatePieceCardName(key, project) {
     }
 }
 
+function registerUpdatePieceCardName(key, project) {
+
+    // Set card name on change
+    jQuery('#'+key+'-obj-input').on('change', function() {
+        updatePieceCardName(key, project);
+    });
+
+    // Init once at start
+    updatePieceCardName(key, project);
+}
+
 function getSelectSubKeys(key, project) {
 
     var selectSubs = [];
 
     getAllKeys(project).forEach(k => {
 
-        if (k.startsWith(key)) {
+        if ((k.startsWith(key)) && (k.split('-').length == key.split('-').length)) {
             var k_split = k.split('_');
             if (k_split.length > 1) {
                 var select_split = k_split[1].split('-');
@@ -104,17 +115,6 @@ function getSelectSubKeys(key, project) {
     });
 
     return selectSubs;
-}
-
-function registerUpdatePieceCardName(key, project) {
-
-    // Set card name on change
-    jQuery('#'+key+'-obj-input').on('change', function() {
-        updatePieceCardName(key, project);
-    });
-
-    // Init once at start
-    updatePieceCardName(key, project);
 }
 
 function getFreeSubKey(key, project) {
@@ -861,7 +861,11 @@ function procEnsembleModels(key, project) {
     var ensemble_space = key + '-ensemble-space';
     getAllKeys(project).forEach(k => {
         if (k.startsWith(ensemble_space)) {
-            addEnsembleModel(project, ensemble_space, k);
+            var end_k = k.replace(ensemble_space, '');
+
+            if (!end_k.includes('_')) {
+                addEnsembleModel(project, ensemble_space, k);
+            }
         }
     });
 

@@ -436,6 +436,14 @@ function registerEvaluate(key, project) {
 
 function getPieceHyperParams(obj_name, param_dist) {
 
+    if (param_dists['user'][obj_name] == undefined) {
+        param_dists['user'][obj_name] = {};
+    }
+
+    if (param_dists['public'][obj_name] == undefined) {
+        param_dists['public'][obj_name] = {};
+    }
+
     var all_options = [param_dists['default'],
                        param_dists['user'][obj_name],
                        param_dists['public'][obj_name]];

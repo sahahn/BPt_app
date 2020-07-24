@@ -384,9 +384,6 @@ function refreshBar(entry, project) {
 
     // If already done / error, remove progress.
     if (job['status'] == "1") {
-        console.log(job_name)
-        console.log(data['jobname'])
-        console.log(key);
         loadResults(data['jobname'], key, project);
         jQuery('#'+key+'-progress').remove();
         return;
@@ -485,7 +482,7 @@ function registerTable(project) {
     jQuery('#results-table-space').empty().append(table_html);
 
     // Create data table
-    $('#results-table').DataTable({
+    var table = $('#results-table').DataTable({
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
         "scrollX": false,
         "searching": true,
@@ -508,7 +505,7 @@ function registerTable(project) {
         registerJobsShow(project);
 
         // Re-register delete jobs
-        registerJobsDelete(project); 
+        registerJobsDelete(project, table); 
 
         // Rerefresh confirm delete
         refreshConfirmDelete();
@@ -607,7 +604,7 @@ function registerJobsShow(project) {
 
 }
 
-function registerJobsDelete(project) {
+function registerJobsDelete(project, table) {
 
     // Remove any previous registers
     jQuery('.results-delete').off('click');
@@ -641,7 +638,7 @@ function registerJobsDelete(project) {
             });
 
             // Delete row
-            $(this).parent().parent().remove();
+            table.row($(this).parents('tr')).remove().draw();
         }
     });
 }
@@ -710,8 +707,6 @@ function loadResults(job_name, key, project) {
     jQuery.post('php/run_quick_py.php', {
         'params': params
     }, function (output) {
-
-        console.log(output)
 
         // Remove loading indicator
         jQuery('#'+key+'-loading').css('display', 'none');
