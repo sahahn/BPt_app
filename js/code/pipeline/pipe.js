@@ -806,8 +806,8 @@ function switchOnSelect(key, project, getHTML, initNew) {
     // Set first additional select choice (2nd actual choice) to
     // also be unremovable, s.t., you must have atleast 2 objs to
     // select between
-    var second_choice_key = key+'_'+getSelectSubKeys(key, project)[0];
-    $('#'+second_choice_key+'-remove-tab').css('display', 'none');
+    // var second_choice_key = key+'_'+getSelectSubKeys(key, project)[0];
+    // $('#'+second_choice_key+'-remove-tab').css('display', 'none');
 
     // Set to first choice
     $('#'+key+'-select-tab').click();
