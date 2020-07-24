@@ -570,11 +570,6 @@ function registerParamInput(key, i, options, params, dis) {
 
     var n = i.toString();
     var k = key+'-p-'+n;
-
-    // On change on any input save to params
-    jQuery('#'+k).on('change', function() {
-        params[name] = $(this).val();
-    });
     
     // Register select2 if choices
     var p_options = options['options'][i];
@@ -782,10 +777,10 @@ function addParam(key, i, options) {
     // Base input html
     input_html = input_html + '<div id="'+key+'-b-input-'+n+'">';
     if (p_options !== '') {
-        input_html = input_html + '<select data-width="100%" class="form-control" id="'+key+'-p-'+n+'"></select>';
+        input_html = input_html + '<select data-name="'+name+'" data-width="100%" class="form-control base-param" id="'+key+'-p-'+n+'"></select>';
     }
     else {
-        input_html = input_html + '<input type="text" class="form-control" id="'+key+'-p-'+n+'">';
+        input_html = input_html + '<input data-name="'+name+'" type="text" class="form-control base-param" id="'+key+'-p-'+n+'">';
     }
     input_html = input_html + '</div>';
 
@@ -820,6 +815,18 @@ function refreshParams(options, key, params, dis) {
 
     // Update for new popovers
     registerPopovers();
+
+
+    jQuery('.base-param').on('change', function () {
+        params[$(this).data('name')] = $(this).val();
+    });
+
+    // On change on any input save to params
+    //jQuery('#'+k).on('change', function() {
+    //    params[name] = $(this).val();
+    //});
+
+    
 
     // Register inputs to params
     for (var i = 0; i < options['param_names'].length; i++) {
@@ -890,7 +897,8 @@ function setParamDistChoices(key, options, obj_name) {
 
 }
 
-function registerParamsModal(key, options, project) {
+function updateParamsModal(key, options, project) {
+    // Update Params Models gets called everytime the object changes
 
     // Clear any existing events bound to param dist
     jQuery('#'+key+'-param-dist').off('change');
@@ -898,7 +906,12 @@ function registerParamsModal(key, options, project) {
     // Update card name on change
     jQuery('#'+key+'-param-dist').on('change', function() {
         updatePieceCardName(key, project);
-    })
+    });
+
+    // Save value on change
+    jQuery('#'+key+'-param-dist').on('change', function() {
+        project['data'][key]['param_dist'] = $(this).val();
+    });
 
     // Set params name
     var obj_name = jQuery('#'+key+'-obj-input').find('option:selected').html();
@@ -911,11 +924,6 @@ function registerParamsModal(key, options, project) {
     // Add choices of parameter distribution
     setParamDistChoices(key, options, obj_name);
 
-    // If the previous object isnt undefined, reset the param dist
-    if (jQuery('#'+key+'-obj-input').data('val') !== undefined) {
-        project['data'][key]['param_dist'] = undefined;
-    }
-
     // If no param dist already selected, set to first one
     if (project['data'][key]['param_dist'] == undefined) {
         project['data'][key]['param_dist'] = options['preset_params'][0];
@@ -923,16 +931,24 @@ function registerParamsModal(key, options, project) {
 
     // Set to save previous selection
     jQuery('#'+key+'-param-dist').on('select2:select', function() {
-        $(this).data('val', $(this).val());
+         $(this).data('val', $(this).val());
     });
-    
-    // On param dist change / selection
+
+    // Set the selection of param dist
+    jQuery('#'+key+'-param-dist').val(project['data'][key]['param_dist']).trigger('select2:select').trigger('change');
+}
+
+
+function registerParamsModal(key, options, project) {
+
+    // First call update params modal
+    updateParamsModal(key, options, project);
+
     jQuery('#'+key+'-param-dist').on('change', function() {
-        
+
         var choice = $(this).val();
         var prev_val = $(this).data('val');
-
-        project['data'][key]['param_dist'] = choice;
+        var obj_name = project['data'][key]['-obj-name'];
 
         // Grab the correct params
         var params_and_dis = getParamsFromChoice(key, options, choice, obj_name, prev_val);
@@ -959,6 +975,7 @@ function registerParamsModal(key, options, project) {
                 }
                 else {
                     delete param_dists['user'][obj_name][choice];
+                    project['data'][key]['param_dist'] = options['preset_params'][0]
                     registerParamsModal(key, options, project);
                 }
             });
@@ -971,7 +988,6 @@ function registerParamsModal(key, options, project) {
 
                 jQuery('#'+key+'-param-dist').select2('open');
 
-
                 var n = 1;
                 var user_options = getUserOptions(obj_name);
                 while (user_options.includes(choice + ' (' + n.toString() + ')')) {
@@ -980,14 +996,10 @@ function registerParamsModal(key, options, project) {
 
                 jQuery('span.select2-search.select2-search--dropdown > input').val(choice + ' (' + n.toString() + ')').trigger('input');
             });
-
-
         }
-
     });
 
-    // Set the selection of param dist
-    jQuery('#'+key+'-param-dist').val(project['data'][key]['param_dist']).trigger('select2:select').trigger('change');
+    jQuery('#'+key+'-param-dist').trigger('change');
 }
 
 function getParamsFromChoice(key, options, choice, obj_name, prev_val) {

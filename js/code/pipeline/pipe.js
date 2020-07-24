@@ -331,8 +331,14 @@ function onSelectObj(key, options, project) {
         jQuery('#'+key+'-sklearn-logo').css('display', 'none');
     }
 
-    // Update params modal
-    registerParamsModal(key, options, project);
+    // Update
+    updateParamsModal(key, options, project);
+
+    // Re-register register Params Model
+    jQuery('#'+key+'-edit-params').off('click');
+    jQuery('#'+key+'-edit-params').on('click', function() {
+        registerParamsModal(key, options, project);
+    });
 }
 
 ////////////
