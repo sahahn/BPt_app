@@ -24,7 +24,8 @@ function removeSpace(key, project) {
         if (k.startsWith(key)) {
             delete project['data'][k];
 
-            // Try to remove edit params modal 
+            // Try to remove edit params modal
+            // It is not stored w/ space, so need seperate check + remove
             jQuery('#'+key+'-edit-popup').remove();
         }
     });
