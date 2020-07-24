@@ -149,6 +149,38 @@ function getBaseTransformerHTML(key) {
     return html;
 }
 
+//////////////////
+// Select HTML //
+////////////////
+
+function getRemoveTabCloseHTML(key) {
+
+    var close_btn = '&nbsp;<button type="button" class="close float-right" aria-label="Remove" id="'+key+'-remove-tab">' +
+                    '<span aria-hidden="true">&times;</span></button>';
+
+    var split_key = key.split('_');
+    if (split_key.length > 1) {
+        var select_split = split_key[1].split('-');
+        if (select_split.length == 1) {
+            return close_btn;
+        }
+    }
+
+    return '';
+}
+
+function getTabHTML(key) {
+
+    var start = '<i>Select Choice</i>';
+    
+    var html = '' +
+    '<li class="nav-item">' +
+    '<span class="nav-link fake-link" id="'+key+'-select-tab" href="#'+key+'-tab" role="tab">' + start + getRemoveTabCloseHTML(key) + '</span>' +
+    '</li>';
+
+    return html;
+}
+
 ////////////////////
 // Pipeline HTML //
 //////////////////
