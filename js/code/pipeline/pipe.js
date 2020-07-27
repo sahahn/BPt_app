@@ -1477,6 +1477,9 @@ function displayMLPipe(project) {
         var key = addMLPipe(project);
         jQuery('#'+key+'-collapse').collapse("show");
         jQuery('#'+key+'-name').focus();
+        
+        // Make sure initially un-draggable
+        jQuery('#'+key+'-space').prop('draggable', false);
     }
 
     // If just 1 ML pipeline, unroll it by default
@@ -1484,6 +1487,9 @@ function displayMLPipe(project) {
         var n = project['loading_spaces']['pipe-space']['data_fields'][0];
         var key = 'pipe-space-' + n;
         jQuery('#'+key+'-collapse').collapse("show");
+
+        // Make sure initially un-draggable
+        jQuery('#'+key+'-space').prop('draggable', false);
     }
 
     // Add new pipe
