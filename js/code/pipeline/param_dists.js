@@ -136,7 +136,17 @@ function getDefaultParamVal(options, i, params, name) {
 function registerParamType(key, n, name, params, p_types) {
 
     var type_k = key + '-type-' + n;
+
+    if (name == undefined) {
+        jQuery('#'+type_k).css('display', 'none');
+        return
+    }
+    else {
+        jQuery('#'+type_k).css('display', 'block');
+    }
+
     var param_type_name = name + '_type';
+    // console.log('Register Param type' + key + ' ' + param_type_name + ' exist value:' + params[param_type_name])
 
     // Unregister any previous
     jQuery('#'+type_k).off('click');
@@ -205,11 +215,15 @@ function registerShowParamDist(key, n, name, params, dist_params) {
 
             // The type should only hide if it is now not applicable
             var existing_choice = jQuery('input[name=' + key + '-dist-' + n + '-choice]:checked').val();
-            if (['normal', 'log'].includes(existing_choice)) {
-                registerParamType(key, n, name, params, ['float', 'int']);
+
+            if (existing_choice == 'normal') {
+                registerParamType(key, n, existing_choice, params[name+'_dist'], ['float', 'int']);
+            }
+            else if (existing_choice == 'log') {
+                registerParamType(key, n, existing_choice, params[name+'_dist'], ['float']);
             }
             else {
-                registerParamType(key, n, name, params, ['-']);
+                registerParamType(key, n, existing_choice, params[name+'_dist'], ['-']);
             }
 
             // Show params
@@ -239,13 +253,18 @@ function getSelectParamOptions(p_options) {
 }
 
 function registerParamDistChoices(key, n, name, params, dist_params, dis) {
+
+    if (params[name+'_dist'] == undefined) {
+        params[name+'_dist'] = {};
+    }
     
     var dist_options_k = key + '-dist-' + n + '-choice';
-    jQuery('input[name=' + dist_options_k + ']').on('change', function () {
+    jQuery('input[name=' + dist_options_k + ']').on('change', function() {
 
         var choice = $(this).val();
         dist_params['type'] = choice;
 
+        // Handle showing
         dist_types.forEach(dist => {
 
             if (choice == dist) {
@@ -254,16 +273,20 @@ function registerParamDistChoices(key, n, name, params, dist_params, dis) {
             else {
                 jQuery('#' + key + '-if-' + dist + '-' + n).css('display', 'none');
             }
-
-            // Show + re-register type for just float / int
-            if (['normal', 'log'].includes(choice)) {
-                jQuery('#' + key + '-type-' + n).css('display', 'block');
-                registerParamType(key, n, name, params, ['float', 'int']);
-            }
-            else {
-                registerParamType(key, n, name, params, ['-']);
-            }
         });
+
+        // Register correct choice
+        if (choice == 'normal') {
+            registerParamType(key, n, choice, params[name+'_dist'], ['float', 'int']);
+        }
+        else if (choice == 'log') {
+            registerParamType(key, n, choice, params[name+'_dist'], ['float']);
+        }
+        else {
+            registerParamType(key, n, choice, params[name+'_dist'], ['-']);
+        }
+            
+
     });
 
     // If any previous dist's selected, set choice
@@ -373,7 +396,7 @@ function registerNewSubChoiceDist(choice_obj, key, dist, n, dist_params, cat_cho
                 if (new_dist) {
                     registerScalerParamDist(base_key, val.split('-')[1], 'log',
                         dist_params[p_dist_ind], true, dis);
-                    registerParamType(base_key, p + 'l', val, dist_params[p_dist_ind], ['float', 'int']);
+                    registerParamType(base_key, p + 'l', val, dist_params[p_dist_ind], ['float']);
                 }
             }
             else if (val.startsWith('Code-')) {
@@ -595,11 +618,11 @@ function registerParamInput(key, i, options, params, dis) {
         jQuery('#'+k).val(def).trigger('change');
     }
 
-    // Register + save the param type
-    registerParamType(key, n, name, params, param_types);
-
     // Register param dist
     registerParamDist(key, n, name, params, cat_choices, dis);
+
+    // Register + save the param type
+    registerParamType(key, n, name, params, param_types);
 
     // If dis, disable all inputs and hide delete
     if (dis) {
@@ -813,25 +836,18 @@ function refreshParams(options, key, params, dis) {
     jQuery('#' + key + '-params-body').empty();
     jQuery('#' + key + '-params-body').append(param_html);
 
-    // Update for new popovers
-    registerPopovers();
-
-
+    // Save params values to project
     jQuery('.base-param').on('change', function () {
         params[$(this).data('name')] = $(this).val();
     });
-
-    // On change on any input save to params
-    //jQuery('#'+k).on('change', function() {
-    //    params[name] = $(this).val();
-    //});
-
-    
 
     // Register inputs to params
     for (var i = 0; i < options['param_names'].length; i++) {
         registerParamInput(key, i, options, params, dis);
     }
+
+    // Update for new popovers
+    registerPopovers();
 }
 
 function getOptions(dists, obj_name) {
@@ -937,7 +953,6 @@ function updateParamsModal(key, options, project) {
     // Set the selection of param dist
     jQuery('#'+key+'-param-dist').val(project['data'][key]['param_dist']).trigger('select2:select').trigger('change');
 }
-
 
 function registerParamsModal(key, options, project) {
 

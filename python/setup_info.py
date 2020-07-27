@@ -303,22 +303,23 @@ def save_default_params(loc):
                     new_val['code'] = {'-code': result[0]}
                     new_val['type'] = 'code'
                     new_val['on'] = 'true'
+                    new_val['code_type'] = "-"
                     def_param_dists[dist_key][key+'_dist'] = new_val
-                    def_param_dists[dist_key][key+'_type'] = "-"
+                    # def_param_dists[dist_key][key+'_type'] = "-"
 
                 else:
                     new_val = {}
                     new_val[result[1]] = result[0]
                     new_val['type'] = result[1]
                     new_val['on'] = 'true'
-                    def_param_dists[dist_key][key+'_dist'] = new_val
 
                     # Set saved type or - if choice
                     if len(result) == 3:
-                        def_param_dists[dist_key][key+'_type'] =\
-                            result[2]
+                        new_val[result[1] + '_type'] = result[2]
                     else:
-                        def_param_dists[dist_key][key+'_type'] = '-'
+                        new_val[result[1] + '_type'] = '-'
+
+                    def_param_dists[dist_key][key+'_dist'] = new_val
 
                 # Change old key to use default
                 def_param_dists[dist_key][key] = 'USE-DEFAULT'

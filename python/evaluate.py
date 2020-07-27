@@ -172,26 +172,44 @@ def get_code_dist(dist_params):
     return eval(code)
 
 
-def get_dist(p_name, params_in, p_type):
+def proc_dist(dist):
 
-    dist = params_in[p_name + '_dist']
-    if dist['on'] == 'true':
-        dist_type = dist['type']
-        dist_params = dist[dist_type]
+    # Select the hyper params dist info
+    selected_dist = dist['type']
+    dist_params = dist[selected_dist]
 
-        if dist_type == 'normal':
-            val = get_normal_dist(dist_params, p_type)
-        elif dist_type == 'log':
-            val = get_log_dist(dist_params, p_type)
-        elif dist_type == 'choice':
-            val = get_choice_dist(dist_params)
-        elif dist_type == 'transition':
-            val = get_transition_dist(dist_params)
-        elif dist_type == 'code':
-            val = get_code_dist(dist_params)
-        else:
-            print('warning unknown type', dist_type)
+    # Check for type
+    try:
+        p_type = dist[selected_dist + '_type']
+    except KeyError:
+        p_type = '-'
+        print('no type for', selected_dist, 'setting to "-"')
 
+    if selected_dist == 'normal':
+        val = get_normal_dist(dist_params, p_type)
+    elif selected_dist == 'log':
+        val = get_log_dist(dist_params, p_type)
+    elif selected_dist == 'choice':
+        val = get_choice_dist(dist_params)
+    elif selected_dist == 'transition':
+        val = get_transition_dist(dist_params)
+    elif selected_dist == 'code':
+        val = get_code_dist(dist_params)
+    else:
+        print('warning unknown selected dist type', selected_dist)
+
+    return val
+
+
+def get_base_val(p_name, params_in):
+
+    try:
+        p_type = params_in[p_name + '_type']
+    except KeyError:
+        p_type = '-'
+        print('no type for', p_name, 'setting to "-"')
+
+    val = proc_val(params_in[p_name], p_type)
     return val
 
 
@@ -200,21 +218,18 @@ def proc_hyper_params(params_in):
     params_out = {}
     for p_name in get_param_keys(params_in):
 
-        try:
-            p_type = params_in[p_name + '_type']
-        except KeyError:
-            print('no type for', p_name, 'setting to "-"')
-            p_type = '-'
+        # Set the base value
+        val = get_base_val(p_name, params_in)
 
-        # Check for dist
+        # Check if dist exists
         if p_name + '_dist' in params_in:
-            val = get_dist(p_name, params_in, p_type)
 
-        # Otherwise, just base value
-        else:
-            val = proc_val(params_in[p_name], p_type)
+            # Make sure dist is set to on
+            dist = params_in[p_name + '_dist']
+            if dist['on'] == 'true':
+                val = proc_dist(dist)
 
-        # Set in params out
+        # Set the eithert single val or hyper-param dist in params out
         params_out[p_name] = val
 
     return params_out
