@@ -273,6 +273,21 @@ def get_select_sub_keys(key, p_params):
     return [key + '_' + str(s) for s in sub_keys]
 
 
+def get_keys_by_index(p_params):
+
+    def by_index(key):
+
+        try:
+            index = float(p_params[key]['index'])
+        except KeyError:
+            index = 9999999
+
+        return index
+
+    all_keys = list(p_params)
+    return sorted(all_keys, key=by_index)
+
+
 def get_obj_from_params(name, obj_params, class_obj, p_params, sub_key=None):
 
     obj, params, scope = get_base_obj(obj_params)
@@ -298,7 +313,7 @@ def get_pipeline_obj(name_key, class_obj, p_params, sub_key=None):
 
     objs = []
 
-    for key in p_params:
+    for key in get_keys_by_index(p_params):
 
         split_key = key.split('-')
         if split_key[1] == name_key and len(split_key) == 4 and '_' not in key:
@@ -389,7 +404,7 @@ def get_ensemble(model_name, p_params):
 
     # Get base models
     models = []
-    for key in p_params:
+    for key in get_keys_by_index(p_params):
         if key.startswith(model_name + '-'):
             models.append(get_model(key, p_params))
 
