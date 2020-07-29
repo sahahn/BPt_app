@@ -6,7 +6,7 @@ var ignore_params = ['presort', 'min_impurity_split', 'random_state',
                      'DSEL_perc', 'base_estimator', 'pool_classifiers', 'add_indicator',
                      'copy', 'missing_values', 'estimator', 'cols', 'return_df', 'handle_missing',
                      'handle_unknown', 'V_init', 'U_init', 'normalize_components', 'dict_init',
-                     'silent', 'use_cat_names'];
+                     'silent', 'use_cat_names', 'copy_X'];
 var param_types = ['-', 'str', 'bool', 'float', 'int', 'tuple'];
 var dist_types = ['normal', 'log', 'choice', 'transition', 'code'];
 
@@ -146,7 +146,6 @@ function registerParamType(key, n, name, params, p_types) {
     }
 
     var param_type_name = name + '_type';
-    // console.log('Register Param type' + key + ' ' + param_type_name + ' exist value:' + params[param_type_name])
 
     // Unregister any previous
     jQuery('#'+type_k).off('click');

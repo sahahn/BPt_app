@@ -186,13 +186,16 @@ def incr_input_cache(v_type, params):
 
         all_keys =\
             {'float': ["-outlier-percent", "-range-percent",
-                       "-outlier-std", "-range-std"],
-             'cat': ["-outlier-cat", "-range-cat",
-                     "-cat-encode-choice"],
+                       "-range-percentL", "-range-percentU"
+                       "-outlier-std", "-range-std", "-range-stdL",
+                       "-range-stdU"],
+             'cat': ["-outlier-cat", "-range-cat", "-cat-choice",
+                     '-cat-bins', '-cat-bin-strat'],
              'binary': ["-binary-choice", "-binary-threshold",
-                        "-binary-thresholdU",
-                        "-binary-thresholdL"]
+                        "-binary-thresholdU", "-binary-thresholdL"]
              }
+
+        all_keys['cat'] += [k + '-cat' for k in all_keys['float']]
 
         defaults = ["-type"]
         to_save_keys = all_keys[params['-type']] + defaults

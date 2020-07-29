@@ -202,6 +202,17 @@ def check_defaults(params):
     if '-outlier-cat' not in params:
         params['-outlier-cat'] = 'false'
 
+    if '-outlier-std-cat' not in params:
+        params['-outlier-std-cat'] = 'false'
+
+    if '-outlier-percent-cat' not in params:
+        params['-outlier-percent-cat'] = 'false'
+
+    for k in ["percent", "std", "cat", "percent-cat", "std-cat"]:
+        for end in ['', 'L', 'U']:
+            if '-range-' + k + end not in params:
+                params['-range-' + k + end] = ''
+
     return params
 
 
@@ -323,6 +334,33 @@ def init_ML(user_dr, output_loc, params, n=0):
     return ML, log_dr
 
 
+def _proc_UL(base, params):
+
+    if params['-outlier-' + base] == 'true':
+
+        if params['-range-' + base] != '':
+            val = float(params['-range-' + base])
+        else:
+
+            lower = params['-range-' + base + 'L']
+            if lower == '':
+                lower = None
+            else:
+                lower = float(lower)
+
+            upper = params['-range-' + base + 'U']
+            if upper == '':
+                upper = None
+            else:
+                upper = float(upper)
+
+            val = (lower, upper)
+
+        return val
+
+    return None
+
+
 def _proc_datatype_args(params, output_loc):
 
     # Proc input params as needed
@@ -333,19 +371,24 @@ def _proc_datatype_args(params, output_loc):
         if data_type not in ['float', 'binary', 'cat']:
             save_error('You must select a Data Type', output_loc)
 
-        fop, fos, cdp, binary_thresh = None, None, None, None
+        fop, fos, cdp, binary_thresh, fb, fbs =\
+            None, None, None, None, None, None
 
         if data_type == 'float':
-
-            if params['-outlier-percent'] == 'true':
-                fop = float(params['-range-percent'])
-            if params['-outlier-std'] == 'true':
-                fos = float(params['-range-std'])
+            fop = _proc_UL('percent', params)
+            fos = _proc_UL('std', params)
 
         if data_type == 'cat':
+            cdp = _proc_UL('cat', params)
 
-            if params['-outlier-cat'] == 'true':
-                cdp = float(params['-range-cat']) / 100
+            if params['-cat-choice'] == 'bins':
+
+                data_type = 'f2b'
+                fop = _proc_UL('percent-cat', params)
+                fos = _proc_UL('std-cat', params)
+
+                fb = int(float(params['-cat-bins']))
+                fbs = params['-cat-bin-strat'].lower()
 
         if data_type == 'binary':
             if params['-binary-choice'] == 'threshold':
@@ -359,7 +402,7 @@ def _proc_datatype_args(params, output_loc):
     except Exception as e:
         save_error('Error processing data type input args', output_loc, e)
 
-    return data_type, fop, fos, cdp, binary_thresh
+    return data_type, fop, fos, cdp, binary_thresh, fb, fbs
 
 
 def _proc_na(params):
@@ -512,7 +555,7 @@ def drop_target_overlap(params, ML, target=False):
 def load_target(ML, params, output_loc, drops=True):
 
     # Proc input args
-    data_type, fop, fos, cdp, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh, fb, fbs =\
         _proc_datatype_args(params, output_loc)
 
     # Load the target df
@@ -533,7 +576,9 @@ def load_target(ML, params, output_loc, drops=True):
                         ext=ext,
                         filter_outlier_percent=fop,
                         filter_outlier_std=fos,
-                        categorical_drop_percent=cdp)
+                        categorical_drop_percent=cdp,
+                        float_bins=fb,
+                        float_bin_strategy=fbs)
     except Exception as e:
         save_error('Error loading target variable', output_loc, e)
 
@@ -570,7 +615,7 @@ def load_variable(ML, params, output_loc, drops=True):
         return load_set(ML, params_copy, output_loc, drops=True)
 
     # Proc input args
-    data_type, fop, fos, cdp, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh, fb, fbs =\
         _proc_datatype_args(params, output_loc)
     drop_na = _proc_na(params)
 
@@ -592,7 +637,9 @@ def load_variable(ML, params, output_loc, drops=True):
                        drop_na=drop_na,
                        filter_outlier_percent=fop,
                        filter_outlier_std=fos,
-                       categorical_drop_percent=cdp)
+                       categorical_drop_percent=cdp,
+                       float_bins=fb,
+                       float_bin_strategy=fbs)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
@@ -619,7 +666,7 @@ def load_variable(ML, params, output_loc, drops=True):
 def load_strat(ML, params, output_loc, drops=False):
 
     # Proc input args
-    data_type, fop, fos, cdp, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh, fb, fbs =\
         _proc_datatype_args(params, output_loc)
 
     # Load df
@@ -633,6 +680,11 @@ def load_strat(ML, params, output_loc, drops=False):
         binary_col = True
     else:
         binary_col = False
+
+    if data_type == 'f2b':
+        float_col = True
+    else:
+        float_col = False
 
     if binary_thresh is not None:
 
@@ -653,9 +705,9 @@ def load_strat(ML, params, output_loc, drops=False):
                       ext=ext,
                       binary_col=binary_col,
                       float_to_binary=float_to_binary,
-                      float_col=False,
-                      float_bins=10,
-                      float_bin_strategy='uniform',
+                      float_col=float_col,
+                      float_bins=fb,
+                      float_bin_strategy=fbs,
                       categorical_drop_percent=cdp)
 
     except Exception as e:
@@ -669,7 +721,7 @@ def load_strat(ML, params, output_loc, drops=False):
 def load_set(ML, params, output_loc, drops=True):
 
     # Proc input args
-    data_type, fop, fos, cdp, binary_thresh =\
+    data_type, fop, fos, cdp, binary_thresh, fb, fbs =\
         _proc_datatype_args(params, output_loc)
     drop_na = _proc_na(params)
 
@@ -682,6 +734,8 @@ def load_set(ML, params, output_loc, drops=True):
     fos = [fos for i in range(len(col_names))]
     cdp = [cdp for i in range(len(col_names))]
     binary_thresh = [binary_thresh for i in range(len(col_names))]
+    fb_s = [fb for fb in range(len(col_names))]
+    fbs_s = [fbs for fbs in range(len(col_names))]
 
     # Check if any set vars passed
     if 'set-vars' in params:
@@ -706,7 +760,7 @@ def load_set(ML, params, output_loc, drops=True):
             i = col_names.index(var['-input'])
 
             # Proc input args, and override
-            data_type[i], fop[i], fos[i], cdp[i], binary_thresh[i] =\
+            data_type[i], fop[i], fos[i], cdp[i], binary_thresh[i], fb_s[i], fbs_s[i] =\
                 _proc_datatype_args(var, output_loc)
 
     params['all_data_types'] = data_type
@@ -730,7 +784,9 @@ def load_set(ML, params, output_loc, drops=True):
                        drop_na=drop_na,
                        filter_outlier_percent=fop,
                        filter_outlier_std=fos,
-                       categorical_drop_percent=cdp)
+                       categorical_drop_percent=cdp,
+                       float_bins=fb_s,
+                       float_bin_strategy=fbs_s)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
@@ -765,13 +821,13 @@ def plot_dist(params, ML, load_type, log_dr, output_loc):
 
     try:
         if load_type == 'target':
-            ML.Show_Targets_Dist(targets=key)
+            d_dfs = ML.Show_Targets_Dist(targets=key, return_display_dfs=True)
             key = '_target_distribution.png'
         elif load_type == 'variable':
-            ML.Show_Covars_Dist(covars=key)
+            d_dfs = ML.Show_Covars_Dist(covars=key, return_display_dfs=True)
             key = '_covar_distribution.png'
         elif load_type == 'strat':
-            ML.Show_Strat_Dist(strat=key)
+            d_dfs = ML.Show_Strat_Dist(strat=key, return_display_dfs=True)
             key = '_strat_distribution.png'
 
     except Exception as e:
@@ -790,7 +846,7 @@ def plot_dist(params, ML, load_type, log_dr, output_loc):
     except Exception as e:
         save_error('Error saving variable distribution image', output_loc, e)
 
-    return img_loc
+    return img_loc, d_dfs
 
 
 def chunk_line(line):
@@ -1073,7 +1129,8 @@ def _output_from_single_logs(log_dr):
                ' excluded subjects',
                'Total inclusion subjects:',
                'rows/subjects in computing overlap with',
-               'New Shape']
+               'New Shape',
+               'Filtering for outliers']
 
     up_to_keys = [' rows for missing values']
 
@@ -1097,42 +1154,7 @@ def _output_from_single_logs(log_dr):
     output = _extract_from_logs(lines, if_keys, up_to_keys, [s_func1],
                                 ignore=ignore)
 
-    # Create table
-    dist_start = lines.index('Set to overlapping loaded subjects.\n')
-    t_output = '<table id="default-table-id" class="table table-striped">'
-    t_output += '<thead><tr>'
-
-    header = lines[dist_start+2]
-    header = chunk_line(header)
-    next_line = lines[dist_start+3]
-    next_line = chunk_line(next_line)
-
-    if len(next_line) == 1:
-        header = next_line + header
-        table_start = dist_start+4
-    else:
-        header = [''] + header
-        table_start = dist_start+3
-
-    for h in header:
-        t_output += '<th scope="col">' + h + '</th>'
-    t_output += '</tr></thead><tbody>'
-
-    for line in lines[table_start:]:
-        line = chunk_line(line)
-
-        if len(line) > 0:
-            t_output += '<tr>'
-            t_output += '<th scope="row">' + line[0] + '</th>'
-            for e in line[1:]:
-                t_output += '<td>' + e + '</td>'
-            t_output += '</tr>'
-        else:
-            break
-
-    t_output += '</tbody></table>'
-
-    return output, t_output
+    return output
 
 
 def save_results(output_loc, output):
@@ -1413,18 +1435,48 @@ def variable_load(user_dr, v_type, n):
     ML._print('loaded variable')
 
     # Save a copy of the dist figure
-    img_loc = plot_dist(params, ML, v_type, log_dr, output_loc)
+    img_loc, d_dfs = plot_dist(params, ML, v_type, log_dr, output_loc)
 
     ML._print('plotted Dist')
 
     # Generate output
     output = {}
     output['img_loc'] = img_loc
-    output['html_output'], output['html_table'] =\
-        output_from_single_logs(log_dr, output_loc)
+    output['html_output'] = output_from_single_logs(log_dr, output_loc)
+    output['html_table'] = get_variable_table_html(d_dfs)
 
     # Save + cache, etc..
     base_finish_load(output_loc, output, params, param_hash, v_type)
+
+
+def get_variable_table_html(d_dfs):
+
+    df = d_dfs[0]
+
+    # Get rid of index if there
+    df = df.reset_index()
+    df = df.rename({'index': ''}, axis=1)
+
+    # Create table
+    t_output = '<table id="default-table-id" class="table table-striped">'
+    t_output += '<thead><tr>'
+
+    # Create header
+    for col in list(df):
+        t_output += '<th scope="col">' + str(col) + '</th>'
+    t_output += '</tr></thead><tbody>'
+
+    # Create body
+    for index, row in df.iterrows():
+        t_output += '<tr>'
+        t_output += '<th>' + str(row.values[0]) + '</th>'
+        for val in row.values[1:]:
+            t_output += '<td>' + str(val) + '</td>'
+        t_output += '</tr>'
+
+    t_output += '</tbody></table>'
+
+    return t_output
 
 
 def set_load(user_dr, n):

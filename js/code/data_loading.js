@@ -3,7 +3,7 @@
 var sets = [];
 var v_cache;
 var v_real_cache;
-var slider_keys = ["percent", "std", "cat"];
+var slider_keys = ["percent", "std", "cat", "percent-cat", "std-cat"];
 
 ////////////////////
 // Set functions //
@@ -294,66 +294,79 @@ function setSetResults(output, key, project) {
 // Data Loading utilities //
 ///////////////////////////
 
-function updateInputField(key, top_keys) {
+
+function updateMultiChoicesField(key, stem, existing) {
+    
+    ['', 'L', 'U'].forEach(k => {
+        if (existing[stem+k] !== undefined){
+            if (existing[stem+k].length > 0) {
+                jQuery('#'+key+stem+k).val(existing[stem+k]).trigger('input');
+            }
+        }
+    });
+}
+
+function updateInputField(key, existing) {
 
     // Input for set
-    if (top_keys['-data-sets'] !== undefined) {
-        setSet(jQuery('#'+key+'-data-sets'), top_keys['-data-sets']);
+    if (existing['-data-sets'] !== undefined) {
+        setSet(jQuery('#'+key+'-data-sets'), existing['-data-sets']);
     }
 
     // In the case that a set is saved, don't set input, as this is just the set name
     // If not a set though, try to set the input if undefined
-    else if (top_keys['-input'] !== undefined) {
-        jQuery('#' + key + '-input').val(top_keys['-input']).trigger('input');
+    else if (existing['-input'] !== undefined) {
+        jQuery('#' + key + '-input').val(existing['-input']).trigger('input');
     }
     
     // Eventname
-    if (top_keys['-eventname'] !== undefined) {
-        jQuery('#'+key+'-eventname').val(top_keys['-eventname']).trigger('change');
+    if (existing['-eventname'] !== undefined) {
+        jQuery('#'+key+'-eventname').val(existing['-eventname']).trigger('change');
     }
 
     // Data type
-    if (top_keys['-type'] !== undefined) {
-        jQuery('input[name=' + key + '-type][value="' + top_keys['-type'] + '"]').trigger('click');
+    if (existing['-type'] !== undefined) {
+        jQuery('input[name=' + key + '-type][value="' + existing['-type'] + '"]').trigger('click');
     }
     
     // Outliers w/ sliders
     slider_keys.forEach(k => {
 
-        if (top_keys['-outlier-' + k] !== undefined) {
+        if (existing['-outlier-' + k] !== undefined) {
             
             // Be careful with return str bool
-            var bool_val = ((top_keys['-outlier-' + k] === "true") || (top_keys['-outlier-' + k] === true));
+            var bool_val = ((existing['-outlier-' + k] === "true") || (existing['-outlier-' + k] === true));
             jQuery('#' + key + '-outlier-' + k).prop("checked", bool_val).trigger('change');
         }
 
-        // Update sliders
-        if (top_keys['-range-' + k] !== undefined) {
-            jQuery('#' + key + '-range-' + k).val(top_keys['-range-' + k]);
-            var range = jQuery('#' + key + '-range-' + k)[0];
-            var rangeV = jQuery('#' + key + '-rangeV-' + k)[0];
-            setSliderVal(range, rangeV);
-        }
+        // Update outliers
+        updateMultiChoicesField(key, '-range-'+k, existing);
     });
 
     // Drop NaN button
-    if (top_keys['-drop-choice'] !== undefined) {
-        jQuery('input[name=' + key + '-drop-choice][value="' + top_keys['-drop-choice'] + '"]').trigger('click');
+    if (existing['-drop-choice'] !== undefined) {
+        jQuery('input[name=' + key + '-drop-choice][value="' + existing['-drop-choice'] + '"]').trigger('click');
     }
 
     // Binary choices
-    if (top_keys['-binary-choice'] !== undefined) {
-        jQuery('input[name=' + key + '-binary-choice][value="' + top_keys['-binary-choice'] + '"]').trigger('click');
+    if (existing['-binary-choice'] !== undefined) {
+        jQuery('input[name=' + key + '-binary-choice][value="' + existing['-binary-choice'] + '"]').trigger('click');
     }
     
     // Binary input vals
-    ['', 'L', 'U'].forEach(k => {
-        if (top_keys['-binary-threshold'+k] !== undefined){
-            if (top_keys['-binary-threshold'+k].length > 0) {
-                jQuery('#'+key +'-binary-threshold'+k).val(top_keys['-binary-threshold'+k]).trigger('input');
-            }
-        }
-    });
+    updateMultiChoicesField(key, '-binary-threshold', existing);
+
+    // Cat choices
+    if (existing['-cat-choice'] !== undefined) {
+        jQuery('input[name=' + key + '-cat-choice][value="' + existing['-cat-choice'] + '"]').trigger('click');
+    }
+    if (existing['-cat-bins'] !== undefined) {
+        jQuery('#'+key+'-cat-bins').val(existing['-cat-bins']).trigger('change');
+    }
+    if (existing['-cat-bin-strat'] !== undefined) {
+        jQuery('#'+key+'-cat-bin-strat').val(existing['-cat-bin-strat']).trigger('change');
+    }
+
 }
 
 function disableSetVar(k) {
@@ -473,6 +486,35 @@ function registerExIncChangeFile(key, project) {
     });
 }
 
+function registerCat(key, data) {
+
+     // Register cat choices appear / disappear
+     jQuery('input[name='+key+'-cat-choice]').change(function(){
+        var choice = $(this).val();
+        data['-cat-choice'] = choice;
+
+        if (choice == 'bins') {
+            jQuery('.'+key+'-if-bins').css('display', 'block');
+        }
+        else {
+            jQuery('.'+key+'-if-bins').css('display', 'none');
+        }
+    });
+
+    // Save Input
+    jQuery('#'+key+'-cat-bins').on('change', function() {
+        data['-cat-bins'] = $(this).val();
+    });
+
+    // Save Input
+    jQuery('#'+key+'-cat-bin-strat').select2({
+        minimumResultsForSearch: -1
+    });
+    jQuery('#'+key+'-cat-bin-strat').on('change', function() {
+        data['-cat-bin-strat'] = $(this).val();
+    });
+}
+
 function registerBinary(key, data) {
     
     // Register binary chocie appear / disappear
@@ -486,26 +528,37 @@ function registerBinary(key, data) {
         else {
             jQuery('#'+key+'-if-threshold').css('display', 'none');
         }
-    })
+    });
 
     // Input validation for binary
-    jQuery('#'+key+'-binary-threshold').on('input', function() {
-        jQuery('#'+key+'-binary-thresholdU').val('');
-        jQuery('#'+key+'-binary-thresholdL').val('');
+    optionsInputValidation(key, '-binary-threshold', data);
+}
 
-        data['-binary-threshold'] = $(this).val();
-        data['-binary-thresholdU'] = '';
-        data['-binary-thresholdL'] = '';
+function optionsInputValidation(key, stem, data) {
+
+    var s_key = key+stem;
+    
+    jQuery('#'+s_key).on('input', function() {
+        jQuery('#'+s_key+'U').val('');
+        jQuery('#'+s_key+'L').val('');
+
+        data[stem] = $(this).val();
+        data[stem+'U'] = '';
+        data[stem+'L'] = '';
     });
-    jQuery('#'+key+'-binary-thresholdU').on('input', function() {
-        jQuery('#'+key+'-binary-threshold').val('');
-        data['-binary-threshold'] = ''
-        data['-binary-thresholdU'] = $(this).val();
+
+    jQuery('#'+s_key+'U').on('input', function() {
+        jQuery('#'+s_key).val('');
+    
+        data[stem] = ''
+        data[stem+'U'] = $(this).val();
     });
-    jQuery('#'+key+'-binary-thresholdL').on('input', function() {
-        jQuery('#'+key+'-binary-threshold').val('');
-        data['-binary-threshold'] = ''
-        data['-binary-thresholdL'] = $(this).val();
+
+    jQuery('#'+s_key+'L').on('input', function() {
+        jQuery('#'+s_key).val('');
+
+        data[stem] = ''
+        data[stem+'L'] = $(this).val();
     });
 }
 
@@ -578,7 +631,6 @@ function registerChangeOutlier(key, data) {
    slider_keys.forEach(val => {
        jQuery('#'+key+'-outlier-'+val).change(function(){
            if($(this).prop("checked") == true){
-               initSlider(key, val);
                jQuery('#'+key+'-'+val).css('display', 'block');
 
                // Register changes to project data
@@ -592,13 +644,8 @@ function registerChangeOutlier(key, data) {
            }
        });
 
-       // Register project changes to slider val
-       jQuery('#'+key+'-range-'+val).change(function(){
-           data['-range-' + val] = $(this).val();
-       });
-       
-       // Trigger once to save default value to project data
-       jQuery('#'+key+'-range-'+val).trigger('change');
+       // Register input
+       optionsInputValidation(key, '-range-'+val, data);
    });
 }
 
@@ -734,6 +781,9 @@ function registerInputField(key, data_types, data) {
     if (data_types.indexOf('binary') !== -1) {
         registerBinary(key, data);
     }
+
+    // Register cat
+    registerCat(key, data);
 
     // Register input choices
     registerInputChoices(key, data);

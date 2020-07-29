@@ -172,6 +172,80 @@ function inputSetFormHTML(key) {
 
 }
 
+function getFloatOutlierHTML(key, append='') {
+    var a = append;
+
+    var html = '' +
+
+    '<!--Display under if % pressed -->' + 
+    '<div class="custom-control custom-checkbox">' +
+        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-percent'+a+'">' +
+        '<label class="custom-control-label" for="'+key+'-outlier-percent'+a+'">Drop Outliers by Percent</label>' +
+    '</div>' +
+
+    '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-percent'+a+'">' +
+
+        '<div class="input-group mb-3" style="margin-top: 10px;">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p1'+a+'">Single Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'" type="number" class="form-control" aria-describedby="'+key+'-p1'+a+'" step="0.1" min="0" max="10" title="Single Percent Value"></input>' + 
+        '</div>' + 
+
+        '<hr>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p2'+a+'">Lower Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'L" type="number" class="form-control" aria-describedby="'+key+'-p2'+a+'" step="0.1" min="0" max="10" title="Lower Percent Value"></input>' + 
+        '</div>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p3'+a+'">Upper Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-p3'+a+'" step="0.1" min="0" max="10" title="Upper Percent Value"></input>' + 
+        '</div>' + 
+
+    '</div>' +
+
+    '<!--Display under if std pressed -->' +
+    '<div class="custom-control custom-checkbox">' +
+        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-std'+a+'">' +
+        '<label class="custom-control-label" for="'+key+'-outlier-std'+a+'">Drop Outliers by STD</label>' +
+    '</div>' +
+
+    '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-std'+a+'">' +
+
+        '<div class="input-group mb-3" style="margin-top: 10px;">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-s1'+a+'">Single STD Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-std'+a+'" type="number" class="form-control" aria-describedby="'+key+'-s1'+a+'" step="0.1" min="0" title="Single STD Value"></input>' + 
+        '</div>' + 
+
+        '<hr>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-s2'+a+'">Lower STD Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-std'+a+'L" type="number" class="form-control" aria-describedby="'+key+'-s2'+a+'" step="0.1" min="0" title="Lower STD Value"></input>' + 
+        '</div>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-s3'+a+'">Upper STD Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-std'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-s3'+a+'" step="0.1" min=".1" title="Upper STD Value"></input>' + 
+        '</div>' +
+
+    '</div>';
+
+    return html;
+}
+
 function ifFloatHTML(key) {
 
     var html = '' +
@@ -189,36 +263,7 @@ function ifFloatHTML(key) {
     'The selected fixed percent of datapoints from either end of' +
     'the distribution will be dropped.' +
     '">Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
-
-    '<!--Display under if % pressed -->' + 
-    '<div class="custom-control custom-checkbox">' +
-        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-percent">' +
-        '<label class="custom-control-label" for="'+key+'-outlier-percent">Drop Outliers by Percent</label>' +
-    '</div>' +
-
-    '<!--Display under if pressed -->' +
-    '<div class="form-group col" style="display:none" id="'+key+'-percent">' +
-    '<label></label>' +
-    '<div class="range-wrap">' +
-        '<div class="range-value" id="'+key+'-rangeV-percent"></div>' +
-        '<input id="'+key+'-range-percent" type="range" min="0" max="10" value="1" step=".01">' +
-    '</div>' +
-    '</div>' +
-
-    '<!--Display under if std pressed -->' +
-    '<div class="custom-control custom-checkbox">' +
-        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-std">' +
-        '<label class="custom-control-label" for="'+key+'-outlier-std">Drop Outliers by STD</label>' +
-    '</div>' +
-
-    '<!--Display under if pressed -->' +
-    '<div class="form-group col" style="display:none" id="'+key+'-std">' +
-    '<label></label>' +
-    '<div class="range-wrap">' +
-        '<div class="range-value" id="'+key+'-rangeV-std"></div>' +
-        '<input id="'+key+'-range-std" type="range" min=".1" max="25" value="10" step=".1">' +
-    '</div>' +
-    '</div>' +
+    getFloatOutlierHTML(key) +
     '</div>';
     return html;
 }
@@ -296,7 +341,55 @@ function ifCatHTML(key, target) {
     '<div class="form-group col-md-6" style="display:none" id="'+key+'-if-cat">'
 
     html = html +
-    '<!--Display under if % pressed -->' +
+        '<label><span data-toggle="popover"' +
+        'title="Categorical Encoding Choices" data-placement="left"' +
+        'data-content="<b>Default:</b><br>Placeholder.' +
+        '<br> <b>Continuous to Categorical:</b><br>Placeholder."' +
+        '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
+
+        '<div class="custom-control custom-radio">' +
+        '<input type="radio" class="custom-control-input" ' +
+        'name="'+key+'-cat-choice" ' +
+        'id="'+key+'-cat-default" value="default" checked>' +
+        '<label class="custom-control-label" for="'+key+'-cat-default"' +
+        '>Default</label>' +
+        '</div>' +
+
+        '<div class="custom-control custom-radio">' +
+        '<input type="radio" class="custom-control-input "' +
+        'name="'+key+'-cat-choice" ' +
+        'id="'+key+'-bins" value="bins">' +
+        '<label class="custom-control-label" for="'+key+'-bins"' +
+        '>Continuous to Categorical</label>' +
+        '</div>' +
+
+        '<div class="'+key+'-if-bins" style="display:none">' + 
+        '<div class="input-group mb-3" style="margin-top: 10px;">' +
+
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-n-bins-label">&nbsp;Num. Bins&nbsp;&nbsp;</span>' + 
+            '</div>' + 
+
+            '<input id="'+key+'-cat-bins" type="number" '+
+            'class="form-control" aria-describedby="'+key+'-n-bins-label" step="1" min="2" value="5"></input>' + 
+        
+        '</div>' + 
+
+        '<div class="input-group mb-3" style="margin-top: 10px;">' +
+
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-bin-strat-label">Bin Strategy</span>' + 
+            '</div>' +
+
+            '<select class="form-control" id="'+key+'-cat-bin-strat" class="form-control" aria-describedby="'+key+'-bin-strat-label">' +
+            '<option>Uniform</option>' +
+            '<option selected="selected">Quantile</option>' +
+            '<option>KMeans</option>' +
+            '</select>' +
+
+        '</div>' + 
+        '</div>' + 
+
         '<label><span data-toggle="popover"' +
         'title="Categorical Outlier Options" data-placement="left"' +
         'data-content="<b>Drop Category by Percent</b><br>' +
@@ -304,17 +397,23 @@ function ifCatHTML(key, target) {
         'of values will be dropped if this option is selected."' +
         '>Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
+        '<div class="'+key+'-if-bins" style="display:none">' + 
+        getFloatOutlierHTML(key, append='-cat') + 
+        '</div>' + 
+
         '<div class="custom-control custom-checkbox">' +
             '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-cat">' +
-            '<label class="custom-control-label" for="'+key+'-outlier-cat">Drop Category by Percent</label>' +
+            '<label class="custom-control-label" for="'+key+'-outlier-cat">Drop Category by Frequency</label>' +
         '</div>' +
 
-        '<div class="form-group col" style="display:none" id="'+key+'-cat">' +
-        '<label></label>' +
-        '<div class="range-wrap">' +
-            '<div class="range-value" id="'+key+'-rangeV-cat"></div>' +
-            '<input id="'+key+'-range-cat" type="range" min="0" max="10" value="1" step=".01">' +
-        '</div>' +
+        '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-cat">' +
+            
+            '<div class="input-group mb-3" style="margin-top: 10px;">' +
+                '<div class="input-group-prepend">' +
+                    '<span class="input-group-text" id="'+key+'-c1">Drop Frequency Threshold</span>' + 
+                '</div>' + 
+                '<input id="'+key+'-range-cat" type="number" class="form-control" aria-describedby="'+key+'-c1" step="0.001" min=0 max=".95" title="Drop Frequency Value"></input>' + 
+            '</div>' + 
         '</div>' +
 
     '</div>';

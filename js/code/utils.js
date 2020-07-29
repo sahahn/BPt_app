@@ -73,30 +73,6 @@ function addScrollTo(key, to_id) {
     jQuery('#'+key+'-collapse').collapse("show");
 }
 
-function initSlider(key, val) {
-
-    var range = jQuery('#'+key+'-range-'+val)[0];
-    var rangeV = jQuery('#'+key+'-rangeV-'+val)[0];
-
-    jQuery.ready(function() {
-        setSliderVal(range, rangeV);
-    });
-
-    range.addEventListener('input', function() {
-        setSliderVal(range, rangeV);
-    });
-    
-    // So the value inits right away
-    setSliderVal(range, rangeV);
-}
-
-function setSliderVal(range, rangeV) {
-
-    newValue = Number((range.value - range.min) * 100 / (range.max - range.min)), newPosition = 10 - (newValue * 0.2);
-    rangeV.innerHTML = `<span>${range.value}</span>`;
-    rangeV.style.left = `calc(${newValue}% + (${newPosition}px))`;
-}
-
 function selectDontOpen(input_key) {
 
     jQuery('#'+input_key).on("select2:unselect", function (evt) {
