@@ -9,7 +9,7 @@ $project_job_dr = $job_dr."/".$_GET['project_id'];
 // Main cache dr
 if (!is_dir($data_dr)) {
     mkdir($data_dr , 0777, true);
-  }
+}
 
 // User dr
 if (!is_dir($user_dr)){
