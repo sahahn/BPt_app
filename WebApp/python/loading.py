@@ -24,7 +24,7 @@ def fetchABCDData(variables):
         variables = [variables]
 
     # Reverse map input
-    data_dr = '/var/www/html/data/bpt/tab_data/'
+    data_dr = '/var/www/html/data/tab_data/'
 
     map_loc = os.path.join(data_dr, 'ABCDFixRelease2p0p1',
                            'Fix Release Notes 2.0.1_Public',
@@ -320,7 +320,7 @@ def init_ML(user_dr, output_loc, params, n=0):
 
     # Load the name_map next -- won't need once db
     try:
-        data_dr = '/var/www/html/data/bpt/tab_data/'
+        data_dr = '/var/www/html/data/tab_data/'
         map_loc = os.path.join(data_dr, 'ABCDFixRelease2p0p1',
                                'Fix Release Notes 2.0.1_Public',
                                '24. ABCD_Release_2.0.1_Updates',

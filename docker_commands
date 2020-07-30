@@ -1,2 +1,2 @@
-docker build . -t bpt
+docker build . -t bpt --no-cache
 docker run -d --name bpt -p 8008:80 -v `pwd`/data:/var/www/html/data bpt
