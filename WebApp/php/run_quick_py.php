@@ -16,6 +16,7 @@ file_put_contents($user_dr.'/ML_Params'.$_POST['params']['n'].'.json', json_enco
 //$cmd = $cmd_p1.$cmd_p2.$user_dr." '".$_POST['params']['n']."'".'"';
 
 $cmd = "python3 ".$_POST['params']['script']." ".$user_dr." '".$_POST['params']['n']."'".'"';
+echo $cmd;
 exec($cmd);
 
 // Once done, echo the contents of the output file
