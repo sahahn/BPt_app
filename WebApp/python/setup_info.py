@@ -20,7 +20,7 @@ from ABCD_ML.pipeline.Scorers import get_scorers_by_type
 
 import nevergrad as ng
 from ABCD_ML.helpers.Default_Params import P
-
+import shutil
 
 # Save ML Options Code
 
@@ -451,5 +451,6 @@ if __name__ == "__main__":
 
     cache_dr = '/var/www/html/data/bpt/'
     os.makedirs(cache_dr, exist_ok=True)
+    shutil.chown(cache_dr, user='www-data')
     save_ML_options(os.path.join(cache_dr, 'ML_options.json'))
     save_default_params(os.path.join(cache_dr, 'default_param_dists.json'))
