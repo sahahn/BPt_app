@@ -5,7 +5,7 @@ include '/var/www/html/data/config.php';
 // Make user directory if it doesn't exist
 if(!is_dir($user_dr)){
     mkdir($user_dr, 0777, true);
-    echo '1';
+    echo $user_dr;
 }
 
 echo '2';
