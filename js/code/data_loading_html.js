@@ -133,8 +133,6 @@ function inputDataTypeHTML(key, label, target, data_types) {
     return html;
 }
 
-
-
 function inputSetFormHTML(key) {
 
     html = '' +

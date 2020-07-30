@@ -213,6 +213,12 @@ def check_defaults(params):
             if '-range-' + k + end not in params:
                 params['-range-' + k + end] = ''
 
+    if '-cat-bins' not in params:
+        params['-cat-bins'] = '5'
+
+    if '-cat-bins-strat' not in params:
+        params['-cat-bins-strat'] = 'Quantile'
+
     return params
 
 
@@ -1449,6 +1455,14 @@ def variable_load(user_dr, v_type, n):
     base_finish_load(output_loc, output, params, param_hash, v_type)
 
 
+def rnd(val):
+
+    if isinstance(val, float):
+        return str(np.round(val, 5))
+
+    return str(val)
+
+
 def get_variable_table_html(d_dfs):
 
     df = d_dfs[0]
@@ -1469,9 +1483,9 @@ def get_variable_table_html(d_dfs):
     # Create body
     for index, row in df.iterrows():
         t_output += '<tr>'
-        t_output += '<th>' + str(row.values[0]) + '</th>'
+        t_output += '<th>' + rnd(row.values[0]) + '</th>'
         for val in row.values[1:]:
-            t_output += '<td>' + str(val) + '</td>'
+            t_output += '<td>' + rnd(val) + '</td>'
         t_output += '</tr>'
 
     t_output += '</tbody></table>'

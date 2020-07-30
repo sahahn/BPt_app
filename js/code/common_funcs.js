@@ -73,6 +73,7 @@ function registerCloseButton(space, key, n, cnt_field, cnt_id, project) {
 
         // Refresh all by-val choices if strat closes
         if (space == 'strat-space') {
+            console.log('close strat')
             refreshByValueChoices('filter-space', project);
         }
 
@@ -286,6 +287,8 @@ function refreshStratChoices(project) {
         return undefined;
     }
 
+    console.log('refresh strat')
+
     // Strat choices are added when show is called on strat variables
     // this check is essentially just for checking which ones to remove
     // based on either if they got deleted, or maybe the name/eventname changed
@@ -353,7 +356,7 @@ function registerValueOnChoice(key, project) {
         val.empty();
         val.append('<option item=""></option>');
         var choice_name = $(this).find('option:selected').val();
-        if (choice_name.length > 0) {
+        if ((choice_name !== undefined) && (choice_name.length > 0)) {
             var c = choices[choice_name];
             for (var i = 0; i < c.length; i++) {
                 val.append('<option item="' +
@@ -461,7 +464,13 @@ function saveByValueToProject(key, project) {
     });
 
     jQuery('#'+key+'-var-val').on('change', function() {
-        project['data'][key]['-var-val'] = $(this).val().toString();
+
+        if ($(this).val() == undefined) {
+            project['data'][key]['-var-val'] = undefined
+        }
+        else {
+            project['data'][key]['-var-val'] = $(this).val().toString();
+        }
     });
 }
 
@@ -665,7 +674,7 @@ function registerName(key, project) {
 // Register Vals for CV options code ///
 ///////////////////////////////////////
 
-function getValidCatVars(project, duplicates=Array()) {
+function getValidCatVars(k_iden, project, duplicates=Array()) {
 
     var valid = Array();
 
@@ -675,8 +684,9 @@ function getValidCatVars(project, duplicates=Array()) {
     // Seperate by type of var, and must be valid and categorical / binary
     getAllKeys(project).forEach(k => {
 
+
         // If variable type
-        if ((k.includes('target-space')) || (k.includes('strat-space'))) {
+        if (((k.includes('target-space')) && (k_iden !== '-group')) || (k.includes('strat-space'))) {
             if (validateVariable(k, project['data'][k])) {
                 if (project['data'][k]['-type'] !== 'float') {
                     var reprName = getVarReprName(k, project);
@@ -705,17 +715,17 @@ function getValidCatVars(project, duplicates=Array()) {
     return valid;
 }
 
-function getValidCatVarsOptions(project) {
+function getValidCatVarsOptions(k_iden, project) {
 
     // Wrap getting all valid vars in a check
     // for duplicate names, if any duplicates
     // add extra identifiers for just those duplicates
-    var valid = getValidCatVars(project);
+    var valid = getValidCatVars(k_iden, project);
     var just_names = valid.map(x => x['text']);
     var duplicates = findDuplicates(just_names);
 
     if (duplicates.length > 0) {
-        return getValidCatVars(project, duplicates);
+        return getValidCatVars(k_iden, project, duplicates);
     }
 
     return valid;
@@ -729,7 +739,7 @@ function registerVals(project, key, k) {
     // Setup select2 for variable choice
     jQuery('#'+key+k+'-by').empty().select2({
         placeholder: "Variable",
-        data : getValidCatVarsOptions(project)
+        data : getValidCatVarsOptions(k, project)
     });
 
     // Register by choice save to project
