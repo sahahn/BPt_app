@@ -1,6 +1,7 @@
 <?php
 
 include '/var/www/html/data/config.php';
+return $cache_dr;
 
 if (!is_dir($data_dr)) {
     mkdir($data_dr , 0777, true);
