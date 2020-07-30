@@ -18,6 +18,7 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && pip3 install wheel \
     && pip3 install setuptools \
     && pip3 install /var/www/html/ABCD_ML/ \
+    && python3 /var/www/html/BPt/WebApp/python/setup_info.py \
     && sed -i '/post_max_size = 8M/cpost_max_size = 5000M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/memory_limit = 128M/cmemory_limit = 1024M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/; max_input_vars = 1000/cmax_input_vars = 100000' /etc/php/7.2/apache2/php.ini
