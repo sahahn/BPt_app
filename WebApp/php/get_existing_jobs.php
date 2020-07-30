@@ -7,8 +7,8 @@ $project_job_dr = $job_dr."/".$_GET['project_id'];
 
 // Make directories if they don't exist
 // Main cache dr
-if (!is_dir($cache_dr)) {
-    mkdir($cache_dr , 0777, true);
+if (!is_dir($data_dr)) {
+    mkdir($data_dr , 0777, true);
   }
 
 // User dr
