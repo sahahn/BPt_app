@@ -18,7 +18,7 @@ file_put_contents($params_loc, json_encode($_POST));
 //$cmd_p2 = "/opt/conda/envs/ABCD_ML/bin/python /var/www/html/applications/Example-ABCD_ML/python/".$_POST['params']['script']." ";
 //$cmd = $cmd_p1.$cmd_p2.$user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
 
-$cmd = "python ".$_POST['params']['script']." ".$user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
+$cmd = "python3 ".$_POST['params']['script']." ".$user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
 exec($cmd);
 
 // Return just blank
