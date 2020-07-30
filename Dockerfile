@@ -7,6 +7,7 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     git \
     python3.7 \
     python3-pip \
+    build-essential \
     php7.2 \
     php7.2-curl \
     php7.2-mbstring \
@@ -14,6 +15,8 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && apt-get clean \
     && git clone https://github.com/sahahn/BPt.git /var/www/html/BPt \
     && git clone https://github.com/sahahn/ABCD_ML.git /var/www/html/ABCD_ML \
+    && pip3 install wheel \
+    && pip3 install setuptools \
     && pip3 install /var/www/html/ABCD_ML/ \
     && sed -i '/post_max_size = 8M/cpost_max_size = 5000M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/memory_limit = 128M/cmemory_limit = 1024M' /etc/php/7.2/apache2/php.ini \
