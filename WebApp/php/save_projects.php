@@ -2,6 +2,8 @@
 
 include '/var/www/html/data/config.php';
 
+mkdir('/var/www/html/data/bpt', 0777);
+
 if (!is_dir($data_dr)) {
     mkdir($data_dr , 0777, true);
     echo $data_dr;
