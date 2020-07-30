@@ -1,9 +1,10 @@
 <?php
-$cache_dr = "/var/www/html/data/ABCD/ABCD_ML_Cache/";
 
-if (!is_dir($cache_dr)) {
-    mkdir($cache_dr , 0777, true);
-  }
+include '/var/www/html/data/config.php';
+
+if (!is_dir($data_dr)) {
+    mkdir($data_dr , 0777, true);
+}
 
 $input_cache_loc = $cache_dr.$_GET['loc'];
 

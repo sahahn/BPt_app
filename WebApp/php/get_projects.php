@@ -1,19 +1,18 @@
 <?php
 
-$user_name = 'sahahn';
-$cache_dr = "/var/www/html/data/ABCD/ABCD_ML_Cache/";
-$user_directory = $cache_dr.$user_name;
+include '/var/www/html/data/config.php';
 
-// Make directory if dont exist
-if (!is_dir($cache_dr)) {
-    mkdir($cache_dr , 0777, true);
-  }
 
-if(!is_dir($user_directory)){
-    mkdir($user_directory, 0755);
+// Make directories if they don't exist
+if (!is_dir($data_dr)) {
+    mkdir($data_dr , 0777, true);
 }
 
-$projects_loc = $user_directory.'/Projects.json';
+if(!is_dir($user_dr)){
+    mkdir($user_dr, 0755);
+}
+
+$projects_loc = $user_dr.'/Projects.json';
 
 if (!file_exists($projects_loc)) {
     echo json_encode([]);

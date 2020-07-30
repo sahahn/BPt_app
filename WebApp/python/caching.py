@@ -8,9 +8,7 @@ from utils import save_subjects, load_subjects
 from ABCD_ML import Load
 from pathlib import Path
 
-# the ABCD part shouldn't be fixed, likely project should be passed along
-# which means that these shouldn't be global variables
-V_DR = '/var/www/html/data/ABCD/ABCD_ML_Cache/'
+V_DR = '/var/www/html/data/bpt/'
 
 SUBJECT_CACHE_DR = os.path.join(V_DR, 'Subjects_Cache')
 os.makedirs(SUBJECT_CACHE_DR, exist_ok=True)

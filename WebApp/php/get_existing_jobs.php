@@ -1,8 +1,7 @@
 <?php
 
-$user_name = "sahahn";
-$cache_dr = "/var/www/html/data/ABCD/ABCD_ML_Cache/";
-$user_dr = $cache_dr.$user_name;
+include '/var/www/html/data/config.php';
+
 $job_dr = $user_dr."/Jobs";
 $project_job_dr = $job_dr."/".$_GET['project_id'];
 

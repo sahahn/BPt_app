@@ -1,10 +1,8 @@
 <?php
 
+include '/var/www/html/data/config.php';
 include 'remove_dr.php';
 
-$user_name = "sahahn";
-$cache_dr = "/var/www/html/data/ABCD/ABCD_ML_Cache/";
-$user_dr = $cache_dr.$user_name;
 $jobs_dr = $user_dr."/Jobs";
 $project_jobs_dr = $jobs_dr."/".$_GET['project_id'];
 $job_dr = $project_jobs_dr."/".$_GET['job_name'];

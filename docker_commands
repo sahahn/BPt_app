@@ -1,0 +1,2 @@
+docker build . -t bpt
+docker run -d --name bpt -p 8008:80 -v data:/var/www/html/data dpt

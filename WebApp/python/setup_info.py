@@ -449,6 +449,6 @@ def check(val):
 
 if __name__ == "__main__":
 
-    cache_dr = '/var/www/html/data/ABCD/ABCD_ML_Cache'
+    cache_dr = '/var/www/html/data/bpt/'
     save_ML_options(os.path.join(cache_dr, 'ML_options.json'))
     save_default_params(os.path.join(cache_dr, 'default_param_dists.json'))
