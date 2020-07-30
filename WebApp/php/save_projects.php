@@ -1,6 +1,7 @@
 <?php
 
 include '/var/www/html/data/config.php';
+echo $user_dr;
 
 // Make user directory if it doesn't exist
 if(!is_dir($user_dr)){
