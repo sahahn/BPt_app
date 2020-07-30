@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Example ABCD_ML</title>
+  <title>BPt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
@@ -18,7 +18,7 @@
   <link href="css/select2.min.css" rel="stylesheet" type="text/css">
 
   <!-- Font awesome icons -->
-  <link href="../NewDataExpo/css/fontawesome-all.min.css" rel="stylesheet">
+  <link href="css/fontawesome-all.min.css" rel="stylesheet">
 
   <!-- Datatables -->
   <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css">
