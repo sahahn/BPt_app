@@ -16,7 +16,7 @@ file_put_contents($user_dr.'/ML_Params'.$_POST['params']['n'].'.json', json_enco
 //$cmd = $cmd_p1.$cmd_p2.$user_dr." '".$_POST['params']['n']."'".'"';
 
 
-$cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ABCD_ML; ";
+$cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ML; ";
 $cmd_p2 = "/opt/conda/envs/ABCD_ML/bin/python ".$python_loc.$_POST['params']['script']." ".$user_dr." '".$_POST['params']['n']."'".'"';
 $cmd = $cmd_p1.$cmd_p2;
 exec($cmd);
