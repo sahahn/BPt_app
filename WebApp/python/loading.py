@@ -707,8 +707,6 @@ def load_strat(ML, params, output_loc, drops=False):
 
     eventname, ext = _proc_eventname(params)
 
-    ML.Load_Strat()
-
     try:
         ML.Load_Strat(df=strat_df,
                       col_name=col_name,
