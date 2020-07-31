@@ -1,3 +1,7 @@
+function displaySet(s) {
+	console.log(s)
+}
+
 function getSets() {
     
     jQuery.getJSON('getSets.php', function(data) {
@@ -28,3 +32,11 @@ function getSets() {
 	});
     });
 }
+
+jQuery(document).ready(function() {
+
+	getSets();
+
+
+
+});
