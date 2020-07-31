@@ -3,3 +3,4 @@ js/old/old_data_loading.js
 .vscode/launch.json
 data/bpt*
 data/tab_data/
+db/*

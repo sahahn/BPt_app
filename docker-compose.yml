@@ -1,0 +1,19 @@
+version: "3"
+services:
+  app:
+    container_name: bpt
+    restart: always
+    build: .
+    ports:
+      - "8008:80"
+    volumes : 
+      - ./data:/var/www/html/data
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./db:/data/db
+    ports:
+      - "27017:27017"
