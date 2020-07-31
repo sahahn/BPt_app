@@ -18,7 +18,10 @@ file_put_contents($params_loc, json_encode($_POST));
 //$cmd_p2 = "/opt/conda/envs/ABCD_ML/bin/python /var/www/html/applications/Example-ABCD_ML/python/".$_POST['params']['script']." ";
 //$cmd = $cmd_p1.$cmd_p2.$user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
 
-$cmd = "python3 ".$python_loc.$_POST['params']['script']." ".$user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
+$cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ML; ";
+$cmd_p2 = "/opt/conda/envs/ML/bin/python ".$python_loc.$_POST['params']['script']." ";
+$cmd_p3 = $user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
+$cmd = $cmd_p1.$cmd_p2.$cmd_p3;
 exec($cmd);
 
 // Return just blank
