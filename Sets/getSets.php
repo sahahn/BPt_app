@@ -59,12 +59,11 @@ function saveData($data) {
 
 
 if ($action == "get") {
-    
     $id = "";
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
     }
-
+    //$data = json_decode(file_get_contents($fn), true);
     $data = readData();
     if ($id != "") {
         $ret = array();
