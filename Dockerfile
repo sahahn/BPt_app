@@ -28,6 +28,4 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
 
 
 EXPOSE 80
-ENTRYPOINT apache2ctl -D FOREGROUND \
-&& conda activate ML \
-&& python /var/www/html/BPt/WebApp/python/setup_info.py
+ENTRYPOINT apache2ctl -D FOREGROUND

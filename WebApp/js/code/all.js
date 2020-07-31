@@ -390,6 +390,8 @@ function noProjectDefault() {
 // On document load
 jQuery(document).ready(function() {
 
+    jQuery.post('php/setup.php');
+
     // Use the select2 bootstrap theme
     $.fn.select2.defaults.set("theme", "bootstrap4");
 
