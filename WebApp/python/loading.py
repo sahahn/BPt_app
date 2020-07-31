@@ -216,8 +216,8 @@ def check_defaults(params):
     if '-cat-bins' not in params:
         params['-cat-bins'] = '5'
 
-    if '-cat-bins-strat' not in params:
-        params['-cat-bins-strat'] = 'Quantile'
+    if '-cat-bin-strat' not in params:
+        params['-cat-bin-strat'] = 'Quantile'
 
     return params
 
