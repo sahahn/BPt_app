@@ -396,6 +396,9 @@ def _proc_datatype_args(params, output_loc):
                 fb = int(float(params['-cat-bins']))
                 fbs = params['-cat-bin-strat'].lower()
 
+            else:
+                data_type = 'c'
+
         if data_type == 'binary':
             if params['-binary-choice'] == 'threshold':
                 data_type = 'float'
