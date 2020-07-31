@@ -4,12 +4,15 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     apache2 \
     apache2-utils \
+    ca-certificates \
     git \
     build-essential \
     php7.2 \
     php7.2-curl \
     php7.2-mbstring \
     libapache2-mod-php7.2 \
+    add-apt-key \
+    sudo \
     wget \
     && apt-get clean \
     cd /tmp/ && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
@@ -24,4 +27,4 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && sed -i '/; max_input_vars = 1000/cmax_input_vars = 100000' /etc/php/7.2/apache2/php.ini
 
 EXPOSE 80
-CMD apache2ctl -D FOREGROUND && python3 /var/www/html/BPt/WebApp/python/setup_info.py
+CMD apache2ctl -D FOREGROUND && conda activate ML && python /var/www/html/BPt/WebApp/python/setup_info.py

@@ -578,8 +578,6 @@ def load_target(ML, params, output_loc, drops=True):
     eventname, ext = _proc_eventname(params)
 
     try:
-        ML._print(target_df, col_name, data_type, eventname, 
-                  ext, fop, fos, cdp, fb, fbs)
         ML.Load_Targets(df=target_df,
                         col_name=col_name,
                         data_type=data_type,
@@ -709,6 +707,8 @@ def load_strat(ML, params, output_loc, drops=False):
 
     eventname, ext = _proc_eventname(params)
 
+    ML.Load_Strat()
+
     try:
         ML.Load_Strat(df=strat_df,
                       col_name=col_name,
@@ -719,6 +719,8 @@ def load_strat(ML, params, output_loc, drops=False):
                       float_col=float_col,
                       float_bins=fb,
                       float_bin_strategy=fbs,
+                      filter_outlier_percent=fop,
+                      filter_outlier_std=fos, 
                       categorical_drop_percent=cdp)
 
     except Exception as e:
