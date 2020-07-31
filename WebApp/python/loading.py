@@ -578,6 +578,8 @@ def load_target(ML, params, output_loc, drops=True):
     eventname, ext = _proc_eventname(params)
 
     try:
+        ML._print(target_df, col_name, data_type, eventname, 
+                  ext, fop, fos, cdp, fb, fbs)
         ML.Load_Targets(df=target_df,
                         col_name=col_name,
                         data_type=data_type,
