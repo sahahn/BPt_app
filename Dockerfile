@@ -2,8 +2,7 @@ FROM ubuntu:18.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 ENV LANG="en_US.UTF-8" \
-    LC_ALL="C.UTF-8" \
-    ND_ENTRYPOINT="/startup.sh"
+    LC_ALL="C.UTF-8"
 
 RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     apache2 \
@@ -42,24 +41,5 @@ RUN /bin/echo -e "deb https://dev.monetdb.org/downloads/deb/ bionic monetdb\ndeb
     && monetdbd set control="no" /var/www/html/db \
     && monetdb create abcd && monetdb start abcd && monetdb release abcd
 
-
-RUN if [ ! -f "$ND_ENTRYPOINT" ]; then \
-    echo '#!/usr/bin/env bash' >> $ND_ENTRYPOINT \
-    && echo 'if [ -z "$*" ]; then /usr/bin/env bash; else' >> $ND_ENTRYPOINT \
-    && echo '  if [ "$1" == "start" ]; then' >> $ND_ENTRYPOINT \
-    && echo '    echo "Start system services and apache...";' >> $ND_ENTRYPOINT \
-    && echo '    mkdir -p /usr/local/;' >> $ND_ENTRYPOINT \
-    && echo '  else $*;' >> $ND_ENTRYPOINT \
-    && echo '  fi' >> $ND_ENTRYPOINT \
-    && echo 'fi' >> $ND_ENTRYPOINT \
-    && echo 'monetdbd start /var/www/html/db' >> $ND_ENTRYPOINT \
-    && echo 'monetdb start abcd' >> $ND_ENTRYPOINT \
-    && echo 'apachectl -D FOREGROUND' >> $ND_ENTRYPOINT \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && echo "<Directory /var/www/html/>\n    Options -Indexes +FollowSymLinks\n    AllowOverride None\n    Require all granted\n</Directory>" >> /etc/apache2/apache2.conf \
-    && echo "<FilesMatch \"\\.Rds\$\">\n    Require all denied\n</FilesMatch>" >> /etc/apache2/apache2.conf; \
-    fi \
-    && chmod -R 777 /startup.sh
-
 EXPOSE 80
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ENTRYPOINT apache2ctl -D FOREGROUND
