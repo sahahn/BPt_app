@@ -42,6 +42,7 @@ RUN /bin/echo -e "deb https://dev.monetdb.org/downloads/deb/ bionic monetdb\ndeb
     && monetdb create abcd && monetdb start abcd && monetdb release abcd
 
 EXPOSE 80
-ENTRYPOINT monetdbd start /var/www/html/db \
-&& monetdb start abcd \\
+ENTRYPOINT echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+&& monetdbd start /var/www/html/db \
+&& monetdb start abcd \
 && apache2ctl -D FOREGROUND
