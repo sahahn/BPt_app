@@ -4,3 +4,4 @@ js/old/old_data_loading.js
 data/bpt*
 data/tab_data/
 db/*
+data/sources/*
