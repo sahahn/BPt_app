@@ -193,6 +193,9 @@ def check_defaults(params):
     if '-binary-choice' not in params:
         params['-binary-choice'] = 'default'
 
+    if '-cat-choice' not in params:
+        params['-cat-choice'] = 'default'
+
     if '-outlier-percent' not in params:
         params['-outlier-percent'] = 'false'
 
