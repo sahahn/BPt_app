@@ -3,7 +3,7 @@ include '/var/www/html/data/config.php';
 
 // Try to start database
 exec("/bin/bash -c \"monetdbd start /var/www/html/db\"");
-exec("/bin/bash -c \"monetdb start abcd\"");\
+exec("/bin/bash -c \"monetdb start abcd\"");
 
 echo "run";
 
