@@ -42,4 +42,4 @@ RUN /bin/echo -e "deb https://dev.monetdb.org/downloads/deb/ bionic monetdb\ndeb
     && monetdb create abcd && monetdb start abcd && monetdb release abcd
 
 EXPOSE 80
-ENTRYPOINT ENTRYPOINT apache2ctl -D FOREGROUND
+ENTRYPOINT ["apache2ctl" "-D" "FOREGROUND"]
