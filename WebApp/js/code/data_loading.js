@@ -811,7 +811,26 @@ function registerInputField(key, data_types, data) {
 function registerLoadVariableEvents(key, data_types, data) {
 
     jQuery('#'+key+'-input').select2({
-        data: variable_choices
+        data: variable_choices,
+        query: function (data) {
+            var pageSize,
+                    dataset,
+                    that = this;
+            pageSize = 20; // Number of the option loads at a time
+            results = [];
+            if (data.term && data.term !== '') {
+                // HEADS UP; for the _.filter function I use underscore (actually lo-dash) here
+                results = _.filter(that.data, function (e) {
+                    return e.text.toUpperCase().indexOf(data.term.toUpperCase()) >= 0;
+                });
+            } else if (data.term === '') {
+                results = that.data;
+            }
+            data.callback({
+                results: results.slice((data.page - 1) * pageSize, data.page * pageSize),
+                more: results.length >= data.page * pageSize,
+            });
+        },
     });
 
     // Register base input fields
