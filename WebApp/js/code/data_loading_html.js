@@ -54,8 +54,7 @@ function inputVariableHTML(key, name_label){
     
         '<div class="form-group col-md-6">' +
         name_label +
-        '<input type="text" class="form-control" id="'+key+'-input"' +
-                'placeholder="" value="">' +
+        '<select id="'+key+'-input" class="form-control" data-width="100%"></select>' +
         '</div>' +
 
         inputEventnameHTML(key) +

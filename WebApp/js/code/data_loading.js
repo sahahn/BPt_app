@@ -77,7 +77,7 @@ function checkInputCache(v_type, name) {
 
 function registerVariableCache(key, v_type) {
     
-    jQuery("#"+key+"-input").on('input', function()  {
+    jQuery("#"+key+"-input").on('change', function()  {
         var col_name = $(this).val();
 
         // If non empty input passed
@@ -316,7 +316,7 @@ function updateInputField(key, existing) {
     // In the case that a set is saved, don't set input, as this is just the set name
     // If not a set though, try to set the input if undefined
     else if (existing['-input'] !== undefined) {
-        jQuery('#' + key + '-input').val(existing['-input']).trigger('input');
+        jQuery('#' + key + '-input').val(existing['-input']).trigger('change');
     }
     
     // Eventname
@@ -651,7 +651,7 @@ function registerChangeOutlier(key, data) {
 
 function registerSaveInput(key, data) {
 
-    jQuery("#"+key+"-input").on('input', function() {
+    jQuery("#"+key+"-input").on('change', function() {
         data['-input'] = $(this).val();
     });
 
@@ -661,7 +661,7 @@ function registerSaveInput(key, data) {
 }
 
 function registerOffValInput(key, data) {
-    jQuery("#"+key+"-input").on('input', function() {
+    jQuery("#"+key+"-input").on('change', function() {
         validateVariableInput(key, data);
     });
 }
@@ -696,7 +696,7 @@ function registerDestroySetVars(key, project) {
 
 function registerVariableCardName(key) {
 
-    jQuery("#"+key+"-input").on('input', function() {
+    jQuery("#"+key+"-input").on('change', function() {
         updateVariableCardName(key);
     });
 
@@ -705,7 +705,7 @@ function registerVariableCardName(key) {
     });
 
     // Trigger input once at init
-    jQuery("#"+key+"-input").trigger('input');
+    jQuery("#"+key+"-input").trigger('change');
 }
 
 function registerSetCardName(key) {
@@ -807,6 +807,10 @@ function registerInputField(key, data_types, data) {
 }
 
 function registerLoadVariableEvents(key, data_types, data) {
+
+    jQuery('#'+key+'-input').select2({
+        data: variable_choices
+    });
 
     // Register base input fields
     registerInputField(key, data_types, data);
