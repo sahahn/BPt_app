@@ -1,3 +1,4 @@
+var variables;
 var projects = [];
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
                      '-ml-pipe', '-evaluate', '-results'];
@@ -430,8 +431,13 @@ function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
         console.log(data)
-    });
 
+        if (data !== 'not ready') {
+            clearInterval(db_interval);
+            variables = data;
+            startApp();
+        }
+    });
 }
 
 // On document load
@@ -448,9 +454,6 @@ jQuery(document).ready(function() {
         checkDBReady(db_interval);
     }, 1000);
 
-
-    
-    //startApp();
 });
 
 
