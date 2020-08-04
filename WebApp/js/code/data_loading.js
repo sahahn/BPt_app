@@ -810,53 +810,12 @@ function registerInputField(key, data_types, data) {
 
 function registerLoadVariableEvents(key, data_types, data) {
 
-    //jQuery('#'+key+'-input').select2({
-    //    data: variable_choices,
-    //});
-
-    // initialize select2 dropdown
-    $('#'+key+'-input').select2({
-        data: dropdownData(),
-        placeholder: 'search',
-        multiple: true,
-        // creating query with pagination functionality.
-        query: function (data) {
-            var pageSize,
-                    dataset,
-                    that = this;
-            pageSize = 20; // Number of the option loads at a time
-            results = [];
-            if (data.term && data.term !== '') {
-                // HEADS UP; for the _.filter function I use underscore (actually lo-dash) here
-                results = _.filter(that.data, function (e) {
-                    return e.text.toUpperCase().indexOf(data.term.toUpperCase()) >= 0;
-                });
-            } else if (data.term === '') {
-                results = that.data;
-            }
-            data.callback({
-                results: results.slice((data.page - 1) * pageSize, data.page * pageSize),
-                more: results.length >= data.page * pageSize,
-            });
-        },
+    jQuery('#'+key+'-input').select2({
+        "results": variable_choices,
+        "pagination": {
+            "more": true
+        }
     });
-
-    // Function to fetch the demo data for the dropdown menu
-    function get_random_word(str) {
-        return str
-                .split('').sort(function () {
-            return 0.5 - Math.random();
-        }).join('');
-    }
-    // For the testing purpose we are making a huge array of demo data (20 000 items)
-    function dropdownData() {
-        return _.map(_.range(1, 20000), function (i) {
-            return {
-                id: i,
-                text: get_random_word('The quick brown fox jumps over a lazy dog') + ' ' + i,
-            };
-        });
-    }
 
     // Register base input fields
     registerInputField(key, data_types, data);
