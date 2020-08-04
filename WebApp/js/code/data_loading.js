@@ -810,8 +810,16 @@ function registerInputField(key, data_types, data) {
 
 function registerLoadVariableEvents(key, data_types, data) {
 
-    jQuery('#'+key+'-input').select2({
-        data: variable_choices,
+    //jQuery('#'+key+'-input').select2({
+    //    data: variable_choices,
+    //});
+
+    // initialize select2 dropdown
+    $('#'+key+'-input').select2({
+        data: dropdownData(),
+        placeholder: 'search',
+        multiple: true,
+        // creating query with pagination functionality.
         query: function (data) {
             var pageSize,
                     dataset,
@@ -832,6 +840,23 @@ function registerLoadVariableEvents(key, data_types, data) {
             });
         },
     });
+
+    // Function to fetch the demo data for the dropdown menu
+    function get_random_word(str) {
+        return str
+                .split('').sort(function () {
+            return 0.5 - Math.random();
+        }).join('');
+    }
+    // For the testing purpose we are making a huge array of demo data (20 000 items)
+    function dropdownData() {
+        return _.map(_.range(1, 20000), function (i) {
+            return {
+                id: i,
+                text: get_random_word('The quick brown fox jumps over a lazy dog') + ' ' + i,
+            };
+        });
+    }
 
     // Register base input fields
     registerInputField(key, data_types, data);
