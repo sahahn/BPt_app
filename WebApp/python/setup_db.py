@@ -131,11 +131,8 @@ def upload_custom_data(custom_dr, con):
 
 def main():
 
-    # Get loc of database
-    db_dr = '/var/www/html/data/bpt/db'
-    os.makedirs(db_dr, exist_ok=True)
-
     # Make connection
+    db_dr = '/var/www/html/data/bpt/db'
     con = sqlite3.connect(db_dr)
     
     # Try to upload all custom data
