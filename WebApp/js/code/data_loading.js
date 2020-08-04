@@ -390,7 +390,7 @@ function updateVariableCardName(key) {
     var col_name = jQuery("#"+key+"-input").val();
     jQuery('#'+key+'-header-text').empty();
 
-    if (col_name.length > 0) {
+    if ((col_name !== undefined) && (col_name.length > 0)) {
         var eventname = jQuery('#'+key+'-eventname').val()
         var repr_name = getReprName(col_name, eventname);
         jQuery('#'+key+'-header-text').append(':  <i>' + repr_name + '</i>');
