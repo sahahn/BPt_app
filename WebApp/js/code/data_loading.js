@@ -810,12 +810,8 @@ function registerInputField(key, data_types, data) {
 
 function registerLoadVariableEvents(key, data_types, data) {
 
-    //jQuery('#'+key+'-input').select2({
-    //    "data": variable_choices,
-    //});
-
-    var pageSize = 50
-    
+    // Still dont have the code 100% digested, but it works for now
+    var pageSize = 30
     jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
     
     function (ArrayData, Utils) {
