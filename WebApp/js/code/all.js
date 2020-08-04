@@ -387,26 +387,20 @@ function noProjectDefault() {
     jQuery('#upload-user-dists').on('click', uploadPublicDists);
 }
 
-// On document load
-jQuery(document).ready(function() {
+function startApp() {
 
-    jQuery.post('php/setup.php');
-
-    // Use the select2 bootstrap theme
-    $.fn.select2.defaults.set("theme", "bootstrap4");
-
-    // It is important to first get if the user has any existing projects
+    // It is important to get if the user has any existing projects
     // s.t., should not allow any interaction, e.g., add new projects
     // before existing ones are loaded.
-    jQuery.getJSON('php/get_projects.php', function(data) {
+    jQuery.getJSON('php/get_projects.php', function (data) {
 
         if (Object.keys(data).includes('projects')) {
             projects = data['projects'];
 
             // Add all existing projects as options
             projects.forEach(project => {
-                
-                if (!Object.keys(project).includes('data')){
+
+                if (!Object.keys(project).includes('data')) {
                     project['data'] = {};
                 }
                 loadProject(project);
@@ -414,10 +408,10 @@ jQuery(document).ready(function() {
         };
 
         // Set w/ default no- project entry screen
-        noProjectDefault()
-    
+        noProjectDefault();
+
         // On click add var, call func
-        jQuery('#add-new-project').on('click', function() {
+        jQuery('#add-new-project').on('click', function () {
             addNewProject();
         });
 
@@ -426,11 +420,40 @@ jQuery(document).ready(function() {
 
 
         // Save the updated projects on leaving the window
-        $(window).bind('beforeunload', function(){
+        $(window).bind('beforeunload', function () {
             save_all();
         });
     });
+}
+
+function checkDBReady(db_interval) {
+
+    jQuery.getJSON('php/check_db_ready.php', function (data) {
+        console.log(data)
+    });
+
+}
+
+// On document load
+jQuery(document).ready(function() {
+
+    // Use the select2 bootstrap theme
+    $.fn.select2.defaults.set("theme", "bootstrap4");
+
+    // Run setup
+    jQuery.post('php/setup.php');
+
+    // Start loop to check if db ready
+    db_interval = setInterval(function() {
+        checkDBReady(db_interval);
+    }, 1000);
+
+
+    
+    //startApp();
 });
+
+
 
 
 
