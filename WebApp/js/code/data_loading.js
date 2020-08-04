@@ -810,11 +810,50 @@ function registerInputField(key, data_types, data) {
 
 function registerLoadVariableEvents(key, data_types, data) {
 
-    jQuery('#'+key+'-input').select2({
-        "results": variable_choices,
-        "pagination": {
-            "more": true
+    //jQuery('#'+key+'-input').select2({
+    //    "data": variable_choices,
+    //});
+
+    items = []
+    for (var i = 0; i < 1000; i++) {
+        items.push({ id: i, text : "item " + i})
+    }
+    
+    pageSize = 50
+    
+    jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
+    
+    function (ArrayData, Utils) {
+        function CustomData($element, options) {
+            CustomData.__super__.constructor.call(this, $element, options);
         }
+        Utils.Extend(CustomData, ArrayData);
+
+        CustomData.prototype.query = function (params, callback) {
+        
+            results = [];
+            if (params.term && params.term !== '') {
+                results = _.filter(items, function(e) {
+                return e.text.toUpperCase().indexOf(params.term.toUpperCase()) >= 0;
+                });
+            } else {
+                results = items;
+            }
+
+            if (!("page" in params)) {
+                params.page = 1;
+            }
+            var data = {};
+            data.results = results.slice((params.page - 1) * pageSize, params.page * pageSize);
+            data.pagination = {};
+            data.pagination.more = params.page * pageSize < results.length;
+            callback(data);
+        };
+    
+        jQuery('#'+key+'-input').select2({
+            ajax: {},
+            dataAdapter: CustomData
+        });
     });
 
     // Register base input fields

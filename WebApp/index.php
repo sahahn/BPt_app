@@ -147,7 +147,12 @@
   <script type="text/javascript" src="js/libraries/buttons.bootstrap4.min.js"></script>
   <script type="text/javascript" src="js/libraries/pdfmake.min.js"></script>
   <script type="text/javascript" src="js/libraries/vfs_fonts.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
+
   
+  
+
+
 
   <!-- Main scripts -->
   <script src="js/code/utils.js"></script>
