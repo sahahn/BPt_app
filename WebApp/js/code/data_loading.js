@@ -814,12 +814,7 @@ function registerLoadVariableEvents(key, data_types, data) {
     //    "data": variable_choices,
     //});
 
-    items = []
-    for (var i = 0; i < 1000; i++) {
-        items.push({ id: i, text : "item " + i})
-    }
-    
-    pageSize = 50
+    var pageSize = 50
     
     jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
     
@@ -831,13 +826,13 @@ function registerLoadVariableEvents(key, data_types, data) {
 
         CustomData.prototype.query = function (params, callback) {
         
-            results = [];
+            var results = [];
             if (params.term && params.term !== '') {
-                results = _.filter(items, function(e) {
+                results = _.filter(variable_choices, function(e) {
                 return e.text.toUpperCase().indexOf(params.term.toUpperCase()) >= 0;
                 });
             } else {
-                results = items;
+                results = variable_choices;
             }
 
             if (!("page" in params)) {
