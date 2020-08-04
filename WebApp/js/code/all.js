@@ -1,4 +1,5 @@
 var variables;
+var variable_choices;
 var projects = [];
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
                      '-ml-pipe', '-evaluate', '-results'];
@@ -435,6 +436,7 @@ function checkDBReady(db_interval) {
         if (data !== 'not ready') {
             clearInterval(db_interval);
             variables = data;
+            variable_choices = arrayToChoices(variables);
             startApp();
         }
     });
