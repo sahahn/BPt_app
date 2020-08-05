@@ -456,10 +456,12 @@ function showSets() {
 
         $(this).parent().append('<table id="temp"></table>');
         $('#temp').DataTable({
-            data: results.map(v => [v, 'Remove']),
-            columns: [{title: "Variable"},  {title: "", orderable: false}],
-            "scrollY": 500,
-            "scrollX": true,
+            data: results.map(v => [v, '<span aria-hidden="true">&times;</span>']),
+            columns: [{title: "Variable"},  {title: "Delete", orderable: false}],
+            scrollX: true,
+            autoWidth: true,
+            lengthChange: true,
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
         });
     });
 
