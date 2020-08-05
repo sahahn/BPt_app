@@ -810,6 +810,9 @@ function registerInputField(key, data_types, data) {
 
 function registerLoadVariableEvents(key, data_types, data) {
 
+    // Still dont have the code 100% digested, but it works for now
+    registerInputVar(key);
+
     // Register base input fields
     registerInputField(key, data_types, data);
     
@@ -824,9 +827,6 @@ function registerLoadVariableEvents(key, data_types, data) {
 
     // Register set variable specific
     registerSetVariable(key);
-
-    // Still dont have the code 100% digested, but it works for now
-    registerInputVar(key);
     
     // Set w/ any existing from saved project data
     updateInputField(key, data);
