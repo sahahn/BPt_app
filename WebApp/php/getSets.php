@@ -95,6 +95,9 @@ if ($action == "get") {
             if ($name !== "") {
                 $dat['name'] = $name;
             }
+            if (empty($variables)) {
+                $dat['variables'] = $variables;
+            }
             break;
         }
     }
