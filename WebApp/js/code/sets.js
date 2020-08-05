@@ -21,6 +21,7 @@ function initSetTable(set_id, variables) {
         columns: [{title: "Variable"},  {title: "", orderable: false, className: "text-center"}],
         scrollX: true,
         autoWidth: true,
+        searchable: false,
         lengthChange: true,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
     });
