@@ -404,7 +404,7 @@ function showSets() {
 
     var html = '' +
     '<div class="card-columns">' +
-    '<div class="card w-75">' +
+    '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title"><input type="text" class="set-name form-control"></h5>' +
          getPopLabel('temp', "Set From Search ", "Blah Blah Blah") +
@@ -418,13 +418,13 @@ function showSets() {
     '</div>' +
     '</div>' +
 
-    '<div class="card w-100">' +
+    '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
     '</div>' +
     '</div>' +
 
-    '<div class="card w-150">' +
+    '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
     '</div>' +
@@ -436,12 +436,14 @@ function showSets() {
     jQuery('#body-sets').css('display', 'block');
 
     jQuery('.search-button').on('click', function() {
-        console.log($(this).siblings().val());
 
+        var search = $(this).siblings().val();
+        var results = variables.filter(entry => entry.match(RegExp(search)));
+        console.log(results);
     });
 
 
-    //variables.filter(entry => entry.match(RegExp('^id')))
+    //
 
 
 
