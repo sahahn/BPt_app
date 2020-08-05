@@ -411,7 +411,7 @@ function showSets() {
 
         '<div class="row">' +
         '<div class="col">' +
-        '<input type="text" class="form-control">' +
+        '<input type="text" class="form-control" style="width: 50%;">' +
         '<button class="btn">Search</button>' +
         '</div></div>' +
 
