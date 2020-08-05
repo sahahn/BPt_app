@@ -32,14 +32,12 @@ function initSetTable(set_id, variables) {
 
         jQuery('.set-rm').off('click');
         jQuery('.set-rm').on('click', function() {
-            console.log($(this).parent());
+            console.log($(this).parent().parent());
         });
 
     });
 
-
-
-
+    table.trigger('draw.dt');
 }
 
 function addSet(set, shown_sets) {
@@ -119,12 +117,15 @@ function showSets() {
             var results = variables.filter(entry => entry.match(RegExp(search)));
             initSetTable(set_id, results);
 
-            jQuery.getJSON('php/getSets.php',
-            { "action": "save",
-              "variables": results,
-              "id":$(this).data()['id']}, function(data) {
-                console.log(data);
-            });
+            if (search.length < 5000) {
+
+                jQuery.getJSON('php/getSets.php',
+                { "action": "save",
+                "variables": results,
+                "id":$(this).data()['id']}, function(data) {
+                    console.log(data);
+                });
+            }
         }
 
         else {
