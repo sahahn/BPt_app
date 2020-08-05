@@ -118,6 +118,8 @@ function showSets() {
 
     });
 
+}
+
 
 
     // sets should be already loaded
