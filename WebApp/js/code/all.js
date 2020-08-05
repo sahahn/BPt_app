@@ -23,6 +23,7 @@ function hideAllProjSteps() {
         jQuery('#body'+step).css('display', 'none');
     });
     jQuery('#body-noproj').css('display', 'none');
+    jQuery('#body-sets').css('display', 'none');
 }
 
 function clearAllProjSteps() {
@@ -406,6 +407,8 @@ function showSets() {
     '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
+        '<input type="text" class="form-control">' +
+
     '</div>' +
     '</div>' +
 
