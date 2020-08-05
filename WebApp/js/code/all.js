@@ -404,7 +404,7 @@ function showSets() {
 
     var html = '' +
     '<div class="row">' +
-    '<div class="col">' +
+    '<div class="col col-md-6">' +
 
     '<div class="card">' +
     '<div class="card-body">' +
@@ -422,7 +422,7 @@ function showSets() {
     '</div>' +
     
     '</div>' +
-    '<div class="col">' +
+    '<div class="col col-md-6">' +
 
     '<div class="card">' +
     '<div class="card-body">' +
@@ -434,7 +434,7 @@ function showSets() {
     '</div>' +
 
     '<div class="row">' +
-    '<div class="col">' +
+    '<div class="col col-md-6">' +
 
     '<div class="card">' +
     '<div class="card-body">' +
@@ -456,8 +456,8 @@ function showSets() {
 
         $(this).parent().append('<table id="temp"></table>');
         $('#temp').DataTable({
-            data: results,
-            columns: [{title: "Variable"}]
+            data: results.map(v => [v, '']),
+            columns: [{title: "Variable", title: ""}]
         });
 
 
