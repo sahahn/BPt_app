@@ -16,7 +16,7 @@ function initSetTable(set_id, variables) {
     // Make data table with passed variables
     var table = jQuery('#table-'+set_id);
     var rm_btn = '<button class="btn btn-sm btn-danger set-rm">Remove</button>';
-    table.DataTable({
+    var dt = table.DataTable({
         dom: '<"top"li>rt<"bottom"pf>',
         data: variables.map(v => [v, rm_btn]),
         columns: [{title: "Variable"},  {title: "", orderable: false, className: "text-center"}],
@@ -26,6 +26,19 @@ function initSetTable(set_id, variables) {
         lengthChange: true,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
     });
+
+
+    table.on('draw.dt', function() {
+
+        jQuery('.set-rm').off('click');
+        jQuery('.set-rm').on('click', function() {
+            console.log($(this).parent());
+        });
+
+    });
+
+
+
 
 }
 
@@ -129,6 +142,8 @@ function showSets() {
         });
 
     });
+
+
 
 }
 
