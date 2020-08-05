@@ -811,25 +811,33 @@ function registerInputField(key, data_types, data) {
 function registerLoadVariableEvents(key, data_types, data) {
 
     // Still dont have the code 100% digested, but it works for now
+    console.log('1' + project['data'][key]['-input']);
     registerInputVar(key);
+    console.log('2' + project['data'][key]['-input']);
 
     // Register base input fields
     registerInputField(key, data_types, data);
+    console.log('3' + project['data'][key]['-input']);
     
     // Update card name w/ change
     registerVariableCardName(key);
+    console.log('4' + project['data'][key]['-input']);
     
     // Register save to project for input + event name
     registerSaveInput(key, data);
+    console.log('5' + project['data'][key]['-input']);
     
     // Register input validation
     registerOffValInput(key, data);
+    console.log('6' + project['data'][key]['-input']);
 
     // Register set variable specific
     registerSetVariable(key);
+    console.log('7' + project['data'][key]['-input']);
     
     // Set w/ any existing from saved project data
     updateInputField(key, data);
+    console.log('8' + project['data'][key]['-input']);
 }
 
 function registerInputVar(key) {
