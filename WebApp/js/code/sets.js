@@ -100,11 +100,14 @@ function showSets() {
     jQuery('.search-text').on('input', function() {
 
         var search = $(this).val();
+        var set_id = $(this).data('id');
 
         if (search.length !== 0) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
-            var set_id = $(this).data('id');
             initSetTable(set_id, results);
+        }
+        else {
+            jQuery('#spot-'+set_id).empty();
         }
     });
 
