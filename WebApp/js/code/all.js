@@ -445,6 +445,8 @@ function showSets() {
         var search = $(this).siblings().val();
         var results = variables.filter(entry => entry.match(RegExp(search)));
         console.log(results);
+
+        console.log($(this).parent());
     });
 
 
