@@ -390,6 +390,17 @@ function noProjectDefault() {
     jQuery('#upload-user-dists').on('click', uploadPublicDists);
 }
 
+function getSetTable(set_id) {
+
+    var html = '' +
+    '<div>' +
+    '<br><hr>' +
+    '<table id="table-'+set_id+'" class="table table-striped" style="width:100%"></table>' +
+    '</div>';
+
+    return html;
+}
+
 function showSets() {
 
     // Clear everything
@@ -454,12 +465,12 @@ function showSets() {
         var results = variables.filter(entry => entry.match(RegExp(search)));
         console.log(results);
 
-        $(this).parent().append('<table id="temp" class="table table-striped" style="width:100%"></table>');
+        $(this).parent().append(getSetTable('temp'));
         var rm_btn = '<button class="btn btn btn-danger set-rm">Remove</button>';
 
-        $('#temp').DataTable({
+        $('#table-temp').DataTable({
             data: results.map(v => [v, rm_btn]),
-            columns: [{title: "Variable"},  {title: "", orderable: false}],
+            columns: [{title: "Variable"},  {title: "", orderable: false, className: "text-center"}],
             scrollX: true,
             autoWidth: true,
             lengthChange: true,
