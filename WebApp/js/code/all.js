@@ -411,8 +411,8 @@ function showSets() {
 
         '<div class="row">' +
         '<div class="col">' +
-        '<input type="text" class="form-control" style="width: 70%; margin-right:3px; display:inline-block">' +
-        '<button class="btn">Search</button>' +
+        '<input type="text" class="form-control search-text" style="width: 70%; margin-right:3px; display:inline-block">' +
+        '<button class="btn search-button">Search</button>' +
         '</div></div>' +
 
     '</div>' +
@@ -434,6 +434,9 @@ function showSets() {
 
     jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
+
+
+    //variables.filter(entry => entry.match(RegExp('^id')))
 
 
 
