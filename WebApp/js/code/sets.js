@@ -52,7 +52,7 @@ function addSet(set, shown_sets) {
     '</div>' +
     '</div>';
 
-    jQuery('#body-sets').append(html);
+    jQuery('#card-cols').append(html);
 
     if (set['variables'].length > 0) {
         initSetTable(set_id, set['variables']);
@@ -83,6 +83,7 @@ function showSets() {
     }
 
     var shown_sets = 0;
+    jQuery('#body-sets').append('<div id="card-cols" class="card-columns"></div>');
     jQuery('#body-sets').css('display', 'block');
 
     // Add each existing set
