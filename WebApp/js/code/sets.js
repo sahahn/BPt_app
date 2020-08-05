@@ -4,9 +4,6 @@ function getSetTableHTML(set_id) {
     '<br>' +
     '<div id="spot-'+set_id+'">' +
     '</div>';
-    
-   
-    
 
     return html;
 }
@@ -63,6 +60,7 @@ function addSet(set, shown_sets) {
         html += '</div>';
     }
 
+    console.log(html);
     jQuery('#body-sets').append(html);
 
     if (set['variables'].length > 0) {
@@ -103,10 +101,10 @@ function showSets() {
         shown_sets = addSet(set, shown_sets);
     });
 
-    jQuery.getJSON('php/getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
-        console.log(data)
+    //jQuery.getJSON('php/getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
+   //     console.log(data)
     
-    });
+  //  });
 
    
     jQuery('.search-button').on('click', function() {
