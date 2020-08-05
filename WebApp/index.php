@@ -120,6 +120,7 @@
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
         <div id="body-noproj"></div>
+        <div id="body-sets"></div>
         <div id="body-setup"></div>
         <div id="body-data-loading"></div>
         <div id="body-val"></div>

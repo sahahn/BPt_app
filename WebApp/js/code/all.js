@@ -364,7 +364,7 @@ function noProjectDefault() {
          return;
      }
 
-    html = '' +
+    var html = '' +
     '<div class="form-row">' +
     '<div class="col-md-1"></div>' +
     '<div class="form-group col-md-4">' +
@@ -391,11 +391,27 @@ function noProjectDefault() {
 
 function showSets() {
 
-    removeActiveProjects();
-    jQuery('#top-text').empty();
-    jQuery('#delete-project').css('display', 'none');
+    // Clear everything
+    noProjectDefault();
+    jQuery('#body-noproj').css('display', 'none');
 
-    jQuery.getJSON('php/getSets.php', function(data) {
+    // If already loaded
+    if (jQuery('#body-sets').html().length > 30) {
+        jQuery('#body-sets').css('display', 'block');
+        return;
+    }
+
+    var html = '' +
+    '<div class="form-row">' +
+    'temp' + 
+    '</div>';
+
+    jQuery('#body-sets').append(html);
+    jQuery('#body-sets').css('display', 'block');
+
+
+
+    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
         console.log(data);
     });
 
@@ -454,7 +470,6 @@ function startApp() {
 function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
-        console.log(data)
 
         if (data !== 'not ready') {
             clearInterval(db_interval);
