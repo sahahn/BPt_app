@@ -79,15 +79,15 @@ if ($action == "get") {
         echo("{ \"message\": \"no id specified\" }");
         return; // no id specified, do nothing
     }
+
     
     $name = "";
     if (isset($_GET['name'])) {
         $name = $_GET['name'];
     }
     $variables = array();
-    if (isset($_POST['variables'])) {
-        $variables = $_POST['variables'];
-        echo json_encode($variables);
+    if (isset($_GET['variables'])) {
+        $variables = $_GET['variables'];
     }
     //$data = json_decode(file_get_contents($fn), true);
     $data = readData();
