@@ -457,7 +457,7 @@ function showSets() {
         $(this).parent().append('<table id="temp"></table>');
         $('#temp').DataTable({
             data: results.map(v => [v, '']),
-            columns: [{title: "Variable", title: ""}]
+            columns: [{title: "Variable"},  {title: ""}]
         });
 
 
