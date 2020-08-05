@@ -392,6 +392,18 @@ function noProjectDefault() {
 function showSets() {
 
     removeActiveProjects();
+    jQuery('#top-text').empty();
+    jQuery('#delete-project').css('display', 'none');
+
+    jQuery.getJSON('getSets.php', function(data) {
+        console.log(data);
+    });
+
+    //"name": "smri",
+    //"variables": [],
+    //"id": "ABCD5eb07431c916d"
+
+
 
 }
 
