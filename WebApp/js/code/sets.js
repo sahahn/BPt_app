@@ -1,23 +1,23 @@
 function getSetTableHTML(set_id) {
 
     var html = '' +
-    '<div>' +
     '<br>' +
-    '<table id="table-'+set_id+'" data-id="'+set_id+'" class="table table-striped" style="width:100% display: none>"></table>' +
+    '<div id="spot-'+set_id+'">' +
     '</div>';
+    
+   
+    
 
     return html;
 }
 
 function initSetTable(set_id, variables) {
     
-    var table = jQuery('#table-'+set_id);
+    var table_spot = jQuery('#spot-'+set_id);
+    table_spot.empty().append('<table id="table-'+set_id+'"> data-id="'+set_id+'" class="table table-striped" style="width:100%"></table>');
     
-    // Make sure empty and displayed
-    table.replaceWith(getSetTableHTML(set_id));
-    table.css('display', 'block');
-
     // Make data table with passed variables
+    var table = jQuery('#table-'+set_id);
     var rm_btn = '<button class="btn btn btn-danger set-rm">Remove</button>';
     table.DataTable({
         data: variables.map(v => [v, rm_btn]),
