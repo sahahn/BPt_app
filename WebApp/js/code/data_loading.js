@@ -81,13 +81,15 @@ function registerVariableCache(key, v_type) {
         var col_name = $(this).val();
 
         // If non empty input passed
-        if (col_name.length > 0) {
+        if (col_name !== undefined) {
+            if (col_name.length > 0) {
 
-            // Check the variable cache for top used associated keys, and if any replace w/ those values for default
-            var top_keys = checkInputCache(v_type, col_name);
-            if (top_keys !== undefined) {
-                updateInputField(key, top_keys);
-                $(this).focus();
+                // Check the variable cache for top used associated keys, and if any replace w/ those values for default
+                var top_keys = checkInputCache(v_type, col_name);
+                if (top_keys !== undefined) {
+                    updateInputField(key, top_keys);
+                    $(this).focus();
+                }
             }
         }
     });
