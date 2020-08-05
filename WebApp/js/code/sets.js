@@ -103,7 +103,7 @@ function showSets() {
         shown_sets = addSet(set, shown_sets);
     });
 
-    jQuery.getJSON('getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
+    jQuery.getJSON('php/getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
         console.log(data)
     
     });
