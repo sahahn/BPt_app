@@ -408,8 +408,12 @@ function showSets() {
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
          getPopLabel('temp', "Set From Search ", "Blah Blah Blah") +
+
+        '<div class="row">' +
+        '<div class="col">' +
         '<input type="text" class="form-control">' +
         '<button class="btn">Search</button>' +
+        '</div></div>' +
 
     '</div>' +
     '</div>' +
