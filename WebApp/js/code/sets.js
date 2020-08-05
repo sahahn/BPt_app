@@ -32,7 +32,7 @@ function initSetTable(set_id, variables) {
 
         jQuery('.set-rm').off('click');
         jQuery('.set-rm').on('click', function() {
-            console.log($(this).parent().siblings());
+            console.log($(this).parent().siblings().html());
         });
 
     });
