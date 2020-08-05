@@ -45,8 +45,7 @@ function addSet(set, shown_sets) {
         '<div class="row">' +
         '<div class="col">' +
         '<div>' +
-        '<input type="text" class="form-control search-text" style="width: 70%; margin-right:3px; display:inline-block">' +
-        '<button data-id="'+set['id']+'" class="btn search-button">Search</button>' +
+        '<input data-id="'+set['id']+'" type="text" class="form-control search-text">' +
         '</div>' +
         getSetTableHTML(set['id']) +
         '</div></div>' +
@@ -93,15 +92,14 @@ function showSets() {
         shown_sets = addSet(set, shown_sets);
     });
 
-    //jQuery.getJSON('php/getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
-   //     console.log(data)
-    
-  //  });
+        //jQuery.getJSON('php/getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
+         //     console.log(data)
 
-   
-    jQuery('.search-button').on('click', function() {
+         //  });
 
-        var search = $(this).siblings().val();
+    jQuery('.search-text').on('change', function() {
+
+        var search = $(this).val();
         var results = variables.filter(entry => entry.match(RegExp(search)));
         var set_id = $(this).data('id');
         initSetTable(set_id, results);
