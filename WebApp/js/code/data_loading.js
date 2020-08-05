@@ -316,8 +316,9 @@ function updateInputField(key, existing) {
     // In the case that a set is saved, don't set input, as this is just the set name
     // If not a set though, try to set the input if undefined
     else if (existing['-input'] !== undefined) {
-        console.log(existing['-input']);
+        console.log(key + existing['-input']);
         jQuery('#' + key + '-input').val(existing['-input']).trigger('change');
+        console.log(key + existing['-input']);
     }
     
     // Eventname
