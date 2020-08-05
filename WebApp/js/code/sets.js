@@ -97,13 +97,15 @@ function showSets() {
 
          //  });
 
-    jQuery('.search-text').on('change', function() {
+    jQuery('.search-text').on('input', function() {
 
         var search = $(this).val();
-        var results = variables.filter(entry => entry.match(RegExp(search)));
-        var set_id = $(this).data('id');
-        initSetTable(set_id, results);
 
+        if (search.length !== 0) {
+            var results = variables.filter(entry => entry.match(RegExp(search)));
+            var set_id = $(this).data('id');
+            initSetTable(set_id, results);
+        }
     });
 
 }
