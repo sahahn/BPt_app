@@ -318,9 +318,20 @@ function updateInputField(key, existing) {
     // In the case that a set is saved, don't set input, as this is just the set name
     // If not a set though, try to set the input if undefined
     else if (existing['-input'] !== undefined) {
-        console.log(key + existing['-input']);
-        jQuery('#' + key + '-input').val(existing['-input']).trigger('change');
-        console.log(key + existing['-input']);
+
+        //jQuery('#' + key + '-input').val(existing['-input']).trigger('change');
+        
+        var selectInput = jQuery('#'+key+'-input');
+        var option = new Option(existing['-input'], existing['-input'], true, true);
+        selectInput.append(option).trigger('change');
+
+        // manually trigger the `select2:select` event
+        //selectInput.trigger({
+        //    type: 'select2:select',
+        //    params: {
+         //       data: data
+          //  }
+        //});
     }
     
     // Eventname
@@ -870,7 +881,7 @@ function registerInputVar(key) {
                 callback(data);
             };
 
-            jQuery('#' + key + '-input').select2({
+            jQuery('#'+key+'-input').select2({
                 ajax: {},
                 dataAdapter: CustomData
             });
