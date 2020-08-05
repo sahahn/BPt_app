@@ -454,7 +454,7 @@ function showSets() {
         var results = variables.filter(entry => entry.match(RegExp(search)));
         console.log(results);
 
-        $(this).parent().append('<table id="temp"></table>');
+        $(this).parent().append('<table id="temp" class="table table-striped" style="width:100%"></table>');
         $('#temp').DataTable({
             data: results.map(v => [v, '<span aria-hidden="true">&times;</span>']),
             columns: [{title: "Variable"},  {title: "Delete", orderable: false}],
