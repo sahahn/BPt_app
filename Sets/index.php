@@ -26,7 +26,7 @@
   <script type="text/javascript" src="../WebApp/js/libraries/popper.min.js"></script>
   <script type="text/javascript" src="../WebApp/js/libraries/bootstrap.min.js"></script>
   <script type="text/javascript" src="../WebApp/js/libraries/select2.min.js"></script>
-  <script type="text/javascript" src="js/customSets"></script>
-  
+  <script type="text/javascript" src="js/customSets.js"></script>
+
   </body>
 </html>
