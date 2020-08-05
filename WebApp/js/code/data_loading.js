@@ -316,6 +316,7 @@ function updateInputField(key, existing) {
     // In the case that a set is saved, don't set input, as this is just the set name
     // If not a set though, try to set the input if undefined
     else if (existing['-input'] !== undefined) {
+        console.log(existing['-input']);
         jQuery('#' + key + '-input').val(existing['-input']).trigger('change');
     }
     
@@ -811,33 +812,26 @@ function registerInputField(key, data_types, data) {
 function registerLoadVariableEvents(key, data_types, data) {
 
     // Still dont have the code 100% digested, but it works for now
-    console.log('1' + data['-input']);
     registerInputVar(key);
-    console.log('2' + data['-input']);
 
     // Register base input fields
     registerInputField(key, data_types, data);
-    console.log('3' + data['-input']);
     
     // Update card name w/ change
     registerVariableCardName(key);
-    console.log('4' + data['-input']);
-    
+
     // Register save to project for input + event name
     registerSaveInput(key, data);
-    console.log('5' + data['-input']);
     
     // Register input validation
     registerOffValInput(key, data);
-    console.log('6' + data['-input']);
 
     // Register set variable specific
     registerSetVariable(key);
-    console.log('7' + data['-input']);
     
     // Set w/ any existing from saved project data
     updateInputField(key, data);
-    console.log('8' + data['-input']);
+
 }
 
 function registerInputVar(key) {
