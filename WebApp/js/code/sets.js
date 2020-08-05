@@ -56,7 +56,7 @@ function addSet(set, shown_sets) {
     jQuery('#card-cols').append(html);
 
     if (set['variables'].length > 0) {
-        initSetTable(set_id, set['variables']);
+        initSetTable(set['id'], set['variables']);
     }
 
 
@@ -113,7 +113,7 @@ function showSets() {
                 console.log(data);
             });
         }
-        
+
         else {
             jQuery('#spot-'+set_id).empty();
         }
