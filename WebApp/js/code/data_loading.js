@@ -317,7 +317,6 @@ function updateInputField(key, existing) {
     // If not a set though, try to set the input if undefined
     else if (existing['-input'] !== undefined) {
         jQuery('#' + key + '-input').val(existing['-input']).trigger('change');
-        console.log('set' + existing['-input']);
     }
     
     // Eventname
@@ -655,7 +654,6 @@ function registerChangeOutlier(key, data) {
 function registerSaveInput(key, data) {
 
     jQuery("#"+key+"-input").on('change', function() {
-        console.log('save input' + $(this).val());
         data['-input'] = $(this).val();
     });
 
@@ -812,6 +810,12 @@ function registerInputField(key, data_types, data) {
 
 function registerLoadVariableEvents(key, data_types, data) {
 
+    // Register base input fields
+    registerInputField(key, data_types, data);
+    
+    // Update card name w/ change
+    registerVariableCardName(key);
+
     // Still dont have the code 100% digested, but it works for now
     var pageSize = 30
     jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
@@ -848,12 +852,6 @@ function registerLoadVariableEvents(key, data_types, data) {
             dataAdapter: CustomData
         });
     });
-
-    // Register base input fields
-    registerInputField(key, data_types, data);
-    
-    // Update card name w/ change
-    registerVariableCardName(key);
     
     // Register save to project for input + event name
     registerSaveInput(key, data);
