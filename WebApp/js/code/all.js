@@ -435,7 +435,7 @@ function showSets() {
     jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
 
-    $(".setname").editable("click", function(e){
+    $(".set-name").editable("click", function(e){
         console.log(e.value);
     });
 
