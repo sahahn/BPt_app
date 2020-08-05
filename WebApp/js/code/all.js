@@ -440,6 +440,7 @@ function checkDBReady(db_interval) {
             variable_choices = arrayToChoices(variables);
             startApp();
 
+            console.log('return false');
             return false;
         }
     });
@@ -457,6 +458,8 @@ jQuery(document).ready(function() {
     jQuery.post('php/setup.php');
 
     if (checkDBReady() == true) {
+
+        console.log('wy')
 
         // Start loop to check if db ready
         db_interval = setInterval(function() {
