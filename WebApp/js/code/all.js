@@ -403,8 +403,10 @@ function showSets() {
     }
 
     var html = '' +
-    '<div class="card-columns">' +
-    '<div class="card w-100">' +
+    '<div class="row">' +
+    '<div class="col">' +
+
+    '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title"><input type="text" class="set-name form-control" placeholder="Set Name"></h5>' +
          getPopLabel('temp', "Set From RegExp ", "Blah Blah Blah") +
@@ -416,24 +418,31 @@ function showSets() {
         '<button class="btn search-button">Search</button>' +
         '</div>' +
         '</div></div>' +
-
-        
-
     '</div>' +
     '</div>' +
+    
+    '</div>' +
+    '<div class="col">' +
 
-    '<div class="card w-100">' +
+    '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
     '</div>' +
     '</div>' +
 
-    '<div class="card w-100">' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="row">' +
+    '<div class="col">' +
+
+    '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
     '</div>' +
     '</div>' +
 
+    '</div>' +
     '</div>';
 
     jQuery('#body-sets').append(html);
