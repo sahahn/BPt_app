@@ -101,6 +101,7 @@ if ($action == "get") {
             break;
         }
     }
+    echo json_encode($data);
     saveData($data);
     return;
 } else if ($action == "create") {
