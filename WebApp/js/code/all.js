@@ -455,9 +455,11 @@ function showSets() {
         console.log(results);
 
         $(this).parent().append('<table id="temp" class="table table-striped" style="width:100%"></table>');
+        var rm_btn = '<button class="btn btn btn-danger set-rm">Remove</button>';
+
         $('#temp').DataTable({
-            data: results.map(v => [v, '<span aria-hidden="true">&times;</span>']),
-            columns: [{title: "Variable"},  {title: "Delete", orderable: false}],
+            data: results.map(v => [v, rm_btn]),
+            columns: [{title: "Variable"},  {title: "", orderable: false}],
             scrollX: true,
             autoWidth: true,
             lengthChange: true,
