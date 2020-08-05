@@ -54,7 +54,7 @@ function addSet(set, shown_sets) {
 
     '<div class="card" id="card-'+set['id']+'">' +
     '<div class="card-body">' +
-        '<h5 class="card-title"><input data-id="'+set['id']+'" type="text" class="set-name form-control" placeholder="Set Name" value="'+set['name']+'">' +
+        '<h5 class="card-title"><input style="display:inline-block;" data-id="'+set['id']+'" type="text" class="set-name form-control" placeholder="Set Name" value="'+set['name']+'">' +
         '<span class="pull-right clickable close-icon" data-effect="fadeOut"><i class="fa fa-times"></i></span>' + 
         '</h5>' +
         '<hr>' +
