@@ -23,7 +23,7 @@ def main(user_dr, n):
 if __name__ == "__main__":
 
     with open('/tmp/hi', 'w') as f:
-            f.write('?')
+        f.write('!')
 
     parser = argparse.ArgumentParser(description='ABCD_ML Load Target Script')
     parser.add_argument('user_dr', type=str,
