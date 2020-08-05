@@ -55,21 +55,17 @@ function addSet(set, shown_sets) {
     '<div class="card" id="card-'+set['id']+'">' +
     '<div class="card-body">' +
 
-    '<div class="row">' +
-    '<div class="col">' +
-    '<h5 class="card-title"><input data-id="'+set['id']+'" type="text" class="set-name form-control" placeholder="Set Name" value="'+set['name']+'"></h5>' +
-    '</div>' +
-    '<div class="col">' +
-    '<button type="button" class="close" aria-label="Close">' +
-      '<span aria-hidden="true">&times;</span>' +
-    '</button>' +
-    '</div>' +
-    '</div>' +
+        '<div class="row">' +
+        '<div class="col col-md-10">' +
+        '<h5 class="card-title"><input data-id="'+set['id']+'" type="text" class="set-name form-control" placeholder="Set Name" value="'+set['name']+'"></h5>' +
+        '</div>' +
+        '<div class="col col-md-2">' +
+        '<button type="button" data-id="'+set['id']+'" class="set-close" aria-label="Close">' +
+        '<span aria-hidden="true">&times;</span>' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
 
-
-
-        
-        
         '<hr>' +
          getPopLabel(undefined, "Set from RegExp ", "Blah Blah Blah") +
 
