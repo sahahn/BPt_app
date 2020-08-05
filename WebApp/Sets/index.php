@@ -19,7 +19,7 @@
   
   <body spellcheck="false">
     <div class="container-fluid" style="margin-top: 10px;">
-     hi
+     
     </div>
 
   <script type="text/javascript" src="../js/libraries/jquery-3.2.1.min.js"></script>
