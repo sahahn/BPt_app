@@ -10,7 +10,7 @@ var slider_keys = ["percent", "std", "cat", "percent-cat", "std-cat"];
 //////////////////
 
 function getAllSets() {
-    jQuery.getJSON('Sets/getSets.php', { "action": "get" }, function(data) {
+    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
 	    sets = data;
     });
 }
