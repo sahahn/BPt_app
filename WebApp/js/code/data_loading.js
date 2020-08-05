@@ -815,55 +815,61 @@ function registerLoadVariableEvents(key, data_types, data) {
     
     // Update card name w/ change
     registerVariableCardName(key);
-
-    // Still dont have the code 100% digested, but it works for now
-    var pageSize = 30
-    jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
-    
-    function (ArrayData, Utils) {
-        function CustomData($element, options) {
-            CustomData.__super__.constructor.call(this, $element, options);
-        }
-        Utils.Extend(CustomData, ArrayData);
-
-        CustomData.prototype.query = function (params, callback) {
-        
-            var results = [];
-            if (params.term && params.term !== '') {
-                results = _.filter(variable_choices, function(e) {
-                return e.text.toUpperCase().indexOf(params.term.toUpperCase()) >= 0;
-                });
-            } else {
-                results = variable_choices;
-            }
-
-            if (!("page" in params)) {
-                params.page = 1;
-            }
-            var data = {};
-            data.results = results.slice((params.page - 1) * pageSize, params.page * pageSize);
-            data.pagination = {};
-            data.pagination.more = params.page * pageSize < results.length;
-            callback(data);
-        };
-    
-        jQuery('#'+key+'-input').select2({
-            ajax: {},
-            dataAdapter: CustomData
-        });
-    });
     
     // Register save to project for input + event name
     registerSaveInput(key, data);
     
     // Register input validation
     registerOffValInput(key, data);
-    
+
     // Register set variable specific
     registerSetVariable(key);
+
+    // Still dont have the code 100% digested, but it works for now
+    registerInputVar(key);
     
     // Set w/ any existing from saved project data
     updateInputField(key, data);
+}
+
+function registerInputVar(key) {
+    
+    var pageSize = 30;
+    jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
+
+        function (ArrayData, Utils) {
+            function CustomData($element, options) {
+                CustomData.__super__.constructor.call(this, $element, options);
+            }
+            Utils.Extend(CustomData, ArrayData);
+
+            CustomData.prototype.query = function (params, callback) {
+
+                var results = [];
+                if (params.term && params.term !== '') {
+                    results = _.filter(variable_choices, function (e) {
+                        return e.text.toUpperCase().indexOf(params.term.toUpperCase()) >= 0;
+                    });
+                }
+                else {
+                    results = variable_choices;
+                }
+
+                if (!("page" in params)) {
+                    params.page = 1;
+                }
+                var data = {};
+                data.results = results.slice((params.page - 1) * pageSize, params.page * pageSize);
+                data.pagination = {};
+                data.pagination.more = params.page * pageSize < results.length;
+                callback(data);
+            };
+
+            jQuery('#' + key + '-input').select2({
+                ajax: {},
+                dataAdapter: CustomData
+            });
+        });
 }
 
 function registerLoadVariable(key, data_types, script, v_type, project) {
