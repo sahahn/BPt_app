@@ -655,6 +655,7 @@ function registerChangeOutlier(key, data) {
 function registerSaveInput(key, data) {
 
     jQuery("#"+key+"-input").on('change', function() {
+        console.log('save input' + $(this).val());
         data['-input'] = $(this).val();
     });
 
