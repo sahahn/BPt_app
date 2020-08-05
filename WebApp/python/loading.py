@@ -13,55 +13,22 @@ from caching import (save_cache_subjects, get_subj_param_hash,
                      check_loading_cache, save_to_loading_cache,
                      incr_input_cache, move_img_to_cache, check_loaded_cache,
                      save_to_loaded_cache)
+import sqlite3
 
 
 # Replace this w/ load from DB
 
 def fetchABCDData(variables):
-    '''Pass in variables & output is a pd dataframe'''
+
+    db_dr = '/var/www/html/data/bpt/db'
+    con = sqlite3.connect(db_dr)
 
     if not isinstance(variables, list):
         variables = [variables]
 
-    # Reverse map input
-    data_dr = '/var/www/html/data/tab_data/'
-
-    map_loc = os.path.join(data_dr, 'ABCDFixRelease2p0p1',
-                           'Fix Release Notes 2.0.1_Public',
-                           '24. ABCD_Release_2.0.1_Updates',
-                           'abcd_2.0.1_mapping.csv')
-
-    maps = pd.read_csv(map_loc)
-    rev_mapping = dict(zip(maps['deap_name'],
-                           maps['nda_name']))
-
-    # Apply reverse map
-    for i in range(len(variables)):
-        if variables[i] in rev_mapping:
-            variables[i] = rev_mapping[variables[i]]
-
-    # Load col to loc dict
-    with open(data_dr + 'col_to_loc.json', 'r') as f:
-        col_to_loc = json.load(f)
-
-    # Load requested columns by each file seperately
-    by_file = {}
-    for v in variables:
-
-        file = col_to_loc[v]
-
-        try:
-            by_file[data_dr + file].append(v)
-        except KeyError:
-            by_file[data_dr + file] = [v]
-
-    # Create dfs for each file
     dfs = []
-    for file in by_file:
-        dfs.append(pd.read_csv(file, sep='\t',
-                               skiprows=[1],
-                               usecols=by_file[file] + ['src_subject_id',
-                                                        'eventname']))
+    for variable in variables:
+        dfs.append(pd.read_sql_query("SELECT * from " + variable, con))
 
     if len(dfs) == 1:
         return dfs[0]
@@ -319,21 +286,7 @@ def init_ML(user_dr, output_loc, params, n=0):
     ML.Set_Default_Load_Params(dataset_type='basic',
                                eventname_col='eventname',
                                drop_na=True,
-                               subject_id='src_subject_id')
-
-    # Load the name_map next -- won't need once db
-    try:
-        data_dr = '/var/www/html/data/tab_data/'
-        map_loc = os.path.join(data_dr, 'ABCDFixRelease2p0p1',
-                               'Fix Release Notes 2.0.1_Public',
-                               '24. ABCD_Release_2.0.1_Updates',
-                               'abcd_2.0.1_mapping.csv')
-        ML.Load_Name_Map(loc=map_loc,
-                         dataset_type='custom',
-                         source_name_col='nda_name',
-                         target_name_col='deap_name')
-    except Exception as e:
-        save_error('Error loading internal name map', output_loc, e)
+                               subject_id='subject_id')
 
     if params['inclusions'] is not None:
         ML.Load_Inclusions(subjects=load_cache_subjects(params['inclusions']))
