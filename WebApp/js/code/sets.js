@@ -52,11 +52,12 @@ function addSet(set, shown_sets) {
 
     html += '' +
 
-    '<div class="card">' +
+    '<div class="card" id="card-'+set['id']+'">' +
     '<div class="card-body">' +
         '<h5 class="card-title"><input data-id="'+set['id']+'" type="text" class="set-name form-control" placeholder="Set Name" value="'+set['name']+'"></h5>' +
+        '<span class="pull-right clickable close-icon" data-effect="fadeOut"><i class="fa fa-times"></i></span>' + 
         '<hr>' +
-         getPopLabel(undefined, "Set From RegExp ", "Blah Blah Blah") +
+         getPopLabel(undefined, "Set from RegExp ", "Blah Blah Blah") +
 
         '<div class="row">' +
         '<div class="col">' +
@@ -118,19 +119,16 @@ function showSets() {
         var search = $(this).val();
         var set_id = $(this).data('id');
 
-        if (search.length !== 0) {
+        if ((search.length !== 0) && (search.length < 1000)) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
             initSetTable(set_id, results);
 
-            if (search.length < 5000) {
-
-                jQuery.getJSON('php/getSets.php',
-                { "action": "save",
-                "variables": results,
-                "id":$(this).data()['id']}, function(data) {
-                    console.log(data);
-                });
-            }
+            jQuery.getJSON('php/getSets.php',
+            { "action": "save",
+            "variables": results,
+            "id":$(this).data()['id']}, function(data) {
+                console.log(data);
+            });
         }
 
         else {
