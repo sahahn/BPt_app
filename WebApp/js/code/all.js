@@ -391,10 +391,6 @@ function noProjectDefault() {
 }
 
 
-
-
-}
-
 function startApp() {
 
     // It is important to get if the user has any existing projects
