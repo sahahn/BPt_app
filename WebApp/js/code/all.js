@@ -436,7 +436,7 @@ function showSets() {
     jQuery('#body-sets').css('display', 'block');
 
     jQuery('.search-button').on('click', function() {
-        console.log($(this).siblings()[0].val());
+        console.log($(this).siblings().val());
 
     });
 
