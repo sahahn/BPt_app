@@ -63,6 +63,10 @@
           <a class="nav-link" href="/index.php">
             <span><i class="fas fa-home navbutton"></i></span> Home
           </a>
+
+          <a class="nav-link" href="#">
+            <span><i class="fas fa-bars navbutton"></i></span> Sets
+          </a>
         </li>
       </ul>
 
