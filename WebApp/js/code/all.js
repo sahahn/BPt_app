@@ -389,6 +389,12 @@ function noProjectDefault() {
     jQuery('#upload-user-dists').on('click', uploadPublicDists);
 }
 
+function showSets() {
+
+    removeActiveProjects();
+
+}
+
 function startApp() {
 
     // It is important to get if the user has any existing projects
@@ -415,6 +421,11 @@ function startApp() {
         // On click add var, call func
         jQuery('#add-new-project').on('click', function () {
             addNewProject();
+        });
+
+        // Register Sets button
+        jQuery('#sets').on('click', function () {
+            showSets();
         });
 
         // Register save projects button
