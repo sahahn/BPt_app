@@ -32,7 +32,12 @@ function initSetTable(set_id, variables) {
 
         jQuery('.set-rm').off('click');
         jQuery('.set-rm').on('click', function() {
-            console.log($(this).parent().siblings().html());
+            var row_val = $(this).parent().siblings().html();
+
+            jQuery.getJSON('php/getSets.php', { "action": "removeMeasure", "id": set_id, "variable": row_val }, function(data) {
+            });
+
+            dt.row($(this).parents('tr')).remove().draw();
         });
 
     });
