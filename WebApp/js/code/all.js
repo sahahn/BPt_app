@@ -406,7 +406,7 @@ function showSets() {
     '<div class="card-columns">' +
     '<div class="card">' +
     '<div class="card-body">' +
-        '<h5 class="card-title"><div class="set-name" style="padding: 10px">Temp</div></h5>' +
+        '<h5 class="card-title"><input type="text" class="set-name"></h5>' +
          getPopLabel('temp', "Set From Search ", "Blah Blah Blah") +
 
         '<div class="row">' +
@@ -434,12 +434,6 @@ function showSets() {
 
     jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
-
-    $(".set-name").editable("click", function(e){
-        console.log(e.value);
-    });
-
-   
 
 
 
