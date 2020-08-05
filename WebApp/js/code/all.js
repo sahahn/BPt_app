@@ -406,7 +406,7 @@ function showSets() {
     '<div class="card-columns">' +
     '<div class="card">' +
     '<div class="card-body">' +
-        '<h5 class="card-title"><input type="text" class="set-name"></h5>' +
+        '<h5 class="card-title"><input type="text" class="set-name form-control"></h5>' +
          getPopLabel('temp', "Set From Search ", "Blah Blah Blah") +
 
         '<div class="row">' +
