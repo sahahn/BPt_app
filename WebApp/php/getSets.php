@@ -87,6 +87,7 @@ if ($action == "get") {
     $variables = array();
     if (isset($_POST['variables'])) {
         $variables = $_POST['variables'];
+        echo json_encode($variables);
     }
     //$data = json_decode(file_get_contents($fn), true);
     $data = readData();
@@ -101,7 +102,7 @@ if ($action == "get") {
             break;
         }
     }
-    echo json_encode($data);
+    
     saveData($data);
     return;
 } else if ($action == "create") {
