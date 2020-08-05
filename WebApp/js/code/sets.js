@@ -54,6 +54,8 @@ function addSet(set, shown_sets) {
         '</div></div>' +
     
     '</div>' +
+    '</div>' +
+
     '</div>';
 
     if (shown_sets % 2 == 1) {
