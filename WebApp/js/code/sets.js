@@ -32,11 +32,7 @@ function addSet(set, shown_sets) {
 
     var html = '';
 
-    if (shown_sets % 2 == 0) {
-        html += '<div class="row">'
-    }
-
-    html += '<div class="col col-md-6">' +
+    html += '' +
 
     '<div class="card">' +
     '<div class="card-body">' +
@@ -54,22 +50,13 @@ function addSet(set, shown_sets) {
         '</div></div>' +
     
     '</div>' +
-    '</div>' +
-
     '</div>';
 
-    if (shown_sets % 2 == 1) {
-        html += '</div>';
-    }
-
-    console.log(html);
     jQuery('#body-sets').append(html);
 
     if (set['variables'].length > 0) {
         initSetTable(set_id, set['variables']);
     }
-
-
 
 
     //"name": "smri",
