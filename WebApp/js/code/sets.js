@@ -60,7 +60,7 @@ function addSet(set, shown_sets) {
         '<h5 class="card-title"><input data-id="'+set['id']+'" type="text" class="set-name form-control" placeholder="Set Name" value="'+set['name']+'"></h5>' +
         '</div>' +
         '<div class="col col-md-2">' +
-        '<button type="button" data-id="'+set['id']+'" class="set-close" aria-label="Close">' +
+        '<button type="button" data-id="'+set['id']+'" class="set-close close" aria-label="Close">' +
         '<span aria-hidden="true">&times;</span>' +
         '</button>' +
         '</div>' +
