@@ -14,7 +14,7 @@ function initSetTable(set_id, variables) {
     var table = jQuery('#table-'+set_id);
     
     // Make sure empty and displayed
-    table.empty();
+    table.replaceWith(getSetTableHTML(set_id));
     table.css('display', 'block');
 
     // Make data table with passed variables
