@@ -91,10 +91,6 @@ function addSet(set, shown_sets) {
     //"variables": [],
     //"id":
 
-
-
-
-
     return shown_sets + 1;
 }
 
@@ -124,6 +120,7 @@ function showSets() {
 
          //  });
 
+    jQuery('.search-text').off('change');
     jQuery('.search-text').on('change', function() {
 
         var search = $(this).val();
@@ -146,6 +143,7 @@ function showSets() {
         }
     });
 
+    jQuery('.set-name').off('change');
     jQuery('.set-name').on('change', function() {
 
         jQuery.getJSON('php/getSets.php',
@@ -154,6 +152,20 @@ function showSets() {
            "id":$(this).data()['id']}, function(data) {
                console.log(data);
         });
+
+    });
+
+    jQuery('.set-close').off('click');
+    jQuery('.set-close').on('click', function() {
+        
+        var set_id = $(this).data('id');
+
+        jQuery.getJSON('php/getSets.php', { 'action': "delete", "id": set_id }, function(data) {
+            console.log(data);
+        });
+
+        jQuery('#card-'+set_id).remove();
+
 
     });
 
