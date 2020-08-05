@@ -406,7 +406,7 @@ function showSets() {
     '<div class="card-columns">' +
     '<div class="card">' +
     '<div class="card-body">' +
-        '<h5 class="card-title">Card title</h5>' +
+        '<h5 class="card-title set-name">Card title</h5>' +
          getPopLabel('temp', "Set From Search ", "Blah Blah Blah") +
 
         '<div class="row">' +
@@ -430,11 +430,14 @@ function showSets() {
     '</div>' +
     '</div>' +
 
-
     '</div>';
 
     jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
+
+    $(".setname").editable("click", function(e){
+        console.log(e.value);
+    });
 
    
 
@@ -449,7 +452,6 @@ function showSets() {
     //jQuery.getJSON('getSets.php', { "action": "removeMeasure", "id": id, "variable": item }, function(data) {
     //jQuery.getJSON('getSets.php', { "action": "addMeasure", "id": activeCard, "variable": jQuery(this).attr('item') }, function(data) {
     //jQuery.getJSON('getSets.php', { "action": "create", "name": "unnamed", "variables": [] }
-    //jQuery.getJSON('getSets.php', { "action": "save", "name": value, "id": jQuery(this).parent().attr("id") }, function(data) {
 
 
 
