@@ -105,7 +105,15 @@ function showSets() {
         if (search.length !== 0) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
             initSetTable(set_id, results);
+
+            jQuery.getJSON('php/getSets.php',
+            { "action": "save",
+              "variables": results,
+              "id":$(this).data()['id']}, function(data) {
+                console.log(data);
+            });
         }
+        
         else {
             jQuery('#spot-'+set_id).empty();
         }
