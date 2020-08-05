@@ -456,7 +456,7 @@ jQuery(document).ready(function() {
     // Run setup
     jQuery.post('php/setup.php');
 
-    if (checkDBReady()) {
+    if (checkDBReady() == true) {
 
         // Start loop to check if db ready
         db_interval = setInterval(function() {
