@@ -435,6 +435,11 @@ function showSets() {
     jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
 
+    jQuery('.search-button').on('click', function() {
+        console.log($(this).siblings());
+
+    });
+
 
     //variables.filter(entry => entry.match(RegExp('^id')))
 
