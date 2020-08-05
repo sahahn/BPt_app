@@ -402,7 +402,7 @@ function showSets() {
     }
 
     var html = '' +
-    '<div class="card-deck">' +
+    '<div class="card-columns">' +
     '<div class="card">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
