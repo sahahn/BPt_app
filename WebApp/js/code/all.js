@@ -439,8 +439,12 @@ function checkDBReady(db_interval) {
             variables.unshift('');
             variable_choices = arrayToChoices(variables);
             startApp();
+
+            return false;
         }
     });
+
+    return true;
 }
 
 // On document load
@@ -452,10 +456,13 @@ jQuery(document).ready(function() {
     // Run setup
     jQuery.post('php/setup.php');
 
-    // Start loop to check if db ready
-    db_interval = setInterval(function() {
-        checkDBReady(db_interval);
-    }, 1000);
+    if (checkDBReady()) {
+
+        // Start loop to check if db ready
+        db_interval = setInterval(function() {
+            checkDBReady(db_interval);
+        }, 1000);
+    }
 
 });
 
