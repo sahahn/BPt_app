@@ -402,18 +402,35 @@ function showSets() {
     }
 
     var html = '' +
-    '<div class="form-row">' +
-    'temp' + 
+    '<div class="card-deck">' +
+    '<div class="card">' +
+    '<div class="card-body">' +
+        '<h5 class="card-title">Card title</h5>' +
+    '</div>' +
+    '</div>' +
+
+
     '</div>';
 
     jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
 
+   
 
 
-    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
-        console.log(data);
-    });
+
+    // sets should be already loaded
+
+
+    //jQuery.getJSON('getSets.php', { 'action': "delete", "id": id }, function(data) {
+    //jQuery.getJSON('getSets.php', { "action": "get" }, function(data) {
+    //jQuery.getJSON('getSets.php', { "action": "save", "name": value, "id": jQuery(this).parent().attr("id") }, function(data) {
+    //jQuery.getJSON('getSets.php', { "action": "removeMeasure", "id": id, "variable": item }, function(data) {
+    //jQuery.getJSON('getSets.php', { "action": "addMeasure", "id": activeCard, "variable": jQuery(this).attr('item') }, function(data) {
+    //jQuery.getJSON('getSets.php', { "action": "create", "name": "unnamed", "variables": [] }
+    //jQuery.getJSON('getSets.php', { "action": "save", "name": value, "id": jQuery(this).parent().attr("id") }, function(data) {
+
+
 
     //"name": "smri",
     //"variables": [],
