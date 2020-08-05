@@ -395,7 +395,7 @@ function showSets() {
     jQuery('#top-text').empty();
     jQuery('#delete-project').css('display', 'none');
 
-    jQuery.getJSON('getSets.php', function(data) {
+    jQuery.getJSON('php/getSets.php', function(data) {
         console.log(data);
     });
 
