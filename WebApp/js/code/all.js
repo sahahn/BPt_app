@@ -404,27 +404,32 @@ function showSets() {
 
     var html = '' +
     '<div class="card-columns">' +
-    '<div class="card">' +
+    '<div class="card w-100">' +
     '<div class="card-body">' +
-        '<h5 class="card-title"><input type="text" class="set-name form-control"></h5>' +
-         getPopLabel('temp', "Set From Search ", "Blah Blah Blah") +
+        '<h5 class="card-title"><input type="text" class="set-name form-control" placeholder="Set Name"></h5>' +
+         getPopLabel('temp', "Set From RegExp ", "Blah Blah Blah") +
 
         '<div class="row">' +
         '<div class="col">' +
+        '<div>' +
         '<input type="text" class="form-control search-text" style="width: 70%; margin-right:3px; display:inline-block">' +
         '<button class="btn search-button">Search</button>' +
+        '<div>' +
+        '<div></div>' + 
         '</div></div>' +
 
+        
+
     '</div>' +
     '</div>' +
 
-    '<div class="card">' +
+    '<div class="card w-100">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
     '</div>' +
     '</div>' +
 
-    '<div class="card">' +
+    '<div class="card w-100">' +
     '<div class="card-body">' +
         '<h5 class="card-title">Card title</h5>' +
     '</div>' +
