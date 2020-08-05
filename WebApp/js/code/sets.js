@@ -17,7 +17,7 @@ function initSetTable(set_id, variables) {
     var table = jQuery('#table-'+set_id);
     var rm_btn = '<button class="btn btn-sm btn-danger set-rm">Remove</button>';
     table.DataTable({
-        dom: '<"top"i>rt<"bottom"flp><"clear">',
+        dom: '<"top"il>rt<"bottom"p>',
         data: variables.map(v => [v, rm_btn]),
         columns: [{title: "Variable"},  {title: "", orderable: false, className: "text-center"}],
         scrollX: true,
