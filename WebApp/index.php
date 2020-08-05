@@ -64,6 +64,12 @@
             <span><i class="fas fa-home navbutton"></i></span> Home
           </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <span><i class="fas fa-bars navbutton"></i></span> Sets
+          </a>
+        </li>
       </ul>
 
       <h6 class="nav-link sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
