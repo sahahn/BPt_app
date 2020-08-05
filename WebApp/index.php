@@ -177,6 +177,7 @@
   <script src="js/code/pipeline/pipe.js"></script>
   <script src="js/code/evaluate.js"></script>
   <script src="js/code/results.js"></script>
+  <script src="js/code/sets.js"></script>
   <script src="js/code/all.js"></script>
 
 </body>
