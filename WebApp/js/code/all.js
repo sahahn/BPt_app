@@ -370,7 +370,7 @@ function noProjectDefault() {
     '<div class="col-md-1"></div>' +
     '<div class="form-group col-md-4">' +
     '<br>' + 
-    '<h3>Welcome to ABCD ML</h3>' +
+    '<h3>Welcome to the BPt</h3>' +
     '<br>' + 
     '<p>Select an existing project to work on, or add a new one.</p>' +
     '<p>Other random helper/ intro text, etc...</p>' +
@@ -379,7 +379,7 @@ function noProjectDefault() {
     '<button id="upload-user-dists" class="btn">Upload User Dists</button>' +
     '</div>' +
     '<div class="form-group col-md-6">' +
-    '<img src="images/logo.png" class="img-fluid" width="100%" alt="Logo" style="background:transparent;"/>'+
+    //'<img src="images/logo.png" class="img-fluid" width="100%" alt="Logo" style="background:transparent;"/>'+
     '</div>' + 
     '</div>';
 
