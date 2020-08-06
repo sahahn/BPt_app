@@ -432,7 +432,7 @@ function setSet(data_sets, set_id) {
 }
 
 function refreshAllSets(project) {
-    jQuery.getJSON('../Sets/getSets.php', { "action": "get" }, function(data) {
+    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
         
         sets = data;
         getSubSpaceKeys('data-space', project).forEach(key => {
@@ -1318,6 +1318,9 @@ function displayDataLoading(project) {
     // If already loaded
     if (jQuery('#body-data-loading').html().length > 100) {
         jQuery('#body-data-loading').css('display', 'block');
+
+        // refresh Sets on re-load
+        refreshAllSets(project);
         return;
     }
 
