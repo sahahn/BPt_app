@@ -33,6 +33,7 @@ function showUserSettings() {
         all_events.forEach(event => {
 
             var r_id = 'event-' + cnt.toString();
+            cnt += 1;
 
             var r_html = '<div class="row form-group">' + 
             '<label for="'+r_id+'" class="col-sm-5 col-form-label">' + event + '</label>' +
@@ -42,13 +43,14 @@ function showUserSettings() {
             
             '<div class="form-group col-md-2">' + 
             '<div class="custom-control custom-checkbox">' +
+            '<label for="'+r_id+'-default" class="custom-control-label">Default</label>' +
             '<input type="checkbox" class="custom-control-input" id="'+r_id+'-default">' +
-            '<label for="'+r_id+'-default" class="custom-control-label"></label>' +
             '</div>' +
             '</div>' +
             '</div>';
 
             jQuery('#settings-event-rename').append(r_html);
+            
             
 
         });
