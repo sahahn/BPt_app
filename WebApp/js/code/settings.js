@@ -18,6 +18,10 @@ function showUserSettings() {
         settings['event_mapping'] = {'None': ''};
     }
 
+    if (settings['event_default'] == undefined) {
+        settings['default'] = 'None';
+    }
+
     // Clear everything
     noProjectDefault();
     jQuery('#body-noproj').css('display', 'none');
@@ -65,12 +69,12 @@ function showUserSettings() {
             jQuery('#settings-event-rename').append(r_html);
         });
 
+        // Proc default event name option
         jQuery('.default-box').on('click', function() {
             jQuery('.default-box').prop('checked', false);
             $(this).prop('checked', true);
+            settings['event-default'] = $(this).data()['eventname'];
         });
-
-
 
     }
 

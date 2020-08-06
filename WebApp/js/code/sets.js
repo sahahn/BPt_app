@@ -184,15 +184,22 @@ function registerSetSearch() {
         var search = $(this).val();
         var set_id = $(this).data('id');
 
-        if ((search.length !== 0) && (search.length < 1000)) {
+        if (search.length !== 0) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
-            registerSetTable(set_id, results);
 
-            jQuery.post('php/getSets.php',
-                {"action": "save",
-                 "variables": results,
-                 "id": $(this).data()['id']
-                });
+            if (results.length < 1000) {
+
+                registerSetTable(set_id, results);
+
+                jQuery.post('php/getSets.php',
+                    {"action": "save",
+                    "variables": results,
+                    "id": $(this).data()['id']
+                    });
+            }
+            else {
+                jQuery('#spot-'+set_id).append(results.length + ' results found. Over limit of 1000. Search Again');
+            }
         }
         else {
             jQuery('#spot-' + set_id).empty();
