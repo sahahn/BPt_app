@@ -24,8 +24,8 @@ function hideAllProjSteps() {
         jQuery('#body'+step).css('display', 'none');
     });
     jQuery('#body-noproj').css('display', 'none');
-    jQuery('#body-settings').css('display', 'none');
-    jQuery('#body-sets').css('display', 'none');
+    jQuery('#body-settings').empty();
+    jQuery('#body-sets').empty();
 }
 
 function clearAllProjSteps() {
