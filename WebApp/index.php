@@ -68,10 +68,17 @@
         -->
 
         <li class="nav-item" style="padding-top: 50px;">
+          <a id="settings" class="nav-link" href="#">
+            <span><i class="fas fa-cogs navbutton"></i></span> Settings
+          </a>
+        </li>
+
+        <li class="nav-item" style="padding-top: 50px;">
           <a id="sets" class="nav-link" href="#">
             <span><i class="fas fa-bars navbutton"></i></span> Sets
           </a>
         </li>
+        
       </ul>
 
       <h6 class="nav-link sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
@@ -122,6 +129,7 @@
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
         <div id="body-noproj"></div>
+        <div id="body-settings"></div>
         <div id="body-sets"></div>
         <div id="body-setup"></div>
         <div id="body-data-loading"></div>

@@ -420,6 +420,11 @@ function startApp() {
             addNewProject();
         });
 
+        // Register Settings button
+        jQuery('#settings').on('click', function () {
+            showUserSettings();
+        });
+
         // Register Sets button
         jQuery('#sets').on('click', function () {
             showSets();
@@ -442,8 +447,6 @@ function checkDBReady(db_interval) {
 
         if (data !== 'not ready') {
             clearInterval(db_interval);
-
-            console.log(data['loaded'])
             variables = JSON.parse(data['loaded']);
             all_events = JSON.parse(data['all_events']);
             variable_choices = arrayToChoices(variables);
