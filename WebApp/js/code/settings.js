@@ -67,6 +67,7 @@ function showUserSettings() {
 
         jQuery('.default-box').on('click', function() {
             jQuery('.default-box').prop('checked', false);
+            $(this).prop('checked', true);
         });
 
 
