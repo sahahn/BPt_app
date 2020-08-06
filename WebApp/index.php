@@ -73,7 +73,7 @@
           </a>
         </li>
 
-        <li class="nav-item" style="padding-top: 50px;">
+        <li class="nav-item">
           <a id="sets" class="nav-link" href="#">
             <span><i class="fas fa-bars navbutton"></i></span> Sets
           </a>
