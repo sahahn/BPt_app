@@ -99,13 +99,17 @@ function showSets() {
         jQuery('#body-sets').css('display', 'block');
         return;
     }
+    
 
     var html = '' +
     '<div id="card-cols" class="card-columns">' +
 
     '<div class="card" id="add-set-card">' +
     '<div class="card-body">' +
+
+    '<button id="add-new-set" type="button" class="btn btn-success">' +
     '<i class="fa fa-plus-circle fa-10x" aria-hidden="true"></i>' +
+    '</button>' +
     '</div>' +
     '</div>' +
 
