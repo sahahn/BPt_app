@@ -1,4 +1,5 @@
 var variables;
+var all_events;
 var variable_choices;
 var projects = [];
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
@@ -441,7 +442,8 @@ function checkDBReady(db_interval) {
 
         if (data !== 'not ready') {
             clearInterval(db_interval);
-            variables = data;
+            variables = data['loaded'];
+            all_events = data['all_events'];
             variable_choices = arrayToChoices(variables);
             startApp();
         }
