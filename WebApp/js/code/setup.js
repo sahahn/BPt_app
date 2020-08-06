@@ -54,8 +54,8 @@ function displaySetup(project) {
         '<div class="form-group col-md-3">' +
         '<div class="custom-control custom-checkbox">' +
         '<input type="checkbox" class="custom-control-input" id="'+key+'-input-cache">' +
-        '<label class="custom-control-label"' + cache_span + '</label>' +
         '</div>' +
+        '<label class="custom-control-label"' + cache_span + '</label>' +
         '</div>' +
 
         '<div class="form-group col-md-3">' +
