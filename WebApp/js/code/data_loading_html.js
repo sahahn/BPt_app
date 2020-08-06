@@ -153,10 +153,12 @@ function inputSetFormHTML(key) {
         '</button>' +
 
         '<button id='+key+'-add-set type="button" class="btn btn-sm float-right" ' +
-        'style="background-color:transparent;">' +
-        '<a style="color:inherit; text-decoration : none;" target="_blank" ' +
-        'href="Sets/">Add Sets <i class="fas fa-plus fa-sm"></i></a>' +
+        'style="background-color:transparent; onclick="showSets">' +
+        '<i class="fas fa-plus fa-sm"></i>' + 
         '</button>' +
+
+        //'<a style="color:inherit; text-decoration : none;" target="_blank" ' +
+        //'href="Sets/">Add Sets <i class="fas fa-plus fa-sm"></i></a>' +        
 
         '<select id="'+key+'-data-sets" class="form-control" data-width="100%"></select>' +
 
