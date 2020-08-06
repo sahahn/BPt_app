@@ -61,7 +61,7 @@ function displaySetup(project) {
         '<div class="form-group col-md-3">' +
         '<div class="custom-control custom-checkbox">' +
         '<input type="checkbox" class="custom-control-input" id="'+key+'-public-dist">' +
-        '<label class="custom-control-label"' + public_dist_span + '</label>' +
+        '<label class="custom-control-label"</label>' + public_dist_span +
         '</div>' +
         '</div>' +
 
