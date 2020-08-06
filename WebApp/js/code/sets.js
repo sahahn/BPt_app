@@ -186,6 +186,7 @@ function registerSetSearch() {
 
         if (search.length !== 0) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
+            console.log(results.length)
 
             if (results.length < 1000) {
 
