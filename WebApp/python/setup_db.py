@@ -64,9 +64,10 @@ def check_data(data, params):
     data = data.drop(to_drop, axis=1)
     
     # Set index
+    eventnames = data['eventname'].unique()
     data = data.set_index(['subject_id', 'eventname'])
 
-    return data
+    return data, eventnames
 
 
 def add_col(data, col, con):
@@ -92,9 +93,8 @@ def upload_dataset(data, file, con):
     pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
     
 
-def upload_custom_data(custom_dr, con):
+def upload_custom_data(custom_dr, con, all_events):
 
-    
     folders = [f for f in os.listdir(custom_dr) if '.json' not in f]
 
     for folder in folders:
@@ -119,7 +119,8 @@ def upload_custom_data(custom_dr, con):
             data = load_dataset(file_name, params['load_params'], con)
             
             # Check data
-            data = check_data(data, params)
+            data, eventnames = check_data(data, params)
+            all_events.update(set(eventnames))
             
             # If already loaded or has error
             if data is None:
@@ -128,16 +129,28 @@ def upload_custom_data(custom_dr, con):
             # Upload the dataset
             upload_dataset(data, file_name, con)
 
+    return all_events
+
+    
+
 
 def main():
 
     # Make connection
     db_dr = '/var/www/html/data/bpt/db'
     con = sqlite3.connect(db_dr)
+
+    # Load or init all events
+    all_events_loc = '/var/www/html/data/bpt/all_events.json'
+    if (os.path.isfile(all_events_loc)):
+        with open(all_events_loc, 'r') as f:
+            all_events = set(json.load(f))
+    else:
+        all_events = set()
     
     # Try to upload all custom data
     custom_dr = '/var/www/html/data/sources/custom/'
-    upload_custom_data(custom_dr, con)
+    all_events = upload_custom_data(custom_dr, con, all_events)
 
     # When done with uploads, save a json with the
     # current loaded tables
@@ -145,6 +158,10 @@ def main():
     loaded = get_all_tables(con)
     with open(loaded_loc, 'w') as f:
         json.dump(loaded, f)
+
+    # Save all events
+    with open(all_events_loc, 'w') as f:
+        json.dump(sorted(list(all_events)), f)
 
 
 if __name__ == "__main__":

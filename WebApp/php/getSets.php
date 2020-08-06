@@ -6,6 +6,9 @@ $action = "get";
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
 }
+if (isset($_POST['action'])) {
+    $action = $_POST['action'];
+}
 
 $fn_all = "/var/www/html/data/".$project."/Sets/data/sets_".$project."_all.json";
 $fn = "/var/www/html/data/".$project."/Sets/data/sets_".$project."_".$user_name.".json";
@@ -73,8 +76,8 @@ if ($action == "get") {
     }
 } else if ($action == "save") {
     $id = "";
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
     } else {
         echo("{ \"message\": \"no id specified\" }");
         return; // no id specified, do nothing
@@ -82,12 +85,12 @@ if ($action == "get") {
 
     
     $name = "";
-    if (isset($_GET['name'])) {
-        $name = $_GET['name'];
+    if (isset($_POST['name'])) {
+        $name = $_POST['name'];
     }
     $variables = array();
-    if (isset($_GET['variables'])) {
-        $variables = $_GET['variables'];
+    if (isset($_POST['variables'])) {
+        $variables = $_POST['variables'];
     }
     //$data = json_decode(file_get_contents($fn), true);
     $data = readData();
@@ -125,8 +128,8 @@ if ($action == "get") {
     return;
 } else if ($action == "delete") {
     $id = "";
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
     } else {
         echo("{ \"message\": \"no id specified\" }");
         return; // no id specified, do nothing
@@ -209,15 +212,15 @@ if ($action == "get") {
     return;
 } else if ($action == "removeMeasure") {
     $id = "";
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
     } else {
         echo ("{ \"message\": \"Error: no id found\" }");
         return;
     }
     $variable = "";
-    if (isset($_GET['variable'])) {
-        $variable = $_GET['variable'];
+    if (isset($_POST['variable'])) {
+        $variable = $_POST['variable'];
     } else {
         echo ("{ \"message\": \"Error: no variable found\" }");
         return;

@@ -98,8 +98,10 @@ function registerSetTable(set_id, variables) {
         jQuery('.set-rm').on('click', function() {
             var row_val = $(this).parent().siblings().html();
 
-            jQuery.getJSON('php/getSets.php', { "action": "removeMeasure", "id": set_id, "variable": row_val }, function(data) {
-            });
+            jQuery.post('php/getSets.php',
+                {"action": "removeMeasure",
+                 "id": set_id,
+                 "variable": row_val});
 
             dt.row($(this).parents('tr')).remove().draw();
         });
@@ -152,9 +154,9 @@ function registerRemoveSet() {
 
         var set_id = $(this).data('id');
 
-        jQuery.getJSON('php/getSets.php', { 'action': "delete", "id": set_id }, function (data) {
-            console.log(data);
-        });
+        jQuery.post('php/getSets.php',
+         {'action': "delete",
+          "id": set_id });
 
         jQuery('#card-' + set_id).remove();
     });
@@ -165,13 +167,10 @@ function registerSetNameChange() {
     jQuery('.set-name').off('change');
     jQuery('.set-name').on('change', function () {
 
-        jQuery.getJSON('php/getSets.php',
-            {
-                "action": "save",
-                "name": $(this).val(),
-                "id": $(this).data()['id']
-            }, function (data) {
-                console.log(data);
+        jQuery.post('php/getSets.php',
+            {"action": "save",
+             "name": $(this).val(),
+             "id": $(this).data()['id']
             });
     });
 }
@@ -188,13 +187,10 @@ function registerSetSearch() {
             var results = variables.filter(entry => entry.match(RegExp(search)));
             registerSetTable(set_id, results);
 
-            jQuery.getJSON('php/getSets.php',
-                {
-                    "action": "save",
-                    "variables": results,
-                    "id": $(this).data()['id']
-                }, function (data) {
-                    console.log(data);
+            jQuery.post('php/getSets.php',
+                {"action": "save",
+                 "variables": results,
+                 "id": $(this).data()['id']
                 });
         }
         else {
