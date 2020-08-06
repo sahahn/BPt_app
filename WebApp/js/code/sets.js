@@ -45,7 +45,7 @@ function initSetTable(set_id, variables) {
     table.trigger('draw.dt');
 }
 
-function addSet(set, shown_sets) {
+function addSet(set) {
 
 
     var html = '';
@@ -80,18 +80,12 @@ function addSet(set, shown_sets) {
     '</div>' +
     '</div>';
 
-    jQuery('#card-cols').append(html);
+    jQuery('#card-cols').prepend(html);
 
     if (set['variables'].length > 0) {
         initSetTable(set['id'], set['variables']);
     }
 
-
-    //"name": "smri",
-    //"variables": [],
-    //"id":
-
-    return shown_sets + 1;
 }
 
 function showSets() {
@@ -106,8 +100,18 @@ function showSets() {
         return;
     }
 
-    var shown_sets = 0;
-    jQuery('#body-sets').append('<div id="card-cols" class="card-columns"></div>');
+    var html = '' +
+    '<div id="card-cols" class="card-columns">' +
+
+    '<div class="card" id="add-set-card">' +
+    '<div class="card-body">' +
+    '<button'
+
+    '</div>' +
+    '</div>' +
+    '</div>';
+
+    jQuery('#body-sets').append(html);
     jQuery('#body-sets').css('display', 'block');
 
     // Add each existing set
@@ -165,8 +169,6 @@ function showSets() {
         });
 
         jQuery('#card-'+set_id).remove();
-
-
     });
 
 

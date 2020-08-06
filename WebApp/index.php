@@ -40,7 +40,7 @@
 <body spellcheck="false">
 
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand col-md-1 text-center" href="#">ABCD ML</a>
+    <a class="navbar-brand col-md-1 text-center" href="#">Brain Predictability Toolbox</a>
     <a class="col-md-2" href="#"></a>
 
     <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
