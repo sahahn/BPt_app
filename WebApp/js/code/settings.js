@@ -38,7 +38,7 @@ function showUserSettings() {
         '<div class="col-sm-2">' +
         '<b>Default</b>' +
         '</div>' +
-        '</div>';
+        '</div><hr>';
         jQuery('#settings-event-rename').append(header_html);
         
 
@@ -54,7 +54,7 @@ function showUserSettings() {
               '<input type="text" class="form-control" id="'+r_id+'">' +
             '</div>' +
             
-            '<div class="form-group col-md-2">' + 
+            '<div class="form-group col-md-2 text-center">' + 
             '<div class="custom-control custom-checkbox">' +
             '<input type="checkbox" class="custom-control-input" id="'+r_id+'-default">' +
             '<label for="'+r_id+'-default" class="custom-control-label"></label>' +
