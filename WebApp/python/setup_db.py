@@ -1,4 +1,5 @@
 import sqlite3
+from sqlite3 import DatabaseError
 import numpy as np
 import pandas as pd
 import time
@@ -75,9 +76,13 @@ def add_col(data, col, con):
         data[col].to_sql(col, con, if_exists='fail')
     
     except ValueError:
-        existing = pd.read_sql_query("SELECT * from " + col, con)
-        merged = pd.merge(data[col].reset_index(), existing, how='outer')
-        merged.to_sql(col, con, if_exists='replace', index=False)
+
+        try:
+            existing = pd.read_sql_query("SELECT * from " + col, con)
+            merged = pd.merge(data[col].reset_index(), existing, how='outer')
+            merged.to_sql(col, con, if_exists='replace', index=False)
+        except DatabaseError:
+            pass
         
         
 def upload_dataset(data, file, con):

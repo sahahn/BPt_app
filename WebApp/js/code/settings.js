@@ -3,15 +3,13 @@
 
 
 
-
-
-
-
 function getSettingsHTML() {
     var html = '' +
-    '<div class="row form-row">' + 
+
+    '<div class="row form-group">' + 
     'test' +
     '</div>';
+
 
     return html;
 }
@@ -27,5 +25,11 @@ function showUserSettings() {
     var html = getSettingsHTML();
     jQuery('#body-settings').append(html);
     jQuery('#body-settings').css('display', 'block');
+
+    if ((all_events.length !== 1) && (all_events[0] !== 'None')) {
+        var event_html = '' +
+        
+        
+    }
 
 }
