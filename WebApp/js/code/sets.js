@@ -121,13 +121,19 @@ function showSets() {
 
     // Add each existing set
     sets.forEach(set => {
-        shown_sets = addSet(set, shown_sets);
+        addSet(set);
     });
 
-        //jQuery.getJSON('php/getSets.php', { "action": "create", "name": "unnamed", "variables": [] }, function(data) {
-         //     console.log(data)
+    // Register add new set button
+    jQuery('#add-new-set').on('click', function() {
 
-         //  });
+        jQuery.getJSON('php/getSets.php', { "action": "create",
+                                            "name": "unnamed",
+                                            "variables": [] }, function(data) {
+            addSet(data);
+        });
+
+    });
 
     jQuery('.search-text').off('change');
     jQuery('.search-text').on('change', function() {
