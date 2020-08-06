@@ -77,12 +77,10 @@ def add_col(data, col, con):
     
     except ValueError:
 
-        try:
-            existing = pd.read_sql_query("SELECT * from " + col, con)
-            merged = pd.merge(data[col].reset_index(), existing, how='outer')
-            merged.to_sql(col, con, if_exists='replace', index=False)
-        except DatabaseError:
-            pass
+        existing = pd.read_sql_query("SELECT * from [" + col + ']', con)
+        merged = pd.merge(data[col].reset_index(), existing, how='outer')
+        merged.to_sql(col, con, if_exists='replace', index=False)
+
         
         
 def upload_dataset(data, file, con):
