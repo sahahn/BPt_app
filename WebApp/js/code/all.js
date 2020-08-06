@@ -444,8 +444,8 @@ function checkDBReady(db_interval) {
             clearInterval(db_interval);
 
             console.log(data['loaded'])
-            variables = data['loaded'];
-            all_events = data['all_events'];
+            variables = JSON.parse(data['loaded']);
+            all_events = JSON.parse(data['all_events']);
             variable_choices = arrayToChoices(variables);
             startApp();
         }
