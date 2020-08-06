@@ -130,6 +130,12 @@
       <div id="main-body" class="col-md-10">
         <div id="body-db-loading">
           <h1>Please wait... the backend database is still being built!</h1>
+          <h3>If you have passed a large amount of data this could take a long time.</h3>
+          <h3>Note: You do not need to have this screen up while the uploading is taking place, but
+          you should make sure that the docker container is left running (which means do not log or turn off your
+          device). That said, if the upload is intterupted for whatever reason, you should be able to pick up wherever
+          it was left off by returning to this page.</h3>
+
         </div>
         <div id="body-noproj"></div>
         <div id="body-settings"></div>
