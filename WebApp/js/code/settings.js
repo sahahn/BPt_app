@@ -43,7 +43,7 @@ function showUserSettings() {
             '<div class="form-group col-md-2">' + 
             '<div class="custom-control custom-checkbox">' +
             '<input type="checkbox" class="custom-control-input" id="'+r_id+'-default">' +
-            '<label for="'+r_id+'-default" class="custom-control-label"></label>' + public_dist_span +
+            '<label for="'+r_id+'-default" class="custom-control-label"></label>' +
             '</div>' +
             '</div>' +
             '</div>';
