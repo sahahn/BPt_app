@@ -198,7 +198,7 @@ function registerSetSearch() {
                     });
             }
             else {
-                jQuery('#spot-'+set_id).empty().append(results.length + ' results found. Over limit of 1000. Search Again');
+                jQuery('#spot-'+set_id).empty().append('Over limit of 1000! (' + results.length + ' results found). Search again!');
             }
         }
         else {
