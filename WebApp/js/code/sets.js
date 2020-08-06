@@ -115,7 +115,7 @@ function addSet(set) {
 
     var html = getAddSetHTML(set);
 
-    jQuery('#card-cols').prepend(html);
+    jQuery('#card-cols').append(html);
 
     if (set['variables'].length > 0) {
         registerSetTable(set['id'], set['variables']);
