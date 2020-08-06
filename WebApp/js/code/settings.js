@@ -14,6 +14,10 @@ function showUserSettings() {
     // Load settings
     settings = {};
 
+    if (settings['event_mapping'] == undefined) {
+        settings['event_mapping'] = {'None': ''};
+    }
+
     // Clear everything
     noProjectDefault();
     jQuery('#body-noproj').css('display', 'none');
@@ -31,13 +35,20 @@ function showUserSettings() {
             var r_id = 'event-' + cnt.toString();
 
             var r_html = '<div class="row form-group">' + 
-            '<label for="'+r_id+'" class="col-sm-2 col-form-label">' + event + '</label>' +
-            '<div class="col-sm-10">' +
-              '<input type="password" class="form-control" id="inputPassword" placeholder="Password">' +
+            '<label for="'+r_id+'" class="col-sm-5 col-form-label">' + event + '</label>' +
+            '<div class="col-sm-5">' +
+              '<input type="text" class="form-control" id="'+r_id+'">' +
+            '</div>' +
+            
+            '<div class="form-group col-md-2">' + 
+            '<div class="custom-control custom-checkbox">' +
+            '<input type="checkbox" class="custom-control-input" id="'+r_id+'-default">' +
+            '<label for="'+r_id+'-default" class="custom-control-label"></label>' + public_dist_span +
+            '</div>' +
             '</div>' +
             '</div>';
 
-            jQuery('#settings-event-rename').append(r_html)
+            jQuery('#settings-event-rename').append(r_html);
             
 
         });
