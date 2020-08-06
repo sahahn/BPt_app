@@ -88,7 +88,7 @@ function registerSetTable(set_id, variables) {
         autoWidth: true,
         searching: true,
         lengthChange: true,
-        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        lengthMenu: [[5, 10, 25, 50, -1, 0], [5, 10, 25, 50, "All", 0]],
     });
 
 
