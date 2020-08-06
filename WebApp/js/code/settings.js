@@ -27,7 +27,7 @@ function showUserSettings() {
     jQuery('#body-settings').css('display', 'block');
 
     if ((all_events.length !== 1) && (all_events[0] !== 'None')) {
-        var event_html = '' +
+
         
         
     }
