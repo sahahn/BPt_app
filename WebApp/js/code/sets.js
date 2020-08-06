@@ -105,10 +105,10 @@ function showSets() {
 
     '<div class="card" id="add-set-card">' +
     '<div class="card-body">' +
-    '<button'
-
+    '<i class="fa fa-plus-circle" aria-hidden="true"></i>' +
     '</div>' +
     '</div>' +
+    
     '</div>';
 
     jQuery('#body-sets').append(html);
