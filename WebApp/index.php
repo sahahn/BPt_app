@@ -128,6 +128,9 @@
 
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
+        <div id="body-db-loading">
+          <h1>Please wait... the backend database is still being built!</h1>
+        </div>
         <div id="body-noproj"></div>
         <div id="body-settings"></div>
         <div id="body-sets"></div>

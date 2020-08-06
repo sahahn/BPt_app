@@ -451,6 +451,8 @@ function checkDBReady(db_interval) {
             variables = JSON.parse(data['loaded']);
             all_events = JSON.parse(data['all_events']);
             variable_choices = arrayToChoices(variables);
+
+            jQuery("#body-db-loading").css('display', 'none');
             startApp();
         }
     });
