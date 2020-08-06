@@ -38,9 +38,6 @@ def load_dataset(source, load_params, con):
 
 def check_data(data, params):
     
-    if data is None:
-        return None
-    
     # Apply mapping
     data = data.rename(params['mapping'], axis=1)
     
@@ -117,14 +114,14 @@ def upload_custom_data(custom_dr, con, all_events):
             
             # Load in as dataframe
             data = load_dataset(file_name, params['load_params'], con)
+
+            # If already loaded or has error
+            if data is None:
+                continue
             
             # Check data
             data, eventnames = check_data(data, params)
             all_events.update(set(eventnames))
-            
-            # If already loaded or has error
-            if data is None:
-                continue
             
             # Upload the dataset
             upload_dataset(data, file_name, con)
@@ -132,8 +129,6 @@ def upload_custom_data(custom_dr, con, all_events):
     return all_events
 
     
-
-
 def main():
 
     # Make connection
