@@ -28,8 +28,21 @@ function showUserSettings() {
 
     if ((all_events.length !== 1) && (all_events[0] !== 'None')) {
 
-        var cnt = 0;
+        var header_html = '<div class="row form-group">' + 
+        '<div class="col-sm-5">' +
+        '<b>Eventname</b>' +
+        '</div>' +
+        '<div class="col-sm-5">' +
+        '<b>Append Short Name</b>' +
+        '</div>' +
+        '<div class="col-sm-2">' +
+        '<b>Default</b>' +
+        '</div>' +
+        '</div>';
+        jQuery('#settings-event-rename').append(header_html);
+        
 
+        var cnt = 0;
         all_events.forEach(event => {
 
             var r_id = 'event-' + cnt.toString();
@@ -44,7 +57,7 @@ function showUserSettings() {
             '<div class="form-group col-md-2">' + 
             '<div class="custom-control custom-checkbox">' +
             '<input type="checkbox" class="custom-control-input" id="'+r_id+'-default">' +
-            '<label for="'+r_id+'-default" class="custom-control-label">Default</label>' +
+            '<label for="'+r_id+'-default" class="custom-control-label"></label>' +
             '</div>' +
             '</div>' +
             '</div>';
