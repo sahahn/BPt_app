@@ -107,7 +107,7 @@ function showSets() {
     '<div class="card" id="add-set-card">' +
     '<div class="card-body">' +
 
-    '<button id="add-new-set" type="button" class="btn btn-success mx-auto">' +
+    '<button id="add-new-set" type="button" class="btn btn-success text-center">' +
     '<i class="fa fa-plus-circle fa-7x" aria-hidden="true"></i>' +
     '</button>' +
     '</div>' +
