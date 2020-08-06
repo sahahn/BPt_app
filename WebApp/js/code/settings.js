@@ -56,17 +56,20 @@ function showUserSettings() {
             
             '<div class="form-group col-md-2 text-center">' + 
             '<div class="custom-control custom-checkbox">' +
-            '<input type="checkbox" class="custom-control-input" id="'+r_id+'-default">' +
+            '<input type="checkbox" class="custom-control-input default-box" id="'+r_id+'-default">' +
             '<label for="'+r_id+'-default" class="custom-control-label"></label>' +
             '</div>' +
             '</div>' +
             '</div>';
 
             jQuery('#settings-event-rename').append(r_html);
-            
-            
-
         });
+
+        jQuery('.default-box').on('click', function() {
+            jQuery('.default-box').prop('checked', 'false');
+        });
+
+
 
     }
 
