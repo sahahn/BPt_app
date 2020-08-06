@@ -40,7 +40,7 @@
 <body spellcheck="false">
 
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand col-md-1 text-center" href="#">Brain Predictability Toolbox</a>
+    <a class="navbar-brand col-md-1 text-center" href="#">BPt</a>
     <a class="col-md-2" href="#"></a>
 
     <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
@@ -59,11 +59,13 @@
     <div class="sidebar-static">
       
       <ul class="nav flex-column">
+      <!--
         <li class="nav-item" style="padding-top: 50px;">
           <a class="nav-link" href="/index.php">
             <span><i class="fas fa-home navbutton"></i></span> Home
           </a>
         </li>
+        -->
 
         <li class="nav-item">
           <a id="sets" class="nav-link" href="#">

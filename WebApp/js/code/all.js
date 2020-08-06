@@ -370,7 +370,7 @@ function noProjectDefault() {
     '<div class="col-md-1"></div>' +
     '<div class="form-group col-md-4">' +
     '<br>' + 
-    '<h3>Welcome to the BPt</h3>' +
+    '<h3>Welcome to the Brain Predictability toolbox</h3>' +
     '<br>' + 
     '<p>Select an existing project to work on, or add a new one.</p>' +
     '<p>Other random helper/ intro text, etc...</p>' +
