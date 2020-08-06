@@ -442,6 +442,8 @@ function checkDBReady(db_interval) {
 
         if (data !== 'not ready') {
             clearInterval(db_interval);
+
+            console.log(data['loaded'])
             variables = data['loaded'];
             all_events = data['all_events'];
             variable_choices = arrayToChoices(variables);
