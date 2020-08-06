@@ -186,7 +186,6 @@ function registerSetSearch() {
 
         if (search.length !== 0) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
-            console.log(results.length)
 
             if (results.length < 1000) {
 
@@ -199,7 +198,7 @@ function registerSetSearch() {
                     });
             }
             else {
-                jQuery('#spot-'+set_id).append(results.length + ' results found. Over limit of 1000. Search Again');
+                jQuery('#spot-'+set_id).empty().append(results.length + ' results found. Over limit of 1000. Search Again');
             }
         }
         else {
