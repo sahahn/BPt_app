@@ -9,7 +9,7 @@ if (file_exists($loaded_loc)) {
     $return = array();
     $return['loaded'] = file_get_contents($loaded_loc);
     $return['all_events'] = file_get_contents($all_events_loc);
-    echo $return;
+    echo json_encode($return);
 }
 else {
     echo json_encode('not ready');
