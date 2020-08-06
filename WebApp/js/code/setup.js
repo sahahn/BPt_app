@@ -19,6 +19,11 @@ function displaySetup(project) {
 
     var name_label = getPopLabel(key, "Project Name ", "The name of this project");
     var seed_label = getPopLabel(key, 'Random Seed ', "Random Seed ");
+
+    var eventname_span = '<span data-toggle="popover"' +
+    'title="Longitudinal" data-placement="top"' +
+    'data-content="Placeholder"' +
+    '>Longitudinal <i class="fas fa-info-circle fa-sm"></i></span>';
     
     var cache_span = '<span data-toggle="popover"' +
     'title="Input Caching" data-placement="top"' +
@@ -27,7 +32,7 @@ function displaySetup(project) {
     'or set is selected, and Data Type + Outlier options will be inferred ' +
     'based on the most frequent choices with respect to that variable. ' +
     'This feature is optional."' +
-    '>Input Caching <i class="fas fa-info-circle fa-sm"></i></span>';
+    '> <i class="fas fa-info-circle fa-sm"></i></span>';
 
     var public_dist_span = '<span data-toggle="popover"' +
     'title="See Public Dists" data-placement="top"' +
@@ -53,15 +58,22 @@ function displaySetup(project) {
 
         '<div class="form-group col-md-3">' +
         '<div class="custom-control custom-checkbox">' +
+        '<input type="checkbox" class="custom-control-input" id="'+key+'-eventnames">' +
+        '<label for="'+key+'-eventnames" class="custom-control-label"></label>' + eventname_span +
+        '</div>' +
+        '</div>' +
+
+        '<div class="form-group col-md-3">' +
+        '<div class="custom-control custom-checkbox">' +
         '<input type="checkbox" class="custom-control-input" id="'+key+'-input-cache">' +
-        '<label for="'+key+'-input-cache" class="custom-control-label"></label>' + cache_span +
+        '<label for="'+key+'-input-cache" class="custom-control-label">Input Caching</label>' + cache_span +
         '</div>' +
         '</div>' +
 
         '<div class="form-group col-md-3">' +
         '<div class="custom-control custom-checkbox">' +
         '<input type="checkbox" class="custom-control-input" id="'+key+'-public-dist">' +
-        '<label class="custom-control-label"></label>' + public_dist_span +
+        '<label for="'+key+'-public-dist" class="custom-control-label"></label>' + public_dist_span +
         '</div>' +
         '</div>' +
 
