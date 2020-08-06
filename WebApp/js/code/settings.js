@@ -56,7 +56,7 @@ function showUserSettings() {
             
             '<div class="form-group col-md-2 text-center">' + 
             '<div class="custom-control custom-checkbox">' +
-            '<input type="checkbox" class="custom-control-input default-box" id="'+r_id+'-default">' +
+            '<input data-eventname="'+event+'" type="checkbox" class="custom-control-input default-box" id="'+r_id+'-default">' +
             '<label for="'+r_id+'-default" class="custom-control-label"></label>' +
             '</div>' +
             '</div>' +
