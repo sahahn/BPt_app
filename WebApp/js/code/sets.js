@@ -104,8 +104,9 @@ function showSets() {
     var html = '' +
     '<div id="card-cols" class="card-columns">' +
 
-    '<div class="card" id="add-set-card">' +
+    '<div class="card" id="add-set-card" style="border:0px;">' +
     '<div class="card-body text-center">' +
+    '<h5>Add New Set</h5>' + 
 
     '<button id="add-new-set" type="button" class="btn btn-success">' +
     '<i class="fa fa-plus-circle fa-7x" aria-hidden="true"></i>' +
