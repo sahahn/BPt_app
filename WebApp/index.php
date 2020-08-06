@@ -62,20 +62,20 @@
       <!--
         <li class="nav-item" style="padding-top: 50px;">
           <a class="nav-link" href="/index.php">
-            <span><i class="fas fa-home navbutton"></i></span> Home
+            <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
           </a>
         </li>
         -->
 
         <li class="nav-item" style="padding-top: 50px;">
           <a id="settings" class="nav-link" href="#">
-            <span><i class="fas fa-cogs navbutton"></i></span> Settings
+            <span><i class="fas fa-cogs navbutton fa-fw"></i></span> Settings
           </a>
         </li>
 
         <li class="nav-item">
           <a id="sets" class="nav-link" href="#">
-            <span><i class="fas fa-bars navbutton"></i></span> Sets
+            <span><i class="fas fa-bars navbutton fa-fw"></i></span> Sets
           </a>
         </li>
         
