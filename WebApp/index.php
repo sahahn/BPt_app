@@ -175,6 +175,8 @@
   <script src="js/code/utils.js"></script>
   <script src="js/code/common_html.js"></script>
   <script src="js/code/common_funcs.js"></script>
+  <script src="js/code/sets.js"></script>
+  <script src="js/code/settings.js"></script>
   <script src="js/code/validate_input.js"></script>
   <script src="js/code/setup.js"></script>
   <script src="js/code/data_loading_html.js"></script>
@@ -187,7 +189,6 @@
   <script src="js/code/pipeline/pipe.js"></script>
   <script src="js/code/evaluate.js"></script>
   <script src="js/code/results.js"></script>
-  <script src="js/code/sets.js"></script>
   <script src="js/code/all.js"></script>
 
 </body>
