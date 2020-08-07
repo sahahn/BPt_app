@@ -40,6 +40,7 @@ def load_dataset(source, load_params, con):
 def check_data(data, params):
     
     # Apply mapping
+    print(params['mapping'])
     data = data.rename(params['mapping'], axis=1)
     
     if 'subject_id' not in data:
