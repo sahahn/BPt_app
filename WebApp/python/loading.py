@@ -31,7 +31,7 @@ def fetchABCDData(variables):
         df = df.set_index(['subject_id', 'eventname'])
         dfs.append(df)
 
-    if len(dfs) == 1:
+    if len(dfs) > 1:
         return pd.concat(dfs, axis=1).reset_index()
     else:
         return dfs[0].reset_index()
