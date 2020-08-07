@@ -27,7 +27,7 @@ def fetchABCDData(variables):
 
     dfs = []
     for variable in variables:
-        dfs.append(pd.read_sql_query("SELECT * from " + variable, con))
+        dfs.append(pd.read_sql_query("SELECT * from [" + variable + ']', con))
 
     if len(dfs) == 1:
         return dfs[0]
