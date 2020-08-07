@@ -109,8 +109,9 @@ def upload_custom_data(custom_dr, con, all_events):
     folders = [f for f in os.listdir(custom_dr) if '.json' not in f and os.path.isdir(f)]
 
     for folder in folders:
+        print(folder)
         json_loc = os.path.join(custom_dr, folder + '.json')
-        
+        print(json_loc)
         if os.path.exists(json_loc):
             with open(json_loc, 'r') as f:
                 params = json.load(f)
@@ -212,7 +213,6 @@ def main():
 
 
 if __name__ == "__main__":
-    print('!')
     main()
 
 
