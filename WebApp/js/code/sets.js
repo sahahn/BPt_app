@@ -4,7 +4,7 @@ function getBaseSetsHTML() {
     var html = '' +
     '<div id="card-cols" class="card-columns">' +
 
-    '<div class="card" id="add-set-card" style="border:0px;">' +
+    '<div class="card" id="add-set-card" style="border:0px; width=50%">' +
     '<div class="card-body text-center">' +
     '<h5>Add New Set</h5>' + 
 
