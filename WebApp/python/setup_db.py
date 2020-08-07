@@ -122,6 +122,8 @@ def upload_custom_data(custom_dr, con, all_events):
             if 'ignore_cols' not in params:
                 params['ignore_cols'] = []
 
+            print(params['mapping'])
+
             if isinstance(params['mapping'], str):
                 
                 map_loc = os.path.join(custom_dr, params['mapping'])
