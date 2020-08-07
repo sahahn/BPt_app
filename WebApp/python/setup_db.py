@@ -108,14 +108,11 @@ def upload_custom_data(custom_dr, con, all_events):
 
     folders = [f for f in os.listdir(custom_dr) if '.json' not in f]
     for folder in folders:
-        print(folder)
+
         json_loc = os.path.join(custom_dr, folder + '.json')
-        print(json_loc)
         if os.path.exists(json_loc):
             with open(json_loc, 'r') as f:
                 params = json.load(f)
-
-                print(params)
 
             if 'mapping' not in params:
                 params['mapping'] = {}
@@ -124,12 +121,9 @@ def upload_custom_data(custom_dr, con, all_events):
             if 'ignore_cols' not in params:
                 params['ignore_cols'] = []
 
-            print(params['mapping'])
-
             if isinstance(params['mapping'], str):
                 
                 map_loc = os.path.join(custom_dr, params['mapping'])
-                print(map_loc)
                 if os.path.isfile(map_loc):
                     with open(map_loc, 'r') as f:
                         params['mapping'] = json.load(f)
