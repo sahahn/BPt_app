@@ -187,7 +187,7 @@ function registerSetSearch() {
         if (search.length !== 0) {
             var results = variables.filter(entry => entry.match(RegExp(search)));
 
-            if (results.length < 1000) {
+            if (results.length < 10000) {
 
                 registerSetTable(set_id, results);
 
@@ -198,7 +198,7 @@ function registerSetSearch() {
                     });
             }
             else {
-                jQuery('#spot-'+set_id).empty().append('Over limit of 1000! (' + results.length + ' results found). Search again!');
+                jQuery('#spot-'+set_id).empty().append('Over limit of 10000! (' + results.length + ' results found). Search again!');
             }
         }
         else {
