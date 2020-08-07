@@ -123,7 +123,9 @@ def upload_custom_data(custom_dr, con, all_events):
                 params['ignore_cols'] = []
 
             if isinstance(params['mapping'], str):
+                
                 map_loc = os.path.join(custom_dr, params['mapping'])
+                print(map_loc)
                 if os.path.isfile(map_loc):
                     with open(map_loc, 'r') as f:
                         params['mapping'] = json.load(f)
