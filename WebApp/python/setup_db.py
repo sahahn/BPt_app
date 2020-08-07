@@ -106,10 +106,7 @@ def upload_dataset(data, file, con):
 
 def upload_custom_data(custom_dr, con, all_events):
 
-    print('!')
-
-    folders = [f for f in os.listdir(custom_dr) if '.json' not in f and os.path.isdir(f)]
-    print([f for f in os.listdir(custom_dr) if '.json' not in f])
+    folders = [f for f in os.listdir(custom_dr) if '.json' not in f]
     for folder in folders:
         print(folder)
         json_loc = os.path.join(custom_dr, folder + '.json')
