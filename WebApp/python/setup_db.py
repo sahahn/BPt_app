@@ -115,6 +115,8 @@ def upload_custom_data(custom_dr, con, all_events):
             with open(json_loc, 'r') as f:
                 params = json.load(f)
 
+                print(params)
+
             if 'mapping' not in params:
                 params['mapping'] = {}
             if 'load_params' not in params:
