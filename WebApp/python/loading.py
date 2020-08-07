@@ -740,6 +740,8 @@ def load_set(ML, params, output_loc, drops=True):
     # Proc eventname
     eventname, ext = _proc_eventname(params)
 
+    ML._print(data_df)
+
     # For now load data as covars, since want to handle types
     try:
         ML.Load_Covars(df=data_df,
