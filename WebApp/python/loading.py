@@ -15,13 +15,12 @@ from caching import (save_cache_subjects, get_subj_param_hash,
                      save_to_loaded_cache)
 import sqlite3
 
+db_dr = '/var/www/html/data/bpt/db'
+con = sqlite3.connect(db_dr)
 
 # Replace this w/ load from DB
 
 def fetchABCDData(variables):
-
-    db_dr = '/var/www/html/data/bpt/db'
-    con = sqlite3.connect(db_dr)
 
     if not isinstance(variables, list):
         variables = [variables]
