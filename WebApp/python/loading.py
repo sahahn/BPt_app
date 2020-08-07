@@ -741,6 +741,7 @@ def load_set(ML, params, output_loc, drops=True):
     eventname, ext = _proc_eventname(params)
 
     ML._print(data_df)
+    ML._print(data_df[0])
 
     # For now load data as covars, since want to handle types
     try:
