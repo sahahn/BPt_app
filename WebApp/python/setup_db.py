@@ -40,7 +40,6 @@ def load_dataset(source, load_params, con):
 def check_data(data, params):
     
     # Apply mapping
-    print(params['mapping'])
     data = data.rename(params['mapping'], axis=1)
     
     if 'subject_id' not in data:
@@ -107,7 +106,7 @@ def upload_dataset(data, file, con):
 
 def upload_custom_data(custom_dr, con, all_events):
 
-    folders = [f for f in os.listdir(custom_dr) if '.json' not in f]
+    folders = [f for f in os.listdir(custom_dr) if '.json' not in f and os.path.isdir(f)]
 
     for folder in folders:
         json_loc = os.path.join(custom_dr, folder + '.json')
@@ -115,6 +114,20 @@ def upload_custom_data(custom_dr, con, all_events):
         if os.path.exists(json_loc):
             with open(json_loc, 'r') as f:
                 params = json.load(f)
+
+            if 'mapping' not in params:
+                params['mapping'] = {}
+            if 'load_params' not in params:
+                params['load_params'] = {}
+            if 'ignore_cols' not in params:
+                params['ignore_cols'] = []
+
+            if isinstance(params['mapping'], str):
+                map_loc = os.path.join(custom_dr, params['mapping'])
+                if os.path.isfile(map_loc):
+                    with open(map_loc, 'r') as f:
+                        params['mapping'] = json.load(f)
+
         else:   
             params = {'load_params': {},
                       'ignore_cols': [],
