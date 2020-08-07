@@ -83,7 +83,13 @@ def add_col(data, col, con):
         if current.shape == existing.shape:
             merged = current
         else:
-            merged = pd.merge(current, existing, how='outer')
+            merged = pd.merge(existing, current, how='outer', on=['subject_id', 'eventname'])
+            
+            if col+'_x' in merged:
+                
+                merged[col+'_x'].update(merged[col+'_y'])
+                merged = merged.rename({col+'_x': col}, axis=1)
+                merged = merged.drop(col+'_y', axis=1)
             
         merged.to_sql(col, con, if_exists='replace', index=False)
 
