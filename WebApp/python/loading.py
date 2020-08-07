@@ -27,11 +27,14 @@ def fetchABCDData(variables):
 
     dfs = []
     for variable in variables:
-        dfs.append(pd.read_sql_query("SELECT * from [" + variable + ']', con))
+        df = pd.read_sql_query("SELECT * from [" + variable + ']', con)
+        df = df.set_index(['subject_id', 'eventname'])
+        dfs.append(df)
 
     if len(dfs) == 1:
-        return dfs[0]
-    return dfs
+        return pd.concat(dfs, axis=1).reset_index()
+    else:
+        return dfs[0].reset_index()
 
 
 def load_params(user_dr, output_loc, n):
