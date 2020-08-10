@@ -17,6 +17,7 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     add-apt-key \
     sudo \
     wget \
+    ffmpeg \
     && apt-get clean \
     cd /tmp/ && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && sh Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && . /opt/conda/bin/activate \
