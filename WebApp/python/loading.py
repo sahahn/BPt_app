@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import json
 
-from BPt_ML import BPt_ML, CV
+from BPt import BPt_ML, CV
 
 import numpy as np
 import scipy.stats as stats
