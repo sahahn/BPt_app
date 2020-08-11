@@ -211,6 +211,8 @@ function setTestResults(output, key, project) {
     
     table_html = table_html + '</tbody></table>';
     jQuery('#'+key+'-table').append(table_html);
+
+    console.log(jQuery('#' + key + '-table').width());
     
     $('#'+key+'-real-table').DataTable({
         "scrollY": 500,
