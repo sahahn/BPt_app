@@ -84,7 +84,7 @@ function ifEvents() {
         if (settings['event_default'] == event) {
             jQuery('#'+r_id+'-default').prop('checked', true);
         }
-        
+
     });
 
     // Proc save short name changes
@@ -108,6 +108,6 @@ function ifEvents() {
     jQuery('.default-box').on('click', function () {
         jQuery('.default-box').prop('checked', false);
         $(this).prop('checked', true);
-        settings['event-default'] = $(this).data()['eventname'];
+        settings['event_default'] = $(this).data()['eventname'];
     });
 }
