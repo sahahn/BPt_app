@@ -200,7 +200,7 @@ def init_proc_params(params, output_loc, inc_exc=True):
     # Check for settings
     if 'settings' in params:
         if isinstance(params['settings'], dict):
-            settings = params.pop('settings')
+            settings.update(params.pop('settings'))
 
     # Proc passed inclusions exclusions if any & requested
     if inc_exc:
