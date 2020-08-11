@@ -22,17 +22,10 @@ function showUserSettings() {
 
     // If only one event
     else {
-
-        var single_event = all_events[0];
-
-        if (settings['event_mapping'] == undefined) {
-            settings['event_mapping'] = {single_event: ''}
-        }
-    
-        if (settings['event_default'] == undefined) {
-            settings['default'] = 'None';
-        }
-
+        var single_event = all_events[0].toString;
+        settings['event_mapping'] = {};
+        settings['event_mapping'][single_event] = '';
+        settings['event_default'] = single_event;
     }
 
 }
