@@ -231,7 +231,7 @@ def init_proc_params(params, output_loc, inc_exc=True):
         params = check_defaults(params)
 
         # Remove any eventname extensions from -input
-        params = remove_eventname_check(params, params['settings'], output_loc)
+        # params = remove_eventname_check(params, params['settings'], output_loc)
 
     # Perform a nested check for sub-params!
     if 'target_params' in params:
@@ -723,7 +723,7 @@ def load_set(ML, params, output_loc, drops=True):
                            'from the original', output_loc)
 
             # Remove eventname if any there for some reason
-            var = remove_eventname_check(var, params['settings'], output_loc)
+            # var = remove_eventname_check(var, params['settings'], output_loc)
 
             # Get index of this set var within list of all
             i = col_names.index(var['-input'])
