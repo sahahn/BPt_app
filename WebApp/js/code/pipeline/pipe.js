@@ -465,6 +465,8 @@ function registerSearchType(key, project) {
         'data': getSearchTypeChoices()
     });
 
+    console.log(getSearchTypeChoices());
+
     // Trigger show rest of search params
     search_type.on('change', function() {
         if ($(this).val() !== 'None') {
