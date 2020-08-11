@@ -457,6 +457,8 @@ function registerNumField(key, project, id, def_val) {
 
 function registerSearchType(key, project) {
 
+    console.log('register search type')
+
     var search_type = jQuery('#'+key+'-search-type');
 
     // Register select choices
