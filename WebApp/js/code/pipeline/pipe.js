@@ -457,8 +457,6 @@ function registerNumField(key, project, id, def_val) {
 
 function registerSearchType(key, project) {
 
-    console.log('register search type')
-
     var search_type = jQuery('#'+key+'-search-type');
 
     // Register select choices
@@ -466,8 +464,6 @@ function registerSearchType(key, project) {
         'placeholder': 'Select a search type',
         'data': getSearchTypeChoices()
     });
-
-    console.log(getSearchTypeChoices());
 
     // Trigger show rest of search params
     search_type.on('change', function() {
@@ -504,10 +500,12 @@ function getSearchTypeChoices() {
     choices.push({"id": 'None', "text": 'None'});
 
     ML_options['parameter_search'].forEach(search_type => {
-        choices.push({
-            "id": search_type,
-            "text": search_type
+        if (search_type !== undefined) {
+            choices.push({
+                "id": search_type,
+                "text": search_type
             });
+        }
     });
 
     return choices;
