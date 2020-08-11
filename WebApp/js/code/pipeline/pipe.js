@@ -53,8 +53,8 @@ function getDocsLink(doc_str) {
 
     console.log(doc_str);
 
-    // If nothing else found, just link to the ABCD ML docs, better than nothing
-    return 'https://abcd-ml.readthedocs.io/en/latest/options.html'
+    // If nothing else found, just link to the BPt docs, better than nothing
+    return 'https://bpt.readthedocs.io/en/latest/options.html'
 
 }
 

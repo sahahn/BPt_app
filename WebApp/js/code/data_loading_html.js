@@ -25,6 +25,10 @@ function inputDropNaHTML(key) {
 }
 
 function inputEventnameHTML(key) {
+
+    var eventname_text = 'If some variables have values for multiple time points, then' +
+    'Eventname is used select a specific timepoint per variable or groups of variables. ' +
+    'This can be particulary useful for longitudinal studies';
     
     var html = '' +
     '<div class="form-group col-md-6">' +
@@ -32,8 +36,7 @@ function inputEventnameHTML(key) {
 
         '<span data-toggle="popover"' +
         'title="Eventname" data-placement="top"' +
-        'data-content="ABCD is a longitudinal study, which means some variables have values for multiple time points.' +
-        'Eventname is used select a specific timepoint per variable or groups of variables." >' +
+        'data-content="' + eventname_text + '" >' +
         'Eventname <i class="fas fa-info-circle fa-sm"></i>' +
         '</span></label>' +
 
