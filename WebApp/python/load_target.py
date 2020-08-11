@@ -9,7 +9,7 @@ def main(user_dr, n):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='ABCD_ML Load Target Script')
+    parser = argparse.ArgumentParser(description='BPt Load Target Script')
     parser.add_argument('user_dr', type=str,
                         help='Location of the created users directory to work '
                              'in')

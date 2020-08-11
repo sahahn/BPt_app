@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import json
 
-from ABCD_ML import (ABCD_ML, CV)
+from BPt_ML import BPt_ML, CV
 
 import numpy as np
 import scipy.stats as stats
@@ -20,7 +20,7 @@ con = sqlite3.connect(db_dr)
 
 # Replace this w/ load from DB
 
-def fetchABCDData(variables):
+def load_from_df(variables):
 
     if not isinstance(variables, list):
         variables = [variables]
@@ -269,20 +269,20 @@ def init_proc_params(params, output_loc, inc_exc=True):
 def init_ML(user_dr, output_loc, params, n=0):
 
     try:
-        ML = ABCD_ML(exp_name='ABCD_ML_Logs' + str(n),
-                     log_dr=user_dr,
-                     existing_log='overwrite',
-                     verbose=False, notebook=False,
-                     use_abcd_subject_ids=True, dpi=200,
-                     n_jobs=1, mp_context='spawn')
+        ML = BPt_ML(exp_name='ML_Logs' + str(n),
+                    log_dr=user_dr,
+                    existing_log='overwrite',
+                    verbose=False, notebook=False,
+                    use_abcd_subject_ids=True, dpi=200,
+                    n_jobs=1, mp_context='spawn')
 
         if user_dr is not None:
-            log_dr = os.path.join(user_dr, 'ABCD_ML_Logs' + str(n))
+            log_dr = os.path.join(user_dr, 'ML_Logs' + str(n))
         else:
             log_dr = ''
 
     except Exception as e:
-        save_error('Error creating ABCD_ML object', output_loc, e)
+        save_error('Error creating BPt object', output_loc, e)
 
     # For now these settings are okay
     ML.Set_Default_Load_Params(dataset_type='basic',
@@ -529,7 +529,7 @@ def load_target(ML, params, output_loc, drops=True):
     col_name = params['-input']
 
     try:
-        target_df = fetchABCDData(col_name)
+        target_df = load_from_df(col_name)
     except Exception as e:
         save_error('Error fetching target variable', output_loc, e)
 
@@ -589,7 +589,7 @@ def load_variable(ML, params, output_loc, drops=True):
     # Load the covar df
     col_name = params['-input']
     try:
-        covar_df = fetchABCDData(col_name)
+        covar_df = load_from_df(col_name)
     except Exception as e:
         save_error('Error fetching data variable', output_loc, e)
 
@@ -639,7 +639,7 @@ def load_strat(ML, params, output_loc, drops=False):
     # Load df
     col_name = params['-input']
     try:
-        strat_df = fetchABCDData(col_name)
+        strat_df = load_from_df(col_name)
     except Exception as e:
         save_error('Error fetching non-input variable', output_loc, e)
 
@@ -736,7 +736,7 @@ def load_set(ML, params, output_loc, drops=True):
 
     # Load from db/files
     try:
-        data_df = fetchABCDData(col_names)
+        data_df = load_from_df(col_names)
     except Exception as e:
         save_error('Error fetching set data variables', output_loc, e)
 
@@ -1135,7 +1135,7 @@ def save_results(output_loc, output):
         with open(output_loc, 'w') as f:
             json.dump(output, f)
     except Exception as e:
-        save_error('Error saving output from ABCD_ML', output_loc, e)
+        save_error('Error saving output from BPt', output_loc, e)
 
 
 def get_subjects_load(params, inclusions, exclusions, output_loc, v_type):

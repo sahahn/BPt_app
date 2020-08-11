@@ -43,11 +43,11 @@ function getDocsLink(doc_str) {
     }
 
     // Special cases
-    if (doc_str == 'ABCD_ML.extensions.MLP.MLPClassifier_Wrapper') {
+    if (doc_str == 'BPt.extensions.MLP.MLPClassifier_Wrapper') {
         return 'https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html';
     }
 
-    if (doc_str == 'ABCD_ML.extensions.MLP.MLPRegressor_Wrapper') {
+    if (doc_str == 'BPt.extensions.MLP.MLPRegressor_Wrapper') {
         return 'https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html';
     }
 

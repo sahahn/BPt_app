@@ -142,7 +142,7 @@ function getSetParams(key, project) {
 
 function loadVariable(key, script, project) {
 
-    // Grab all needed params to pass to ABCD_ML
+    // Grab all needed params to pass to BPt
     var params = getBaseParams(key, project);
 
     // Add extra params

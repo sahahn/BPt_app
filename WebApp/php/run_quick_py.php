@@ -10,12 +10,7 @@ if(!is_dir($user_dr)){
 // Save the passed parameters to the user's directory
 file_put_contents($user_dr.'/ML_Params'.$_POST['params']['n'].'.json', json_encode($_POST));
 
-// Pass subject directory to python script and run, waiting to finish
-//$cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ABCD_ML; ";
-//$cmd_p2 = "/opt/conda/envs/ABCD_ML/bin/python /var/www/html/applications/Example-ABCD_ML/python/".$_POST['params']['script']." ";
-//$cmd = $cmd_p1.$cmd_p2.$user_dr." '".$_POST['params']['n']."'".'"';
-
-
+// Generate the py command - run in foreground
 $cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ML; ";
 $cmd_p2 = "/opt/conda/envs/ML/bin/python ".$python_loc.$_POST['params']['script']." ".$user_dr." '".$_POST['params']['n']."'".'"';
 $cmd = $cmd_p1.$cmd_p2;

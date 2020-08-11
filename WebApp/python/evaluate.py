@@ -6,7 +6,7 @@ from loading import get_CV_from_params, get_subjects
 import pickle as pkl
 
 import json
-from ABCD_ML import (Problem_Spec, Model_Pipeline,
+from BPt_ML import (Problem_Spec, Model_Pipeline,
                      Imputer, Scaler,
                      Transformer, Feat_Selector,
                      Model, Ensemble,
@@ -568,7 +568,7 @@ def main(user_dr, job_name):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='ABCD_ML Evaluate Interface')
+    parser = argparse.ArgumentParser(description='BPt Evaluate Interface')
     parser.add_argument('user_dr', type=str,
                         help='Location of the created users directory to work '
                              'in')

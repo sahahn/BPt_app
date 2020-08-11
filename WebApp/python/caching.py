@@ -5,7 +5,7 @@ from shutil import copyfile
 from hashlib import blake2b
 from collections.abc import Iterable
 from utils import save_subjects, load_subjects
-from ABCD_ML import Load
+from BPt_ML import Load
 from pathlib import Path
 
 V_DR = '/var/www/html/data/bpt/'
@@ -262,7 +262,7 @@ def check_loaded_cache(params, output_loc, user_dr, n):
     if os.path.exists(saved_loc):
 
         # If exists load saved ML obj, overriding old cache info
-        ML = Load(saved_loc, exp_name='ABCD_ML_Logs' + str(n),
+        ML = Load(saved_loc, exp_name='ML_Logs' + str(n),
                   log_dr=user_dr, existing_log='overwrite')
 
         # Update timestamp

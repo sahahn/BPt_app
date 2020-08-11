@@ -24,8 +24,8 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && conda init bash && . ~/.bashrc && conda update -n base -c defaults conda -y \
     && conda create --name ML -y && conda activate ML && conda install pip \
     && git clone https://github.com/sahahn/BPt.git /var/www/html/BPt \
-    && git clone https://github.com/sahahn/ABCD_ML.git /var/www/html/ABCD_ML \
-    && pip install /var/www/html/ABCD_ML/ \
+    && git clone https://github.com/sahahn/BPt_app.git /var/www/html/BPt_app \
+    && pip install /var/www/html/BPt/ \
     && sed -i '/post_max_size = 8M/cpost_max_size = 5000M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/memory_limit = 128M/cmemory_limit = 1024M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/; max_input_vars = 5000/cmax_input_vars = 100000' /etc/php/7.2/apache2/php.ini

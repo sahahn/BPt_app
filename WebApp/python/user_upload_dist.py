@@ -51,7 +51,7 @@ def main(user_dr):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='ABCD_ML upload dist')
+    parser = argparse.ArgumentParser(description='BPt upload dist')
     parser.add_argument('user_dr', type=str,
                         help='Location of the created users directory to work '
                              'in')

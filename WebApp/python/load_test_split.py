@@ -39,7 +39,7 @@ def main(user_dr, n):
     ML = base_test_load(params, user_dr, output_loc, n)
     ML._print('loaded')
 
-    log_dr = os.path.join(user_dr, 'ABCD_ML_Logs' + str(n))
+    log_dr = os.path.join(user_dr, 'ML_Logs' + str(n))
 
     # Create output results
     output = {}
@@ -58,7 +58,7 @@ def main(user_dr, n):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description='ABCD_ML Load Test Splits Script')
+        description='BPt Load Test Splits Script')
     parser.add_argument('user_dr', type=str,
                         help='Location of the created users'
                              'directory to work in')

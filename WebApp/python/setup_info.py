@@ -1,25 +1,25 @@
-from ABCD_ML.pipeline.Ensembles import ENSEMBLES
-from ABCD_ML.pipeline.Ensembles import AVALIABLE as AVALIABLE_ENSEMBLES
-from ABCD_ML.pipeline.Feature_Selectors import SELECTORS
-from ABCD_ML.pipeline.Feature_Selectors import AVALIABLE as AVALIABLE_SELECTORS
-from ABCD_ML.pipeline.Transformers import TRANSFORMERS
-from ABCD_ML.pipeline.Scalers import SCALERS
-from ABCD_ML.pipeline.Imputers import IMPUTERS
-from ABCD_ML.pipeline.Models import MODELS
-from ABCD_ML.pipeline.Models import AVALIABLE as AVALIABLE_MODELS
+from BPt.pipeline.Ensembles import ENSEMBLES
+from BPt.pipeline.Ensembles import AVALIABLE as AVALIABLE_ENSEMBLES
+from BPt.pipeline.Feature_Selectors import SELECTORS
+from BPt.pipeline.Feature_Selectors import AVALIABLE as AVALIABLE_SELECTORS
+from BPt.pipeline.Transformers import TRANSFORMERS
+from BPt.pipeline.Scalers import SCALERS
+from BPt.pipeline.Imputers import IMPUTERS
+from BPt.pipeline.Models import MODELS
+from BPt.pipeline.Models import AVALIABLE as AVALIABLE_MODELS
 
 import json
 import inspect
-from ABCD_ML.helpers.ML_Helpers import get_objects_by_type, get_objects
-from ABCD_ML.helpers.Docstring_Helpers import get_name, get_scorer_name
+from BPt.helpers.ML_Helpers import get_objects_by_type, get_objects
+from BPt.helpers.Docstring_Helpers import get_name, get_scorer_name
 from inspect import signature
 import numpy as np
 import re
 import os
-from ABCD_ML.pipeline.Scorers import get_scorers_by_type
+from BPt.pipeline.Scorers import get_scorers_by_type
 
 import nevergrad as ng
-from ABCD_ML.helpers.Default_Params import P
+from BPt.helpers.Default_Params import P
 import shutil
 
 # Save ML Options Code

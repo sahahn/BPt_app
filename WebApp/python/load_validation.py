@@ -22,7 +22,7 @@ def main(user_dr, n):
 
     ML._print(list(ML.all_data))
 
-    log_dr = os.path.join(user_dr, 'ABCD_ML_Logs' + str(n))
+    log_dr = os.path.join(user_dr, 'ML_Logs' + str(n))
 
     # Get the CV param object
     try:
@@ -31,7 +31,7 @@ def main(user_dr, n):
     except Exception as e:
         save_error('Error creating CV params', output_loc, e)
 
-    # Obtain the CV splits from the ABCD_ML object
+    # Obtain the CV splits from the BPt object
     try:
         ML._get_CV(cv_params, show=True, show_original=True)
     except Exception as e:
@@ -50,7 +50,7 @@ def main(user_dr, n):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description='ABCD_ML Load Validation Script')
+        description='BPt Load Validation Script')
     parser.add_argument('user_dr', type=str,
                         help='Location of the created users'
                              'directory to work in')
