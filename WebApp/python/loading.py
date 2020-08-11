@@ -867,7 +867,7 @@ def _get_set_html_output(log_dr):
                'rows/subjects in computing overlap with',
                'New Shape']
 
-    up_to_keys = [' rows for missing values']
+    up_to_keys = [' rows for missing values', ' rows based on filter input params']
 
     ignore = ['Removed excluded subjects from loaded dfs']
 
