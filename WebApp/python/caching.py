@@ -4,7 +4,7 @@ import json
 from shutil import copyfile
 from hashlib import blake2b
 from collections.abc import Iterable
-from utils import save_subjects, load_subjects
+from utils import save_subjects, load_subjects, save_error
 from BPt import Load
 from pathlib import Path
 

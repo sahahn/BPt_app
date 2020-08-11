@@ -258,7 +258,9 @@ def init_proc_params(params, output_loc, inc_exc=True):
 
 def init_ML(user_dr, output_loc, params, n=0):
 
-    temp_dr = os.path.join(user_dr, 'temp')
+    temp_dr = None
+    if user_dr is not None:
+        temp_dr = os.path.join(user_dr, 'temp')
 
     try:
         ML = BPt_ML(exp_name='ML_Logs_' + str(n),
