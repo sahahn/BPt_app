@@ -161,6 +161,9 @@ function getAllLoadedDataParams(project) {
 
 function addOtherLoadedParams(key, params, project) {
 
+    // Add settings, as this should be included with all data loading
+    params['settings'] = settings;
+
     // Grab filter info -- only if not strat!
     if (!key.includes('strat-space')) {
 

@@ -327,6 +327,9 @@ function updateInputField(key, existing) {
     if (existing['-eventname'] !== undefined) {
         jQuery('#'+key+'-eventname').val(existing['-eventname']).trigger('change');
     }
+    else {
+        jQuery('#'+key+'-eventname').trigger('change');
+    }
 
     // Data type
     if (existing['-type'] !== undefined) {

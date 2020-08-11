@@ -154,7 +154,8 @@ def proc_inc_ex(params, output_loc):
 def check_defaults(params):
 
     if '-eventname' not in params:
-        params['-eventname'] = 'baseline'
+        if 'settings' in params:
+            params['-eventname'] = params['settings']['event_default']
 
     if '-drop-choice' not in params:
         params['-drop-choice'] = 'true'
@@ -194,12 +195,15 @@ def check_defaults(params):
     return params
 
 
-def remove_eventname_check(params, output_loc):
+def remove_eventname_check(params, settings, output_loc):
+
+    reverse_mapping = {'.' + settings['event_mapping'][key]: key 
+                       for key in settings['event_mapping'] if key != ''}
 
     # Remove any eventname extensions from -input
     try:
         if '-input' in params:
-            for key in ['.baseline', '.year1']:
+            for key in reverse_mapping:
                 if params['-input'].endswith(key):
                     params['-input'] = params['-input'].replace(key, '')
     except Exception as e:
@@ -227,7 +231,7 @@ def init_proc_params(params, output_loc, inc_exc=True):
         params = check_defaults(params)
 
         # Remove any eventname extensions from -input
-        params = remove_eventname_check(params, output_loc)
+        params = remove_eventname_check(params, params['settings'], output_loc)
 
     # Perform a nested check for sub-params!
     if 'target_params' in params:
@@ -384,12 +388,8 @@ def _proc_na(params):
 
 
 def _proc_eventname(params):
-
-    if params['-eventname'] == 'baseline':
-        return 'baseline_year_1_arm_1', '.baseline'
-    elif params['-eventname'] == 'year 1':
-        return '1_year_follow_up_y_arm_1', '.year1'
-
+    
+    return params['-eventname'], params['settings']['event_mapping'][params['-eventname']]
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
 
@@ -703,8 +703,8 @@ def load_set(ML, params, output_loc, drops=True):
     fos = [fos for i in range(len(col_names))]
     cdp = [cdp for i in range(len(col_names))]
     binary_thresh = [binary_thresh for i in range(len(col_names))]
-    fb_s = [fb for fb in range(len(col_names))]
-    fbs_s = [fbs for fbs in range(len(col_names))]
+    fb_s = [fb for i in range(len(col_names))]
+    fbs_s = [fbs for i in range(len(col_names))]
 
     # Check if any set vars passed
     if 'set-vars' in params:
@@ -723,7 +723,7 @@ def load_set(ML, params, output_loc, drops=True):
                            'from the original', output_loc)
 
             # Remove eventname if any there for some reason
-            var = remove_eventname_check(var, output_loc)
+            var = remove_eventname_check(var, params['settings'], output_loc)
 
             # Get index of this set var within list of all
             i = col_names.index(var['-input'])
