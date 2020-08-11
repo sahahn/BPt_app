@@ -1361,7 +1361,10 @@ def base_single_load(user_dr, v_type, n):
     params = load_params(user_dr, output_loc, n)
 
     # Perform initial processing
-    params = init_proc_params(params, output_loc, inc_exc=True)
+    try:
+        params = init_proc_params(params, output_loc, inc_exc=True)
+    except Exception as e:
+        save_error('Error proc params', output_loc, e)
 
     # After init proc of params, check the loading cache
     # If results cached will set the results and exit the script
