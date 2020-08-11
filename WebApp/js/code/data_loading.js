@@ -1211,6 +1211,10 @@ function addTarget(project, key=undefined) {
     // Register all events
     registerLoadVariable(key, data_types, 'load_target.py', 'target', project);
 
+    if (project['data'][key]['-type'] == undefined) {
+        project['data'][key]['-type'] = 'float'
+    }
+
     // Register close button
     cnt_id = 'target-count';
     registerCloseButton(space, key, n, 'n', cnt_id, project);
