@@ -442,20 +442,26 @@ function startApp() {
     });
 }
 
+
+
 function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
-
         if (data !== 'not ready') {
             clearInterval(db_interval);
-            variables = JSON.parse(data['loaded']);
-            all_events = JSON.parse(data['all_events']);
-            variable_choices = arrayToChoices(variables);
-
-            jQuery("#body-db-loading").css('display', 'none');
-            startApp();
+            isReady(data);
         }
     });
+}
+
+function isReady(data) {
+    
+    variables = JSON.parse(data['loaded']);
+    all_events = JSON.parse(data['all_events']);
+    variable_choices = arrayToChoices(variables);
+
+    jQuery("#body-db-loading").css('display', 'none');
+    startApp();
 }
 
 // On document load
@@ -467,12 +473,29 @@ jQuery(document).ready(function() {
     // Run setup
     jQuery.post('php/setup.php');
 
-    // Start loop to check if db ready
-    db_interval = setInterval(function() {
-        checkDBReady(db_interval);
-    }, 750);
+    // Run once in this loop, so waits for finish
+    jQuery.getJSON('php/check_db_ready.php', function (data) {
+
+        // If ready, call isReady
+        if (data !== 'not ready') {
+            isReady(data);
+        }
+
+        // If not ready, set load and start check loop
+        else {
+            jQuery("#body-db-loading").css('display', 'block');
+
+             // Start loop to check if db ready
+            db_interval = setInterval(function() {
+                checkDBReady(db_interval);
+            }, 5000);
+        }
+
+    });
 
 });
+
+
 
 
 

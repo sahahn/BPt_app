@@ -128,7 +128,7 @@
 
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
-        <div id="body-db-loading">
+        <div id="body-db-loading" style="display: none">
           <h1>Please wait... the backend database is still being built!</h1>
           <h3>If you have passed a large amount of data this could take a long time.</h3>
           <h3>Note: You do not need to have this screen up while the uploading is taking place, but
