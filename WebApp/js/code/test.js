@@ -214,7 +214,6 @@ function setTestResults(output, key, project) {
     
     $('#'+key+'-real-table').DataTable({
         "scrollY": 500,
-        "scrollX": true,
         "searching": true,
         "paging": true,
         "info": true,
