@@ -22,7 +22,7 @@ function showUserSettings() {
 
     // If only one event
     else {
-        var single_event = all_events[0].toString;
+        var single_event = all_events[0];
         settings['event_mapping'] = {};
         settings['event_mapping'][single_event] = '';
         settings['event_default'] = single_event;
