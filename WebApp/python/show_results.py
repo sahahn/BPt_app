@@ -137,7 +137,7 @@ def main(user_dr, job_name):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description='ABCD_ML Show Results Script')
+        description='BPt Show Results Script')
     parser.add_argument('user_dr', type=str,
                         help='Location of the created users'
                              'directory to work in')
