@@ -17,7 +17,7 @@ import sqlite3
 
 db_dr = '/var/www/html/data/bpt/db'
 con = sqlite3.connect(db_dr)
-settings = {}
+global settings
 
 # Replace this w/ load from DB
 
