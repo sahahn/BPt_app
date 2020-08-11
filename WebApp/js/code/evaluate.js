@@ -73,7 +73,7 @@ function getEvalSubjectsHTML(key) {
     var from_strat_label = getPopLabel(key, 'Subset-Subjects by Non-Input Value ', from_strat_content);
 
     var html = addSubjectsInputRowHTML(key, file_input_label, from_strat_label,
-                                      'eval', row_class=' m-5 mt-2');
+                                      'eval', row_class=' mblr-5 mt-2');
     html = '<hr><div class="text-center"><i>Optional</i></div>' + html;
     return html;
 
