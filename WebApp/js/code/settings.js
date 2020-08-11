@@ -1,6 +1,3 @@
-var settings;
-
-
 function getSettingsHTML() {
     var html = '<div id="settings-event-rename">' + 
     '</div>';
@@ -8,11 +5,7 @@ function getSettingsHTML() {
     return html;
 }
 
-
 function showUserSettings() {
-
-    // Load settings
-    settings = {};
 
     if (settings['event_mapping'] == undefined) {
         settings['event_mapping'] = {'None': ''};

@@ -2,6 +2,7 @@ var variables;
 var all_events;
 var variable_choices;
 var projects = [];
+var settings = {};
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
                      '-ml-pipe', '-evaluate', '-results'];
 var active_jobs_interval;
@@ -11,7 +12,8 @@ function save_all() {
     
     // Save projects
     jQuery.post('php/save_projects.php', {
-        'projects': projects
+        'projects': projects,
+        'settings': settings
     });
 
     // Save user param dists
@@ -399,6 +401,10 @@ function startApp() {
     // s.t., should not allow any interaction, e.g., add new projects
     // before existing ones are loaded.
     jQuery.getJSON('php/get_projects.php', function (data) {
+
+        if (Object.keys(data).includes('settings')) {
+            settings = data['settings'];
+        }
 
         if (Object.keys(data).includes('projects')) {
             projects = data['projects'];
