@@ -38,7 +38,6 @@ function showUserSettings() {
         '</div><hr>';
         jQuery('#settings-event-rename').append(header_html);
         
-
         var cnt = 0;
         all_events.forEach(event => {
 
@@ -48,7 +47,7 @@ function showUserSettings() {
             var r_html = '<div class="row form-group">' + 
             '<label for="'+r_id+'" class="col-sm-5 col-form-label">' + event + '</label>' +
             '<div class="col-sm-5">' +
-              '<input type="text" class="form-control" id="'+r_id+'">' +
+              '<input data-eventname="'+event+'" type="text" class="form-control short-name" id="'+r_id+'">' +
             '</div>' +
             
             '<div class="form-group col-md-2 text-center">' + 
@@ -60,6 +59,23 @@ function showUserSettings() {
             '</div>';
 
             jQuery('#settings-event-rename').append(r_html);
+        });
+
+        // Proc save short name changes
+        jQuery('.short-name').on('change', function() {
+            var event = $(this).data()['eventname'];
+            settings['event_mapping'][event] = $(this).val();
+        });
+
+        // Apply any saved names
+        jQuery('.short-name').each(function() {
+            var event = $(this).data()['eventname'];
+            if (settings['event_mapping'][event] == undefined) {
+                $(this).val(event).trigger('change');
+            }
+            else {
+                $(this).val(settings['event_mapping'][event]).trigger('change');
+            }
         });
 
         // Proc default event name option
