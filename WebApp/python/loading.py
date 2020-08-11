@@ -17,6 +17,7 @@ import sqlite3
 
 db_dr = '/var/www/html/data/bpt/db'
 con = sqlite3.connect(db_dr)
+settings = {}
 
 # Replace this w/ load from DB
 
@@ -154,8 +155,7 @@ def proc_inc_ex(params, output_loc):
 def check_defaults(params):
 
     if '-eventname' not in params:
-        if 'settings' in params:
-            params['-eventname'] = params['settings']['event_default']
+        params['-eventname'] = settings['event_default']
 
     if '-drop-choice' not in params:
         params['-drop-choice'] = 'true'
@@ -195,25 +195,12 @@ def check_defaults(params):
     return params
 
 
-def remove_eventname_check(params, settings, output_loc):
-
-    reverse_mapping = {'.' + settings['event_mapping'][key]: key 
-                       for key in settings['event_mapping'] if key != ''}
-
-    # Remove any eventname extensions from -input
-    try:
-        if '-input' in params:
-            for key in reverse_mapping:
-                if params['-input'].endswith(key):
-                    params['-input'] = params['-input'].replace(key, '')
-    except Exception as e:
-        save_error('Error processing passed input',
-                   output_loc, e)
-
-    return params
-
-
 def init_proc_params(params, output_loc, inc_exc=True):
+
+    # Check for settings
+    if 'settings' in params:
+        if isinstance(params['settings'], dict):
+            settings = params.pop('settings')
 
     # Proc passed inclusions exclusions if any & requested
     if inc_exc:
@@ -229,9 +216,6 @@ def init_proc_params(params, output_loc, inc_exc=True):
 
         # Replace any missing params w/ defaults
         params = check_defaults(params)
-
-        # Remove any eventname extensions from -input
-        # params = remove_eventname_check(params, params['settings'], output_loc)
 
     # Perform a nested check for sub-params!
     if 'target_params' in params:
@@ -389,7 +373,7 @@ def _proc_na(params):
 
 def _proc_eventname(params):
     
-    return params['-eventname'], '.'+params['settings']['event_mapping'][params['-eventname']]
+    return params['-eventname'], '.'+settings['event_mapping'][params['-eventname']]
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
 
@@ -721,9 +705,6 @@ def load_set(ML, params, output_loc, drops=True):
             if '-drop-choice' in var and _proc_na(var) != drop_na:
                 save_error('You cannot change drop na of a set variable ' +
                            'from the original', output_loc)
-
-            # Remove eventname if any there for some reason
-            # var = remove_eventname_check(var, params['settings'], output_loc)
 
             # Get index of this set var within list of all
             i = col_names.index(var['-input'])
