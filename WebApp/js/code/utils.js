@@ -200,17 +200,23 @@ function registerAddNewStratVar(key, project) {
 
 function getReprName(name, eventname, is_set_name=false) {
 
+    var event_mapping = settings['event_mapping'];
+    var event_default = settings['event_default'];
+
     var ext = '';
     if ((eventname == undefined) || (eventname.length == 0)) {
-        ext = 'baseline';
+        ext = event_mapping[event_default];
     }
-    else if (eventname == 'baseline') {
-        ext = 'baseline';
-    }
-    else if (eventname == 'year 1') {
-        ext = 'year1';
+    else if (Object.keys(event_mapping).includes(eventname)) {
+        ext = event_mapping[eventname];
     }
 
+    // Return just base name if no ext
+    if (ext == '') {
+        return name;
+    }
+
+    // Otherwise, return name w/ ext based on if set or not
     if (is_set_name == true) {
         return name + ' - ' + ext;
     }
@@ -225,17 +231,25 @@ function getVarReprName(key, project) {
 
 function getBaseName(repr_name) {
 
-    var event_exts = ['baseline', 'year1'];
-    event_exts.forEach(e_key => {
-        
-        var options = [' - ', '.'];
-        options.forEach(pre_key => {
+    // Create reverse mapping
+    var reverse_mapping = {}
+    Object.keys(settings['event_mapping']).forEach(k => {
+        reverse_mapping[settings['event_mapping'][k]] = k;
+    });
 
-            var replace_key = pre_key + e_key;
-            if (repr_name.endsWith(replace_key)) {
-                repr_name = repr_name.replace(replace_key, '');
-            }
-        });
+    Object.keys(reverse_mapping).forEach(e_key => {
+
+        if (e_key !== '') {
+        
+            var options = [' - ', '.'];
+            options.forEach(pre_key => {
+
+                var replace_key = pre_key + e_key;
+                if (repr_name.endsWith(replace_key)) {
+                    repr_name = repr_name.replace(replace_key, '');
+                }
+            });
+        }
     });
 
     return repr_name;
