@@ -263,7 +263,8 @@ def check_loaded_cache(params, output_loc, user_dr, n):
 
         # If exists load saved ML obj, overriding old cache info
         ML = Load(saved_loc, exp_name='ML_Logs_' + str(n),
-                  log_dr=user_dr, existing_log='overwrite')
+                  log_dr=os.path.join(user_dr, 'temp'),
+                  existing_log='overwrite')
 
         # Update timestamp
         Path(saved_loc).touch()

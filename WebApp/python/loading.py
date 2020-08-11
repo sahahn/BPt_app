@@ -258,16 +258,18 @@ def init_proc_params(params, output_loc, inc_exc=True):
 
 def init_ML(user_dr, output_loc, params, n=0):
 
+    temp_dr = os.path.join(user_dr, 'temp')
+
     try:
         ML = BPt_ML(exp_name='ML_Logs_' + str(n),
-                    log_dr=user_dr,
+                    log_dr=temp_dr,
                     existing_log='overwrite',
                     verbose=False, notebook=False,
                     use_abcd_subject_ids=True, dpi=200,
                     n_jobs=1, mp_context='spawn')
 
         if user_dr is not None:
-            log_dr = os.path.join(user_dr, 'ML_Logs_' + str(n))
+            log_dr = os.path.join(temp_dr, 'ML_Logs_' + str(n))
         else:
             log_dr = ''
 

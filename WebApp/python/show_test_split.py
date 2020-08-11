@@ -48,7 +48,7 @@ def main(user_dr, n):
     ML = base_test_load(params, user_dr, output_loc, n)
 
     show_params = params['show_params']
-    save_loc = os.path.join(user_dr, 'temp_dist'+str(n)+'.png')
+    save_loc = os.path.join(temp_dr, 'temp_dist'+str(n)+'.png')
 
     if show_params['source'] in ['Data Variable', 'Set Variable']:
 
