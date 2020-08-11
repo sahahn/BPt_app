@@ -38,7 +38,8 @@ def df_to_table(display_df):
 
 def main(user_dr, n):
 
-    output_loc = os.path.join(user_dr, 'ML_Output' + str(n) + '.json')
+    temp_dr = os.path.join(user_dr, 'temp')
+    output_loc = os.path.join(temp_dr, 'ML_Output_' + str(n) + '.json')
 
     # Load in params
     params = load_params(user_dr, output_loc, n)

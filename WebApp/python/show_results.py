@@ -90,11 +90,9 @@ def get_raw_preds_table_html(results):
 def main(user_dr, job_name):
 
     # Should switch over all quick py runs to using temp
-    # temp_dr = os.path.join(user_dr, 'temp')
-    temp_dr = user_dr
-
-    params_loc = os.path.join(temp_dr, 'ML_Params' + str(job_name) + '.json')
-    output_loc = os.path.join(temp_dr, 'ML_Output' + str(job_name) + '.json')
+    temp_dr = os.path.join(user_dr, 'temp')
+    params_loc = os.path.join(temp_dr, 'ML_Params_' + str(job_name) + '.json')
+    output_loc = os.path.join(temp_dr, 'ML_Output_' + str(job_name) + '.json')
 
     with open(params_loc, 'r') as f:
         params = json.load(f)['params']

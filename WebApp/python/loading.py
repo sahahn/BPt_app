@@ -43,7 +43,8 @@ def load_params(user_dr, output_loc, n):
 
     # Load params
     try:
-        params_loc = os.path.join(user_dr, 'ML_Params' + str(n) + '.json')
+        temp_dr = os.path.join(user_dr, 'temp')
+        params_loc = os.path.join(temp_dr, 'ML_Params_' + str(n) + '.json')
         with open(params_loc, 'r') as f:
             params = json.load(f)['params']
 
@@ -1338,7 +1339,8 @@ def proc_main_input(params, output_loc):
 
 def base_single_load(user_dr, v_type, n):
 
-    output_loc = os.path.join(user_dr, 'ML_Output' + str(n) + '.json')
+    temp_dr = os.path.join(user_dr, 'temp')
+    output_loc = os.path.join(temp_dr, 'ML_Output_' + str(n) + '.json')
 
     # Load in params
     params = load_params(user_dr, output_loc, n)
