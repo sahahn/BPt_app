@@ -500,7 +500,7 @@ function getSearchTypeChoices() {
     choices.push({"id": 'None', "text": 'None'});
 
     ML_options['parameter_search'].forEach(search_type => {
-        if (search_type !== undefined) {
+        if ((search_type !== undefined) && (search_type !== null)) {
             console.log(search_type);
             choices.push({
                 "id": search_type,
