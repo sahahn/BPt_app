@@ -39,7 +39,7 @@ def main(user_dr, n):
     ML = base_test_load(params, user_dr, output_loc, n)
     ML._print('loaded')
 
-    log_dr = os.path.join(user_dr, 'ML_Logs' + str(n))
+    log_dr = os.path.join(user_dr, 'ML_Logs_' + str(n))
 
     # Create output results
     output = {}
