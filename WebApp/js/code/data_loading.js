@@ -1211,8 +1211,12 @@ function addTarget(project, key=undefined) {
     // Register all events
     registerLoadVariable(key, data_types, 'load_target.py', 'target', project);
 
+    // If no type, set to undefined
     if (project['data'][key]['-type'] == undefined) {
-        project['data'][key]['-type'] = 'float'
+        project['data'][key]['-type'] = 'float';
+    }
+    if (project['data'][key]['-input'] == undefined) {
+        project['data'][key]['-input'] = ' ';
     }
 
     // Register close button
