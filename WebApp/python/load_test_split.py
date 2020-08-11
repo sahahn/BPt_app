@@ -34,7 +34,7 @@ def main(user_dr, n):
     output_loc = os.path.join(temp_dr, 'ML_Output_' + str(n) + '.json')
 
     # Load in params
-    params = load_params(temp_dr, output_loc, n)
+    params = load_params(user_dr, output_loc, n)
 
     # Base apply test
     ML = base_test_load(params, user_dr, output_loc, n)
