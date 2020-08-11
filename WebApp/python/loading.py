@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import json
+import time
 
 from BPt import BPt_ML, CV
 
@@ -717,18 +718,18 @@ def load_set(ML, params, output_loc, drops=True):
 
     # Load from db/files
     try:
+        start = time.time()
         data_df = load_from_df(col_names)
+        ML._print('Loaded set from db in', time.time() - start)
     except Exception as e:
         save_error('Error fetching set data variables', output_loc, e)
 
     # Proc eventname
     eventname, ext = _proc_eventname(params)
 
-    ML._print('??')
-    ML._print(data_df)
-
     # For now load data as covars, since want to handle types
     try:
+        start = time.time()
         ML.Load_Covars(df=data_df,
                        col_name=col_names,
                        data_type=data_type,
@@ -740,6 +741,7 @@ def load_set(ML, params, output_loc, drops=True):
                        categorical_drop_percent=cdp,
                        float_bins=fb_s,
                        float_bin_strategy=fbs_s)
+        ML._print('Loaded set into mem in', time.time() - start)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
