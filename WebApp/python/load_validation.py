@@ -20,8 +20,6 @@ def main(user_dr, n):
     except Exception as e:
         save_error('Error loading data', output_loc, e)
 
-    ML._print(list(ML.all_data))
-
     log_dr = os.path.join(user_dr, 'ML_Logs' + str(n))
 
     # Get the CV param object

@@ -1645,8 +1645,6 @@ def apply_test_split(test_params, ML, output_loc):
         except Exception as e:
             save_error('Error creating CV params', output_loc, e)
 
-        ML._print(cv_params)
-
         test_size = .2
         if test_params['test-size-type'] == 'percent':
             test_size = float(test_params['test-size']) / 100
