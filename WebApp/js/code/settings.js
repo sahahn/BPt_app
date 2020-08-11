@@ -32,12 +32,16 @@ function showUserSettings() {
 
 function ifEvents() {
     
+    // Init event mapping with default None short name
+    // ext as nothing
     if (settings['event_mapping'] == undefined) {
-        settings['event_mapping'] = { 'None': '' };
+        settings['event_mapping'] = {'None': ''};
     }
 
+    // Set default event as just whatever is first
+    // if not already defined
     if (settings['event_default'] == undefined) {
-        settings['event_default'] = 'None';
+        settings['event_default'] = all_events[0];
     }
 
     var header_html = '<div class="row form-group">' +
@@ -59,21 +63,28 @@ function ifEvents() {
         var r_id = 'event-' + cnt.toString();
         cnt += 1;
 
-        var r_html = '<div class="row form-group">' +
-            '<label for="' + r_id + '" class="col-sm-5 col-form-label">' + event + '</label>' +
-            '<div class="col-sm-5">' +
-            '<input data-eventname="' + event + '" type="text" class="form-control short-name" id="' + r_id + '">' +
-            '</div>' +
+        var r_html = '' +
+        '<div class="row form-group">' +
+        '<label for="' + r_id + '" class="col-sm-5 col-form-label">' + event + '</label>' +
+        '<div class="col-sm-5">' +
+        '<input data-eventname="' + event + '" type="text" class="form-control short-name" id="' + r_id + '">' +
+        '</div>' +
 
-            '<div class="form-group col-md-2 text-center">' +
-            '<div class="custom-control custom-checkbox">' +
-            '<input data-eventname="' + event + '" type="checkbox" class="custom-control-input default-box" id="' + r_id + '-default">' +
-            '<label for="' + r_id + '-default" class="custom-control-label"></label>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+        '<div class="form-group col-md-2 text-center">' +
+        '<div class="custom-control custom-checkbox">' +
+        '<input data-eventname="' + event + '" type="checkbox" class="custom-control-input default-box" id="' + r_id + '-default">' +
+        '<label for="' + r_id + '-default" class="custom-control-label"></label>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
 
         jQuery('#settings-event-rename').append(r_html);
+
+        // If this event is set to default, check it
+        if (settings['event_default'] == event) {
+            jQuery('#'+r_id+'-default').prop('checked', true);
+        }
+        
     });
 
     // Proc save short name changes
