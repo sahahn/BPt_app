@@ -6,7 +6,7 @@ from loading import get_CV_from_params, get_subjects
 import pickle as pkl
 
 import json
-from BPt_ML import (Problem_Spec, Model_Pipeline,
+from BPt import (Problem_Spec, Model_Pipeline,
                      Imputer, Scaler,
                      Transformer, Feat_Selector,
                      Model, Ensemble,

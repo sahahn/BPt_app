@@ -5,7 +5,7 @@ from shutil import copyfile
 from hashlib import blake2b
 from collections.abc import Iterable
 from utils import save_subjects, load_subjects
-from BPt_ML import Load
+from BPt import Load
 from pathlib import Path
 
 V_DR = '/var/www/html/data/bpt/'
