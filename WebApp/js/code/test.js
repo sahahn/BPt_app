@@ -215,7 +215,7 @@ function setTestResults(output, key, project) {
     console.log(jQuery('#' + key + '-table').width()); 
 
     var to_scroll_X = false;
-    if (jQuery('#' + key + '-table').width() > 800) {
+    if (jQuery('#' + key + '-table').width() > 600) {
         to_scroll_X = true;
     }
     
