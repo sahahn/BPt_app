@@ -57,7 +57,7 @@ function inputEventnameHTML(key) {
         '</span></label>' +
 
         '<select id="'+key+'-eventname" class="form-control" data-width="100%">' +
-            getEventNameOptionsHTML()
+            getEventNameOptionsHTML() + 
         '</select>' +
     '</div>';
     return html;
