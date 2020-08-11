@@ -37,7 +37,7 @@ function ifEvents() {
     }
 
     if (settings['event_default'] == undefined) {
-        settings['default'] = 'None';
+        settings['event_default'] = 'None';
     }
 
     var header_html = '<div class="row form-group">' +

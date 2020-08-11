@@ -24,6 +24,22 @@ function inputDropNaHTML(key) {
     return html;
 }
 
+function getEventNameOptionsHTML() {
+
+    var html = '';
+    Object.keys(settings['event_mapping']).forEach(event, function() {
+
+        if (event == settings['event_default']) {
+            html += '<option selected value="' + event + '">'+event+'</option>';   
+        }
+        else {
+            html += '<option value="' + event + '">'+event+'</option>';
+        }
+    });
+
+    return html;
+}
+
 function inputEventnameHTML(key) {
 
     var eventname_text = 'If some variables have values for multiple time points, then' +
@@ -41,10 +57,7 @@ function inputEventnameHTML(key) {
         '</span></label>' +
 
         '<select id="'+key+'-eventname" class="form-control" data-width="100%">' +
-            '<option selected value="baseline">' +
-                    'baseline</option>' +
-            '<option value="year 1">' +
-                    'year 1</option>' +
+            getEventNameOptionsHTML()
         '</select>' +
     '</div>';
     return html;
