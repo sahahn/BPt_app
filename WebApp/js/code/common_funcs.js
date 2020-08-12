@@ -292,7 +292,7 @@ function refreshStratChoices(project) {
     getSubSpaceKeys('strat-space', project).forEach(strat_key => {
         var var_name = jQuery('#'+strat_key+'-input').val();
 
-        if (var_name.length > 0) {
+        if ((var_name !== undefined) && (var_name.length > 0)) {
 
             // Get repr name not base name
             var eventname = jQuery('#'+strat_key+'-eventname').val();
