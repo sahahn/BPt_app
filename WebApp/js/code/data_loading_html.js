@@ -268,24 +268,18 @@ function getFloatOutlierHTML(key, append='') {
     return html;
 }
 
-function ifFloatHTML(key) {
-
-    var html = '' +
-    '<div class="form-group col-md-6" style="display:none" id="'+key+'-if-float">' +
-
-    '<label><span data-toggle="popover"' +
-    'title="Continuous Outlier Options" data-placement="left"' +
-    'data-content="' +
-
-    '<b>Drop Outliers by STD</b><br>' +
+function getSTDText() {
+    return '<b>Drop Outliers by STD</b><br>' +
     'If single percent threshold, then ' +
     'any data points outside of the selected value multiplied by the standard deviation (for both the upper and lower portions of the distribution)' +
     ' will be dropped. ' +
     '<br>If a combination of lower and upper STD threshold, then each parameter controls the threshold for that portion of ' +
     'the distribution. Further, you may optionally threshold by only one of Upper or Lower if desired by simply leaving the ' +
-    'other empty.' +
+    'other empty.';
+}
 
-    '<br><b>Drop Outliers by Percent</b><br>' +
+function getPercentText() {
+    return '<br><b>Drop Outliers by Percent</b><br>' +
     'If single percent threshold then the selected fixed percent of datapoints from either end of' +
     'the distribution will be dropped. For example, if set to 1%, then for each feature (if multiple) ' +
     'all data points with < the value of that feature at the first percentile will be dropped. Likewise, ' +
@@ -294,7 +288,20 @@ function ifFloatHTML(key) {
     'can be specified seperately for either end of the distribution. You may also choose to not performing filtering ' + 
     'on one end, e.g., the upper portion, and instead only pass a value to the lower. Note: when passing a value for the ' +
     'Upper Percent Threshold, you should pass the amount you want taken off. E.g., passing 1% will indicate that values greater ' +
-    'than the 99th percentile should be dropped, and passing 99% would instead only leave the first 1% of the distribution (a bad idea)."' +
+    'than the 99th percentile should be dropped, and passing 99% would instead only leave the first 1% of the distribution (a bad idea)';
+}
+
+function ifFloatHTML(key) {
+
+    var html = '' +
+    '<div class="form-group col-md-6" style="display:none" id="'+key+'-if-float">' +
+
+    '<label><span data-toggle="popover"' +
+    'title="Continuous Outlier Options" data-placement="left"' +
+    'data-content="' +
+    getSTDText() +
+    getPercentText() +
+    '"' +
     '">Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
     getFloatOutlierHTML(key) +
     '</div>';
@@ -393,9 +400,9 @@ function ifCatHTML(key, target) {
         'The continuous to categorical option allows you to perform k-bin encoding on a ' +
         'originally continusous variable, thus transforming it into a categorical variable. ' +
         'As with the default behavior, the resulting categorical variable will be ordinally encoded after binning.' +
-        '<br>If selected, there are two avaliable parameters, there are: Num. Bins and Bin Strategy<br>' +
-        'Num. Bins determines the number of k-bins in which to encode the variable.<br>' +
-        'Bin Strategy determines the type of categorical encoding to perform, options are: ' +
+        '<br>If selected, there are two avaliable parameters.<br>' +
+        '<b>Num. Bins</b> determines the number of k-bins in which to encode the variable.<br>' +
+        '<b>Bin Strategy</b> determines the type of categorical encoding to perform, options are: ' +
         '<ul>' +
         '<li><b>Uniform</b> All bins in each feature have identical widths</li>' +
         '<li><b>Quantile</b> All bins in each feature have the same number of points</li>' +
@@ -451,7 +458,14 @@ function ifCatHTML(key, target) {
         'title="Categorical Outlier Options" data-placement="left"' +
         'data-content="<b>Drop Category by Percent</b><br>' +
         'Any categories that make up less than the selected percent ' +
-        'of values will be dropped if this option is selected."' +
+        'of values will be dropped if this option is selected. For example, ' +
+        'passing .1, would indicate that any category that makes up less than 10% of ' +
+        'the frequency out of all categories should be dropped.' +
+        '<hr>' +
+        'If Cont. to Categorical is selected, these options are avaliable:<br>' +
+        getPercentText() +
+        getSTDText() +
+        '"' +
         '>Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="'+key+'-if-bins" style="display:none">' + 
