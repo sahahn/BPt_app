@@ -281,7 +281,7 @@ function ifFloatHTML(key) {
     'If single percent threshold, then ' +
     'any data points outside of the selected value multiplied by the standard deviation (for both the upper and lower portions of the distribution)' +
     ' will be dropped. ' +
-    'If a combination of lower and upper STD threshold, then each parameter controls the threshold for that portion of ' +
+    '<br>If a combination of lower and upper STD threshold, then each parameter controls the threshold for that portion of ' +
     'the distribution. Further, you may optionally threshold by only one of Upper or Lower if desired by simply leaving the ' +
     'other empty.' +
 
@@ -290,7 +290,7 @@ function ifFloatHTML(key) {
     'the distribution will be dropped. For example, if set to 1%, then for each feature (if multiple) ' +
     'all data points with < the value of that feature at the first percentile will be dropped. Likewise, ' +
     'all values > the value of that feature at the 99th percentile will be dropped. ' +
-    'If instead a combination of Lower and Upper percent thresholds are selected, then a percentile threshold ' +
+    '<br>If instead a combination of Lower and Upper percent thresholds are selected, then a percentile threshold ' +
     'can be specified seperately for either end of the distribution. You may also choose to not performing filtering ' + 
     'on one end, e.g., the upper portion, and instead only pass a value to the lower. Note: when passing a value for the ' +
     'Upper Percent Threshold, you should pass the amount you want taken off. E.g., passing 1% will indicate that values greater ' +
@@ -383,8 +383,25 @@ function ifCatHTML(key, target) {
     html = html +
         '<label><span data-toggle="popover"' +
         'title="Categorical Encoding Choices" data-placement="left"' +
-        'data-content="<b>Default:</b><br>Placeholder.' +
-        '<br> <b>Continuous to Categorical:</b><br>Placeholder."' +
+        'data-content="<b>Default:</b><br>' +
+        'Default behavior for a categorical variable indicates that the variable ' +
+        'should be ordinally encoded, where each unique value (be it a number or string) ' +
+        'is encoded a 0 to n-1, where n is the number of unique categories.<br>' +
+        'Note: If behavior like one hot encoding is desired, it should be specified when ' +
+        'setting up the model pipeline, as that way it will be properly nested within cross validation.' +
+        '<br> <b>Continuous to Categorical:</b><br>' +
+        'The continuous to categorical option allows you to perform k-bin encoding on a ' +
+        'originally continusous variable, thus transforming it into a categorical variable. ' +
+        'As with the default behavior, the resulting categorical variable will be ordinally encoded after binning.' +
+        '<br>If selected, there are two avaliable parameters, there are: Num. Bins and Bin Strategy<br>' +
+        'Num. Bins determines the number of k-bins in which to encode the variable.<br>' +
+        'Bin Strategy determines the type of categorical encoding to perform, options are: ' +
+        '<ul>' +
+        '<li><b>Uniform</b> All bins in each feature have identical widths</li>' +
+        '</li><b>Quantile</b> All bins in each feature have the same number of points</li>' +
+        '</li><b>KMeans</b> Values in each bin have the same nearest center of a 1D k-means cluster</li>' +
+        '</ul>' +
+        '"' +
         '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="custom-control custom-radio">' +
