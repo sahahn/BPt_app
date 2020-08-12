@@ -176,7 +176,7 @@ function inputSetFormHTML(key) {
         //'</button>' +
 
         '<button id='+key+'-add-set type="button" class="btn btn-sm float-right" ' +
-        'style="background-color:transparent; onclick="showSets">' +
+        'style="background-color:transparent; onclick="showSets()">' +
         'Add Sets <i class="fas fa-plus fa-sm"></i>' + 
         '</button>' +
 
