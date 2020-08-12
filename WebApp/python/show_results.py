@@ -17,9 +17,6 @@ def check_round(val):
 
 def get_table_html(results):
 
-    if 'summary_scores' not in results:
-        results['summary_scores'] = results['scores']
-
     n_repeats = int(float(results['n_repeats']))
     n_splits = int(float(results['n_splits']))
 
@@ -48,13 +45,22 @@ def get_table_html(results):
 
     table_html += '</tr></thead><tbody>'
 
-    for i, scorer in enumerate(results['scorer_strs']):
-        table_html += '<tr>'
-        table_html += '<th>' + scorer + '</th>'
+    # If test
+    if 'scores' in results:
+        for i, scorer in enumerate(results['scorer_strs']):
+            table_html += '<tr>'
+            table_html += '<th>' + scorer + '</th>'
+            table_html += '<td>' + check_round(results['scores'][0][i]) + '</td>'
 
-        for field in results['summary_scores'][i][:len(cols)-1]:
-            table_html += '<td>' + check_round(field) + '</td>'
-        table_html += '</tr>'
+    # If evaluate
+    else:
+        for i, scorer in enumerate(results['scorer_strs']):
+            table_html += '<tr>'
+            table_html += '<th>' + scorer + '</th>'
+
+            for field in results['summary_scores'][i][:len(cols)-1]:
+                table_html += '<td>' + check_round(field) + '</td>'
+            table_html += '</tr>'
 
     table_html += '</tbody></table>'
 
