@@ -1145,6 +1145,9 @@ function addDataSet(project, space='data-space', key=undefined) {
     // Register events
     registerLoadSet(key, data_types, 'load_set.py', 'set', project);
 
+    // Register add set button
+    jQuery('#'+key+'-add-set').on('click', showSets());
+
     // Register close button
     registerCloseButton(space, key, n, 'n_sets', 'set-count', project);
 
