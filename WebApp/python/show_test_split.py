@@ -44,6 +44,12 @@ def get_show(params, ML, save_loc, output_loc):
 
         try:
 
+            ML._print(ML.train_subjects)
+            ML._print(ML.test_subjects)
+            ML._print(ML.covars)
+            ML._print(len(ML.covars))
+            ML._print(ML.all_data)
+
             display_df = ML.Show_Covars_Dist(covars=show_params['name'],
                                             subjects='both',
                                             show=False, cat_type='Frequency',
@@ -122,11 +128,6 @@ def main(user_dr, n):
 
     # Base apply test
     ML = base_test_load(params, user_dr, output_loc, n)
-    ML._print(ML.train_subjects)
-    ML._print(ML.test_subjects)
-    ML._print(ML.covars)
-    ML._print(len(ML.covars))
-    ML._print(ML.all_data)
 
     # Generate the figure + table
     save_loc = os.path.join(temp_dr, 'temp_dist'+str(n)+'.png')
