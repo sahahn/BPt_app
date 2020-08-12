@@ -163,7 +163,10 @@ function inputSetFormHTML(key) {
         'data-content="Data sets can be used to load in multiple data variables at once. ' +
         'To add or edit existing sets click the Add Sets button to the right, ' +
         'and once changes are made then press the Refresh Sets button.' +
-        ' In general, Sets should be used to load homogenous groupings of conceptually simmilar variables."' +
+        ' In general, Sets should be used to load homogenous groupings of conceptually simmilar variables.<br><br>' +
+        'One a set is loaded, a table will appear showing you information about each loaded variable. ' +
+        'Each variable has a button which allows you to set specific loading settings for just that variable. ' +
+        'When this is done, any parameters will override those for the main set."' +
         '>Data Set <i class="fas fa-info-circle fa-sm"></i></span>' +
         '</label>' +
 
