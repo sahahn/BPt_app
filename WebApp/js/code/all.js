@@ -431,8 +431,8 @@ function startApp() {
         });
 
         // Register Settings button
-        jQuery('#home').on('click', function () {
-            console.log('?')
+        console.log('register')
+        jQuery('#home-but').on('click', function () {
             noProjectDefault();
         });
 

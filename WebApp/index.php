@@ -68,7 +68,7 @@
         -->
 
         <li class="nav-item" style="padding-top: 50px;">
-          <a id="home" class="nav-link" href="#">
+          <a id="home-but" class="nav-link" href="#">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
           </a>
         </li>
