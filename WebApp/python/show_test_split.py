@@ -122,6 +122,8 @@ def main(user_dr, n):
 
     # Base apply test
     ML = base_test_load(params, user_dr, output_loc, n)
+    ML._print(ML.train_subjects)
+    ML._print(ML.test_subjects)
 
     # Generate the figure + table
     save_loc = os.path.join(temp_dr, 'temp_dist'+str(n)+'.png')
