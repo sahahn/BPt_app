@@ -398,8 +398,8 @@ function ifCatHTML(key, target) {
         'Bin Strategy determines the type of categorical encoding to perform, options are: ' +
         '<ul>' +
         '<li><b>Uniform</b> All bins in each feature have identical widths</li>' +
-        '</li><b>Quantile</b> All bins in each feature have the same number of points</li>' +
-        '</li><b>KMeans</b> Values in each bin have the same nearest center of a 1D k-means cluster</li>' +
+        '<li><b>Quantile</b> All bins in each feature have the same number of points</li>' +
+        '<li><b>KMeans</b> Values in each bin have the same nearest center of a 1D k-means cluster</li>' +
         '</ul>' +
         '"' +
         '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
