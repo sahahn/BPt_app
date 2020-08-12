@@ -43,8 +43,8 @@ def get_show(params, ML, save_loc, output_loc):
     if show_params['source'] in ['Data Variable', 'Set Variable']:
 
         try:
-            ML._print(ML.all_data.loc[self.train_subjects].copy())
-            ML._print(ML.all_data.loc[self.test_subjects].copy())
+            ML._print(ML.all_data.loc[ML.train_subjects].copy())
+            ML._print(ML.all_data.loc[ML.test_subjects].copy())
 
             display_df = ML.Show_Covars_Dist(covars=show_params['name'],
                                             subjects='both',
