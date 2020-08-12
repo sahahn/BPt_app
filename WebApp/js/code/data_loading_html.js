@@ -463,9 +463,8 @@ function ifCatHTML(key, target) {
         'passing .1, would indicate that any category that makes up less than 10% of ' +
         'the frequency out of all categories should be dropped.' +
         '<hr>' +
-        'If Cont. to Categorical is selected, these options are avaliable:<br>' +
+        'If Cont. to Categorical is selected, these options are avaliable:<br><br>' +
         getSTDText() +
-        '<br>' + 
         getPercentText() +
         '"' +
         '>Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
