@@ -729,7 +729,7 @@ function loadResults(job_name, key, project) {
                 {extend: 'copyHtml5', title: ''},
                 'csvHtml5',
                 {extend: 'excelHtml5', title: ''},
-                {extend: 'pdfHtml5', title: 'Job: "'+job_name+'" Evaluate Summary Scores'}
+                {extend: 'pdfHtml5', title: 'Job: "'+job_name+'" Summary Scores'}
             ],
             searching: false,
             paging: false,
