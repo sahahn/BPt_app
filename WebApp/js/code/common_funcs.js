@@ -286,9 +286,9 @@ function refreshByValueChoices(include_key, project) {
 function refreshStratChoices(project) {
 
     // Only need to refresh choices if within data_loading
-    if (project['last_active'] !== "-data-loading") {
-        return undefined;
-    }
+    //if (project['last_active'] !== "-data-loading") {
+    //    return undefined;
+    //}
 
     console.log('refresh strat')
 
@@ -414,13 +414,10 @@ function getStratReprToKey(project) {
 function checkByValEntry(input_key, key, project) {
 
     var repr_to_key = getStratReprToKey(project);
-    console.log(repr_to_key);
 
     // Get selected strat var + val
     var choice_name = jQuery('#'+key+'-var-input').find('option:selected').val();
     var choice_val = jQuery("#"+key+"-var-val").find('option:selected').val();
-
-    console.log('choice name + val ' + choice_name + ' ' + choice_val)
 
     // Only add if both a var and a value are selected
     if (choice_name.length > 0 && choice_val.length > 0) {
