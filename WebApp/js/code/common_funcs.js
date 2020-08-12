@@ -414,7 +414,7 @@ function getStratReprToKey(project) {
 function checkByValEntry(input_key, key, project) {
 
     var repr_to_key = getStratReprToKey(project);
-    console.log('repr_to_key ' + repr_to_key);
+    console.log(repr_to_key);
 
     // Get selected strat var + val
     var choice_name = jQuery('#'+key+'-var-input').find('option:selected').val();
