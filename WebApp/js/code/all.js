@@ -432,6 +432,7 @@ function startApp() {
 
         // Register Settings button
         jQuery('#home').on('click', function () {
+            console.log('?')
             noProjectDefault();
         });
 
