@@ -175,7 +175,7 @@ function inputSetFormHTML(key) {
         //'Refresh Sets <i class="fas fa-sync fa-xs"></i>' +
         //'</button>' +
 
-        '<button type="button" id="'+key+'-add-set" class="btn btn-sm float-right" ' +
+        '<button type="button" id="'+key+'-add-sets-but" class="btn btn-sm float-right" ' +
         'style="background-color:transparent;">' +
         'Refresh Sets <i class="fas fa-plus fa-xs"></i>' +
         '</button>' +
