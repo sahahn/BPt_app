@@ -431,6 +431,30 @@ function registerEvaluate(key, project) {
     registerPopovers();
 }
 
+function registerJobName(key, project) {
+
+    jQuery('#'+key+'-job-name').on('input', function() {
+
+        // make sure no /'s or \s
+        var input = $(this).val().replace(/[\/\\]/g, '');
+        if ($(this).val() !== input) {
+            $(this).val(input).trigger('input');
+        }
+
+        project['data'][key]['-job-name'] = input;
+    });
+
+    // Set existing if any
+    if (project['data'][key]['-job-name'] !== undefined) {
+        jQuery('#'+key+'-job-name').val(project['data'][key]['-job-name']).trigger('input');
+    }
+
+    // Update validation w/ changes
+    jQuery('#'+key+'-job-name').on('input', function() {
+        validateJobName(key, project['data'][key], Object.keys(project['jobs'])); 
+    });
+}
+
 //////////////////////////
 // Params helper funcs //
 ////////////////////////
@@ -551,42 +575,12 @@ function getSumbitJobParams(key, project) {
 // Submit code //
 ////////////////
 
-function registerJobName(key, project) {
 
-    jQuery('#'+key+'-job-name').on('input', function() {
-
-        // make sure no /'s or \s
-        var input = $(this).val().replace(/[\/\\]/g, '');
-        if ($(this).val() !== input) {
-            $(this).val(input).trigger('input');
-        }
-
-        project['data'][key]['-job-name'] = input;
-    });
-
-    // Set existing if any
-    if (project['data'][key]['-job-name'] !== undefined) {
-        jQuery('#'+key+'-job-name').val(project['data'][key]['-job-name']).trigger('input');
-    }
-
-    // Update validation w/ changes
-    jQuery('#'+key+'-job-name').on('input', function() {
-        validateJobName(key, project['data'][key], Object.keys(project['jobs'])); 
-    });
-}
-
-function registerSubmitEval(key, project) {
-
-    // Set HTML
-    jQuery('#' + key + '-submit-body').empty().append(getSubmitEvalHTML(key));
-    jQuery('#' + key + '-modal-label').empty().append('<b>Evaluate</b>');
-
-    // Registers
-    registerJobName(key, project);
-    registerSplitsRow(key, project);
-    registerPopovers();
-
-    jQuery('#'+key+'-job-submit').on('click', function(e) {
+function registerJobSubmit(key, project, script) {
+    
+    // Remove previous register
+    jQuery('#'+key+'-job-submit').off('click');
+    jQuery('#'+key+'-job-submit').on('click', function() {
 
         if (validateSubmitJob(key, project)) {
 
@@ -595,13 +589,15 @@ function registerSubmitEval(key, project) {
 
             // Get the params
             var params = getSumbitJobParams(key, project);
-            params['script'] = 'evaluate.py';
+            params['script'] = script;
             params['n'] = project['data'][key]['-job-name'];
             params['project_id'] = project['id'];
 
             // Submit the job to run
             submitPy(params);
 
+            // Define a local function, checkInitialJob to make
+            // sure job submits correctly before closing screen
             var cnt = 0;
             function checkInitialJob(interval_var, project, params) {
 
@@ -642,6 +638,7 @@ function registerSubmitEval(key, project) {
                 });
             }
 
+            // Set check to loop every 500ms
             var interval_var = setInterval(function() {
                 checkInitialJob(interval_var, project, params);
             }, 500);
@@ -656,11 +653,33 @@ function atEndSubmit(interval_var, key) {
     jQuery('#' + key + '-loading').css('display', 'none');
 }
 
+function registerSubmitEval(key, project) {
+
+    // Set HTML
+    jQuery('#' + key + '-submit-body').empty().append(getSubmitEvalHTML(key));
+    jQuery('#' + key + '-modal-label').empty().append('<b>Evaluate</b>');
+
+    // Registers
+    registerJobName(key, project);
+    registerSplitsRow(key, project);
+    registerPopovers();
+
+    // Register submit job
+    registerJobSubmit(key, project, 'evaluate.py');
+}
+
 function registerSubmitTest(key) {
+
+    // Set HTML
     jQuery('#' + key + '-submit-body').empty().append(getSubmitTestHTML(key));
     jQuery('#' + key + '-modal-label').empty().append('<b>Test</b>');
+
+    // Base registers
     registerJobName(key, project);
     registerPopovers();
+
+    // Register submit job
+    registerJobSubmit(key, project, 'test.py');
 }
 
 ///////////
@@ -683,6 +702,7 @@ function displayEvaluate(project) {
         project['data'][key] = {};
     }
 
+    // Get + set base page HTML
     var html = getEvaluateHTML(key);
     jQuery('#body-evaluate').append(html);
     jQuery('#body-evaluate').css('display', 'block');
@@ -697,7 +717,7 @@ function displayEvaluate(project) {
     // All base registers
     registerEvaluate(key, project);
 
-    // Register submit button popups
+    // Register Eval submit button popup
     jQuery('#'+key+'-eval-submit').on('click', function(e) {
         
         if (!validatePreSubmitJob(key, project['data'][key])) {
@@ -707,7 +727,13 @@ function displayEvaluate(project) {
         registerSubmitEval(key, project);
     });
 
+    // Register Test submit button popup
     jQuery('#'+key+'-test-submit').on('click', function() {
+
+        if (!validatePreSubmitJob(key, project['data'][key])) {
+            e.stopPropagation();
+        }
+
         registerSubmitTest(key, project);
     });
 }
