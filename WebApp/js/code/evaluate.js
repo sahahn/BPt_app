@@ -74,7 +74,7 @@ function getEvalSubjectsHTML(key) {
 
     var html = addSubjectsInputRowHTML(key, file_input_label, from_strat_label,
                                       'eval', row_class=' mb-5 ml-5 mr-5 mt-3');
-    html = '<hr><div class="text-center"><i>Optional</i></div>' + html;
+    html = '<div class="text-center"><i>Optional</i></div><hr>' + html;
     return html;
 
 }
