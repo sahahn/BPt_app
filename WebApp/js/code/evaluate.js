@@ -668,7 +668,7 @@ function registerSubmitEval(key, project) {
     registerJobSubmit(key, project, 'evaluate.py');
 }
 
-function registerSubmitTest(key) {
+function registerSubmitTest(key, project) {
 
     // Set HTML
     jQuery('#' + key + '-submit-body').empty().append(getSubmitTestHTML(key));
