@@ -36,33 +36,33 @@ def df_to_table(display_df):
     return table
 
 
-def main(user_dr, n):
-
-    temp_dr = os.path.join(user_dr, 'temp')
-    output_loc = os.path.join(temp_dr, 'ML_Output_' + str(n) + '.json')
-
-    # Load in params
-    params = load_params(user_dr, output_loc, n)
-
-    # Base apply test
-    ML = base_test_load(params, user_dr, output_loc, n)
+def get_show(params, ML, save_loc, output_loc):
 
     show_params = params['show_params']
-    save_loc = os.path.join(temp_dr, 'temp_dist'+str(n)+'.png')
 
     if show_params['source'] in ['Data Variable', 'Set Variable']:
 
-        display_df = ML.Show_Covars_Dist(covars=show_params['name'],
-                                         subjects='both',
-                                         show=False, cat_type='Frequency',
-                                         return_display_dfs=True)
+        try:
+
+            display_df = ML.Show_Covars_Dist(covars=show_params['name'],
+                                            subjects='both',
+                                            show=False, cat_type='Frequency',
+                                            return_display_dfs=True)
+
+        except Exception as e:
+            save_error('Error creating variable dist', output_loc, e)
 
     elif show_params['source'] == 'Target':
 
-        display_df = ML.Show_Targets_Dist(targets=show_params['name'],
-                                          subjects='both',
-                                          show=False, cat_type='Frequency',
-                                          return_display_dfs=True)
+        try:
+
+            display_df = ML.Show_Targets_Dist(targets=show_params['name'],
+                                            subjects='both',
+                                            show=False, cat_type='Frequency',
+                                            return_display_dfs=True)
+
+        except Exception as e:
+            save_error('Error creating target dist', output_loc, e)
 
     elif show_params['source'] == 'Non-Input Variable':
 
@@ -108,13 +108,26 @@ def main(user_dr, n):
             save_error('Error creating distribution video', output_loc, e)
 
     plt.savefig(save_loc, dpi=ML.dpi, bbox_inches='tight')
-
     table = df_to_table(display_df)
 
-    # 'Set'
-    # 'Non-Input Variable'
-    # 'Target'
+    return save_loc, table
 
+def main(user_dr, n):
+
+    temp_dr = os.path.join(user_dr, 'temp')
+    output_loc = os.path.join(temp_dr, 'ML_Output_' + str(n) + '.json')
+
+    # Load in params
+    params = load_params(user_dr, output_loc, n)
+
+    # Base apply test
+    ML = base_test_load(params, user_dr, output_loc, n)
+
+    # Generate the figure + table
+    save_loc = os.path.join(temp_dr, 'temp_dist'+str(n)+'.png')
+    save_loc, table = get_show(params, ML, save_loc, output_loc)
+
+    # Convert to output
     output = {}
     output['html_output'] = ''
     output['html_table'] = table

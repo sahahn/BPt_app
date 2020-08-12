@@ -290,8 +290,6 @@ function refreshStratChoices(project) {
     //    return undefined;
     //}
 
-    console.log('refresh strat')
-
     // Strat choices are added when show is called on strat variables
     // this check is essentially just for checking which ones to remove
     // based on either if they got deleted, or maybe the name/eventname changed
