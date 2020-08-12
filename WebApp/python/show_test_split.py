@@ -126,6 +126,7 @@ def main(user_dr, n):
     ML._print(ML.test_subjects)
     ML._print(ML.covars)
     ML._print(len(ML.covars))
+    ML._print(ML.all_data)
 
     # Generate the figure + table
     save_loc = os.path.join(temp_dr, 'temp_dist'+str(n)+'.png')
