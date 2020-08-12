@@ -49,10 +49,9 @@ function registerPopovers() {
     '<h3 class="popover-header"></h3>' +
     '<div class="popover-body"></div>' +
     '<div class="popover-footer">' +
-       'some text' +
+       '<i>Press again to close this message</i>' +
     '</div>' +
     '</div>';
-
 
     $('[data-toggle="popover"]').popover({html: true, template: popover_template}).on("show.bs.popover", function(e){
         $(".popover").not(e.target).remove();
