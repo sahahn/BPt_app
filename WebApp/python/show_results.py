@@ -17,6 +17,9 @@ def check_round(val):
 
 def get_table_html(results):
 
+    if 'summary_scores' not in results:
+        results['summary_scores'] = results['scores']
+
     n_repeats = int(float(results['n_repeats']))
     n_splits = int(float(results['n_splits']))
 
