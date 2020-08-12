@@ -19,6 +19,7 @@ def main(user_dr, job_name):
                           problem_spec=problem_spec,
                           train_subjects='train',
                           test_subjects='test')
+        results['scorer_strs'] = ML.Model_Pipeline.scorer_strs
 
     except Exception as e:
         save_error('Error starting Test', error_output_loc, e)
