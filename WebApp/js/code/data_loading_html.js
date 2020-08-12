@@ -199,39 +199,6 @@ function getFloatOutlierHTML(key, append='') {
 
     var html = '' +
 
-    '<!--Display under if % pressed -->' + 
-    '<div class="custom-control custom-checkbox">' +
-        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-percent'+a+'">' +
-        '<label class="custom-control-label" for="'+key+'-outlier-percent'+a+'">Drop Outliers by Percent</label>' +
-    '</div>' +
-
-    '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-percent'+a+'">' +
-
-        '<div class="input-group mb-3" style="margin-top: 10px;">' +
-            '<div class="input-group-prepend">' +
-                '<span class="input-group-text" id="'+key+'-p1'+a+'">Single Percent Threshold</span>' + 
-            '</div>' + 
-            '<input id="'+key+'-range-percent'+a+'" type="number" class="form-control" aria-describedby="'+key+'-p1'+a+'" step="0.1" min="0" max="10" title="Single Percent Value"></input>' + 
-        '</div>' + 
-
-        '<hr>' + 
-
-        '<div class="input-group mb-3">' +
-            '<div class="input-group-prepend">' +
-                '<span class="input-group-text" id="'+key+'-p2'+a+'">Lower Percent Threshold</span>' + 
-            '</div>' + 
-            '<input id="'+key+'-range-percent'+a+'L" type="number" class="form-control" aria-describedby="'+key+'-p2'+a+'" step="0.1" min="0" max="10" title="Lower Percent Value"></input>' + 
-        '</div>' + 
-
-        '<div class="input-group mb-3">' +
-            '<div class="input-group-prepend">' +
-                '<span class="input-group-text" id="'+key+'-p3'+a+'">Upper Percent Threshold</span>' + 
-            '</div>' + 
-            '<input id="'+key+'-range-percent'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-p3'+a+'" step="0.1" min="0" max="10" title="Upper Percent Value"></input>' + 
-        '</div>' + 
-
-    '</div>' +
-
     '<!--Display under if std pressed -->' +
     '<div class="custom-control custom-checkbox">' +
         '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-std'+a+'">' +
@@ -263,6 +230,39 @@ function getFloatOutlierHTML(key, append='') {
             '<input id="'+key+'-range-std'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-s3'+a+'" step="0.1" min=".1" title="Upper STD Value"></input>' + 
         '</div>' +
 
+    '</div>' +
+
+    '<!--Display under if % pressed -->' + 
+    '<div class="custom-control custom-checkbox">' +
+        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-percent'+a+'">' +
+        '<label class="custom-control-label" for="'+key+'-outlier-percent'+a+'">Drop Outliers by Percent</label>' +
+    '</div>' +
+
+    '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-percent'+a+'">' +
+
+        '<div class="input-group mb-3" style="margin-top: 10px;">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p1'+a+'">Single Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'" type="number" class="form-control" aria-describedby="'+key+'-p1'+a+'" step="0.1" min="0" max="10" title="Single Percent Value"></input>' + 
+        '</div>' + 
+
+        '<hr>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p2'+a+'">Lower Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'L" type="number" class="form-control" aria-describedby="'+key+'-p2'+a+'" step="0.1" min="0" max="10" title="Lower Percent Value"></input>' + 
+        '</div>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p3'+a+'">Upper Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-p3'+a+'" step="0.1" min="0" max="10" title="Upper Percent Value"></input>' + 
+        '</div>' + 
+
     '</div>';
 
     return html;
@@ -278,12 +278,23 @@ function ifFloatHTML(key) {
     'data-content="' +
 
     '<b>Drop Outliers by STD</b><br>' +
-    'Any data points outside of the selected value multiplied by the standard deviation (for both the upper and lower portions of the distribution)' +
-    ' will be dropped.' +
+    'If single percent threshold, then ' +
+    'any data points outside of the selected value multiplied by the standard deviation (for both the upper and lower portions of the distribution)' +
+    ' will be dropped. ' +
+    'If a combination of lower and upper STD threshold, then each parameter controls the threshold for that portion of ' +
+    'the distribution. Further, you may optionally threshold by only one of Upper or Lower if desired by simply leaving the ' +
+    'other empty.' +
 
     '<br><b>Drop Outliers by Percent</b><br>' +
-    'The selected fixed percent of datapoints from either end of' +
-    'the distribution will be dropped.' +
+    'If single percent threshold then the selected fixed percent of datapoints from either end of' +
+    'the distribution will be dropped. For example, if set to 1%, then for each feature (if multiple) ' +
+    'all data points with < the value of that feature at the first percentile will be dropped. Likewise, ' +
+    'all values > the value of that feature at the 99th percentile will be dropped. ' +
+    'If instead a combination of Lower and Upper percent thresholds are selected, then a percentile threshold ' +
+    'can be specified seperately for either end of the distribution. You may also choose to not performing filtering ' + 
+    'on one end, e.g., the upper portion, and instead only pass a value to the lower. Note: when passing a value for the ' +
+    'Upper Percent Threshold, you should pass the amount you want taken off. E.g., passing 1% will indicate that values greater ' +
+    'than the 99th percentile should be dropped, and passing 99% would instead only leave the first 1% of the distribution (a bad idea)."' +
     '">Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
     getFloatOutlierHTML(key) +
     '</div>';
