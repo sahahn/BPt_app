@@ -170,14 +170,14 @@ function inputSetFormHTML(key) {
         '>Data Set <i class="fas fa-info-circle fa-sm"></i></span>' +
         '</label>' +
 
-        '<button type="button" id="'+key+'-refresh-set" class="btn btn-sm float-right" ' +
-        'style="background-color:transparent;">' +
-        'Refresh Sets <i class="fas fa-sync fa-xs"></i>' +
-        '</button>' +
+        //'<button type="button" id="'+key+'-refresh-set" class="btn btn-sm float-right" ' +
+        //'style="background-color:transparent;">' +
+        //'Refresh Sets <i class="fas fa-sync fa-xs"></i>' +
+        //'</button>' +
 
         '<button id='+key+'-add-set type="button" class="btn btn-sm float-right" ' +
         'style="background-color:transparent; onclick="showSets">' +
-        '<i class="fas fa-plus fa-sm"></i>' + 
+        'Add Sets <i class="fas fa-plus fa-sm"></i>' + 
         '</button>' +
 
         //'<a style="color:inherit; text-decoration : none;" target="_blank" ' +
