@@ -296,7 +296,7 @@ function ifBinaryHTML(key) {
         'title="Binary Encoding Choices" data-placement="left"' +
         'data-content="<b>Default:</b><br>The top two unique values by occurance will be '+
         'used to define the two valid binary classes, any additional classes will be dropped.' +
-        '<br> <b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
+        '<br><b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
         'continuous variable via thresholding via different thresholding options.<br>' +
         'In the case of selecting a single threshold, any value less than the threshold will be set to 0 ' +
         'and any value greater than or equal to the threshold will be set to 1.<br>' +
@@ -304,8 +304,7 @@ function ifBinaryHTML(key) {
         'For the lower threshold any value that is greater than the value will be set to 1, ' +
         'and any value <= upper and >= lower will be dropped. ' + 
         'Likewise, for the upper threshold, any value that is less than upper will be set to 0, ' +
-        'and any value <= upper and >= lower will be dropped.'
-        '"' +
+        'and any value <= upper and >= lower will be dropped."' +
         '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="custom-control custom-radio">' +
