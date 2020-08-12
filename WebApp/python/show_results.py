@@ -17,11 +17,8 @@ def check_round(val):
 
 def get_table_html(results):
 
-    try:
-        n_repeats = int(float(results['n_repeats']))
-        n_splits = int(float(results['n_splits']))
-    except KeyError:
-        n_repeats, n_splits = 1, 1
+    n_repeats = int(float(results['n_repeats']))
+    n_splits = int(float(results['n_splits']))
 
     table_html = '<table id="TEMP-ID" class="table table-striped" '
     table_html += 'style="width:100%">'

@@ -20,6 +20,7 @@ def main(user_dr, job_name):
                           train_subjects='train',
                           test_subjects='test')
         results['scorer_strs'] = ML.Model_Pipeline.scorer_strs
+        results['n_repeats'], results['n_splits'] = 1, 1
 
     except Exception as e:
         save_error('Error starting Test', error_output_loc, e)
