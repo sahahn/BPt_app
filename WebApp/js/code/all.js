@@ -356,6 +356,7 @@ function projectDefault(key) {
 
 function noProjectDefault() {
 
+    $(".popover").remove();
     removeActiveProjects();
     jQuery('#top-text').empty();
     jQuery('#delete-project').css('display', 'none');
@@ -380,6 +381,7 @@ function noProjectDefault() {
     'new features on the BPt_app github page!</p>' +
     '<p>Select an existing project to work on, or add a new one over on the left menu.</p>' +
     '<p>The left menu also holds links to pages dedicated to general Settings, and for making namedSets of variables.</p>' +
+    '<p>Note: you may want to zoom in or out a bit on your browser to your prefered text and button size.</p>'
     '<br>' +
     // Hide this for now for the single user version
     //'<p>Press the button below to make all of your custom hyper-parameter distributions public to other users!</p>' +

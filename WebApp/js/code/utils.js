@@ -42,9 +42,23 @@ function registerPopovers() {
     // Set pop overs, s.t. only one can be up at once
     // since if more then one can be, then can block the button
     // to close them
-    $('[data-toggle="popover"]').popover({html: true}).on("show.bs.popover", function(e){
+
+    var popover_template = '' + 
+    '<div class="popover" role="tooltip">' +
+    '<div class="arrow"></div>' +
+    '<h3 class="popover-header"></h3>' +
+    '<div class="popover-body"></div>' +
+    '<div class="popover-footer">' +
+       'some text' +
+    '</div>' +
+    '</div>';
+
+
+    $('[data-toggle="popover"]').popover({html: true, template: popover_template}).on("show.bs.popover", function(e){
         $(".popover").not(e.target).remove();
     });
+
+    
 }
 
 const findDuplicates = (arr) => {

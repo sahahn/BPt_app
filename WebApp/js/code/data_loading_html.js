@@ -42,9 +42,13 @@ function getEventNameOptionsHTML() {
 
 function inputEventnameHTML(key) {
 
-    var eventname_text = 'If some variables have values for multiple time points, then' +
-    'Eventname is used select a specific timepoint per variable or groups of variables. ' +
-    'This can be particulary useful for longitudinal studies';
+    var eventname_text = 'If some variables have values across multiple time points, then ' +
+    'the Eventname parameter is used select a specific timepoint per variable or groups of variables. ' +
+    'This can be particulary useful for longitudinal studies.<br>Note that a special Append Short Name can be ' +
+    'specified in the global Settings menu (found on the sidebar) for each eventname. The Append Short Name ' +
+    'is a value appended to the end of a variable or set name in order to make it unique, this full name is ' +
+    'the name shown in plots, card titles and option menus. By default this Short Name will just be the exact name ' + 
+    'of the event.'
     
     var html = '' +
     '<div class="form-group col-md-6">' +
@@ -293,7 +297,15 @@ function ifBinaryHTML(key) {
         'data-content="<b>Default:</b><br>The top two unique values by occurance will be '+
         'used to define the two valid binary classes, any additional classes will be dropped.' +
         '<br> <b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
-        'continuous variable via thresholding via different thresholding options."' +
+        'continuous variable via thresholding via different thresholding options.<br>' +
+        'In the case of selecting a single threshold, any value less than the threshold will be set to 0 ' +
+        'and any value greater than or equal to the threshold will be set to 1.<br>' +
+        'In the case of selecting a lower and upper threshold, a value must be set for both. ' +
+        'For the lower threshold any value that is greater than the value will be set to 1, ' +
+        'and any value <= upper and >= lower will be dropped. ' + 
+        'Likewise, for the upper threshold, any value that is less than upper will be set to 0, ' +
+        'and any value <= upper and >= lower will be dropped.'
+        '"' +
         '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="custom-control custom-radio">' +

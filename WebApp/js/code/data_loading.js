@@ -1181,7 +1181,9 @@ function addTarget(project, key=undefined) {
     '<span data-toggle="popover"' +
     'title="Target Variable" data-placement="top"' +
     'data-content="The target variable within a machine learning context is ' +
-    'the variable you are trying to predict."' +
+    'the variable you are trying to predict. Keep in mind, the choice of data-type for this variable will ' +
+    'also restrict the types of ML Pipelines compatible with predicting this variable later on. ' +
+    'You may load multiple target variables, but during Evaluate / Test, you may only predict one at a time."' +
     '>Target Variable <i class="fas fa-info-circle fa-sm"></i></span></label>';
 
     // data type label
