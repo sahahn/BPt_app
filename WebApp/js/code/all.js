@@ -379,7 +379,7 @@ function noProjectDefault() {
     '<p>This is an early beta release version, so please report any bugs or feel free to contribute any suggestions for ' +
     'new features on the BPt_app github page!</p>' +
     '<p>Select an existing project to work on, or add a new one over on the left menu.</p>' +
-    '<p></p>' +
+    '<p>The left menu also holds links to pages dedicated to general Settings, and for making namedSets of variables.</p>' +
     '<br>' +
     // Hide this for now for the single user version
     //'<p>Press the button below to make all of your custom hyper-parameter distributions public to other users!</p>' +
@@ -431,7 +431,6 @@ function startApp() {
         });
 
         // Register Settings button
-        console.log('register')
         jQuery('#home-but').on('click', function () {
             noProjectDefault();
         });
