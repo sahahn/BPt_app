@@ -285,11 +285,6 @@ function refreshByValueChoices(include_key, project) {
 
 function refreshStratChoices(project) {
 
-    // Only need to refresh choices if within data_loading
-    //if (project['last_active'] !== "-data-loading") {
-    //    return undefined;
-    //}
-
     // Strat choices are added when show is called on strat variables
     // this check is essentially just for checking which ones to remove
     // based on either if they got deleted, or maybe the name/eventname changed
