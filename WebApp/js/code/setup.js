@@ -17,8 +17,14 @@ function displaySetup(project) {
         project['data'][key] = {};
     }
 
-    var name_label = getPopLabel(key, "Project Name ", "The name of this project");
-    var seed_label = getPopLabel(key, 'Random Seed ', "Random Seed ");
+    var name_txt = "The name of this project. Project names are non-unique, but most user's will likely want them to have a unique name."
+    var name_label = getPopLabel(key, "Project Name ", name_txt);
+    var seed_txt = 'Random seeds are almost always a good idea in a scientific context.' +
+    ' Essentially what this parameter controls is the seed to a fixed random number generator. ' +
+    'This will ensure that almost every process which used randomness in BPt will be replicable if ' +
+    're-run. For example, if generating a new random Test Split, if the random seed does not change and the ' +
+    'loaded subjects also do not change, then the same random split will be generated every time.'
+    var seed_label = getPopLabel(key, 'Random Seed ', seed_txt);
 
     var cache_span = '<span data-toggle="popover"' +
     'title="Input Caching" data-placement="top"' +
@@ -26,12 +32,19 @@ function displaySetup(project) {
     ' will be checked everytime a new variable ' +
     'or set is selected, and Data Type + Outlier options will be inferred ' +
     'based on the most frequent choices with respect to that variable. ' +
-    'This feature is optional."' +
+    'This feature is optional. If used a single user context, then this will just ' +
+    'reflect your prior choices, but if used in a multi-user context, this will take into account ' + 
+    'other users choices as well."' +
     '>Input Caching <i class="fas fa-info-circle fa-sm"></i></span>';
 
     var public_dist_span = '<span data-toggle="popover"' +
     'title="See Public Dists" data-placement="top"' +
-    'data-content="Placeholder"' +
+    'data-content="This parameter is only relevant for now in a multi-user context. ' +
+    'What that means is, unless BPt is being hosted on a server where multiple users can ' +
+    'use the application, then this parameter wont change anything. If in a multi-user context, ' + 
+    'then this will optionally show you any public parameter distributions for specific pipeline objects ' +
+    ' that other users have decided to share. In the future, BPt will hopefully support sharing these distributions ' + 
+    'across different single user versions of BPt."' +
     '>See Public Dists <i class="fas fa-info-circle fa-sm"></i></span>';
 
     var html = '' + 
