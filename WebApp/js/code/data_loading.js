@@ -1037,51 +1037,6 @@ function addStratVariable(project, key=undefined) {
 }
 
 
-function getVarInputLabelHTML(key, space) {
-
-    // name input label
-    if (space == 'data-space') {
-        var var_title = 'Data Variable '
-        var var_content = 'All selected data variables and data sets are combined and used as input features to predict the target variable.' +
-        'In general, data variables should be used to load heterogenous variables, where more specific input processing might be required ' +
-        'and sets to load larger groups of homogeneous variables.';
-    }
-
-    else {
-        var var_title = 'Set Variable '
-        var var_content = 'Set Variables can be used either to visualize a specific variable from a set, ' +
-        'or even to make changes to how a given variable will be processed. ' +
-        'Specifically, any change made to how a set variable is loaded, e.g., ' +
-        'Data Type, will override the set-wide settings, and upon final data loading ' +
-        'will make use of the set variable specific settings. Also keep in mind that when viewing ' +
-        'a single Set Variable, the rest of the Set will still be loading in order to propely ' +
-        'compute the correct overlap of subjects.'
-      
-    }
-
-
-    var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
-        'title="Data Variable" data-placement="top"' +
-        'data-content=' +
-        '><i class="fas fa-info-circle fa-sm"></i></label>';
-
-        var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
-        'title="Set Variable" data-placement="top"' +
-        'data-content=""' +
-        '>Set Variable <i class="fas fa-info-circle fa-sm"></i></label>';
-
-
-     
-    var var_content = 
-
-
-
-
-    getPopLabel(key, var_title, var_content, '-input');
-
-
-}
-
 function addDataVariable(project, space='data-space', key=undefined) {
 
     if (key !== undefined) {

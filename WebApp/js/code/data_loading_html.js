@@ -67,6 +67,31 @@ function inputEventnameHTML(key) {
     return html;
 }
 
+function getVarInputLabelHTML(key, space) {
+
+    // If data variable
+    if (space == 'data-space') {
+        var var_title = 'Data Variable '
+        var var_content = 'All selected data variables and data sets are combined and used as input features to predict the target variable.' +
+        'In general, data variables should be used to load heterogenous variables, where more specific input processing might be required ' +
+        'and sets to load larger groups of homogeneous variables.';
+    }
+
+    // If set variable
+    else {
+        var var_title = 'Set Variable '
+        var var_content = 'Set Variables can be used either to visualize a specific variable from a set, ' +
+        'or even to make changes to how a given variable will be processed. ' +
+        'Specifically, any change made to how a set variable is loaded, e.g., ' +
+        'Data Type, will override the set-wide settings, and upon final data loading ' +
+        'will make use of the set variable specific settings. Also keep in mind that when viewing ' +
+        'a single Set Variable, the rest of the Set will still be loading in order to propely ' +
+        'compute the correct overlap of subjects.'
+    }
+
+    return getPopLabel(key, var_title, var_content, '-input');
+}
+
 function inputVariableHTML(key, name_label){
     
     var html = '' +
