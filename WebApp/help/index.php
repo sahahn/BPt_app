@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  ./
 
   <!-- Base bootstrap -->
   <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -19,9 +18,9 @@
     <main role="main">
         <section class="jumbotron text-center">
             <div class="container">
-            <h1 class="jumbotron-heading">Brain Predicability toolbox Help Page</h1>
+            <h1 class="jumbotron-heading">Brain Predicability Toolbox - Help Page</h1>
             <p class="lead text-muted">This page represents of a collection of more in depth help documents to help 
-                users navigate the Brain Predicability toolbox.
+                users navigate BPt.
             </p>
             </div>
         </section>
