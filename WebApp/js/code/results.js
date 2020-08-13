@@ -82,11 +82,13 @@ function getBarHTML(key, ext, label, job_name) {
 
 function getJobStatusHTML(key, job_name) {
 
+    folds_label = getPopLabel(undefined, 'Folds ', 'test');
+
     var html = '' +
     '<div id="'+key+'-progress" class="container-fluid">' +
 
     getBarHTML(key, 'repeats', 'Repeats', job_name) +
-    getBarHTML(key, 'folds', 'Folds', job_name) +
+    getBarHTML(key, 'folds', folds_label, job_name) +
     getBarHTML(key, 'search-iter', 'Search Params', job_name) +
 
     '</div>';

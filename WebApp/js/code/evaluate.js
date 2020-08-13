@@ -5,7 +5,10 @@
 
 function getTargetHTML(key) {
 
-    var target_content = 'Select which target to predict.'
+    var target_content = 'Within the context of a BPt job submission, you can only predict a single target at a time. ' +
+    'This variable controls which loaded target (if multiple) should be predicted. Note that depending on the loaded type of this ' +
+    'variable, the options for valid ML Pipelines will be restricted. For example, if loaded as Continuous, then only ML Pipelines set ' +
+    'to type regression will appear as valid options. Likewise, binary for binary and categorical for categorical.';
     var target_label = getPopLabel(key, 'Target ', target_content);
 
     var html = '' +
@@ -66,7 +69,7 @@ function getMetricsHTML(key) {
 
 function getEvalSubjectsHTML(key) {
 
-    var subj_overlap_txt = 'Selecting a subset of subjects in which to perform modelling on is foremost an optional step. ' +
+    var subj_overlap_txt = 'Selecting a subset of subjects in which to perform modeling on is foremost an optional step. ' +
     'If not value is provided here, or to Subset-Subjects by Non-Input Value, then the full avaliable set of subjects will be used. ' +
     'On the otherhand, if subjects are provided, then the overlap will be computed between the passed subjects and the set of subjects ' +
     'considered by the type of job submission (i.e., if running Evaluate, then the set of train subjects are used, but if running Test then ' +
@@ -637,7 +640,7 @@ function registerJobSubmit(key, project, script) {
 
                     // If job hasn't been confirmed as started after 10 seconds
                     cnt += 1
-                    if (cnt == 20) {
+                    if (cnt == 50) {
                         alert('Unknown error!');
                         atEndSubmit(interval_var, key);
                     }
