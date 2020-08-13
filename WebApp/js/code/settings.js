@@ -8,8 +8,7 @@ function getSettingsHTML() {
 function showUserSettings() {
 
     // Clear everything
-    noProjectDefault();
-    jQuery('#body-noproj').css('display', 'none');
+    clearAll();
 
     var html = getSettingsHTML();
     jQuery('#body-settings').append(html);

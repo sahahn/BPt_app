@@ -211,8 +211,7 @@ function registerSetSearch() {
 function showSets() {
 
     // Clear everything
-    noProjectDefault();
-    jQuery('#body-noproj').css('display', 'none');
+    clearAll();
 
     // Make sure to refresh sets everytime show sets is called
     jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {

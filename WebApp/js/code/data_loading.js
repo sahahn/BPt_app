@@ -1036,6 +1036,52 @@ function addStratVariable(project, key=undefined) {
     return key;
 }
 
+
+function getVarInputLabelHTML(key, space) {
+
+    // name input label
+    if (space == 'data-space') {
+        var var_title = 'Data Variable '
+        var var_content = 'All selected data variables and data sets are combined and used as input features to predict the target variable.' +
+        'In general, data variables should be used to load heterogenous variables, where more specific input processing might be required ' +
+        'and sets to load larger groups of homogeneous variables.';
+    }
+
+    else {
+        var var_title = 'Set Variable '
+        var var_content = 'Set Variables can be used either to visualize a specific variable from a set, ' +
+        'or even to make changes to how a given variable will be processed. ' +
+        'Specifically, any change made to how a set variable is loaded, e.g., ' +
+        'Data Type, will override the set-wide settings, and upon final data loading ' +
+        'will make use of the set variable specific settings. Also keep in mind that when viewing ' +
+        'a single Set Variable, the rest of the Set will still be loading in order to propely ' +
+        'compute the correct overlap of subjects.'
+      
+    }
+
+
+    var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
+        'title="Data Variable" data-placement="top"' +
+        'data-content=' +
+        '><i class="fas fa-info-circle fa-sm"></i></label>';
+
+        var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
+        'title="Set Variable" data-placement="top"' +
+        'data-content=""' +
+        '>Set Variable <i class="fas fa-info-circle fa-sm"></i></label>';
+
+
+     
+    var var_content = 
+
+
+
+
+    getPopLabel(key, var_title, var_content, '-input');
+
+
+}
+
 function addDataVariable(project, space='data-space', key=undefined) {
 
     if (key !== undefined) {
@@ -1048,32 +1094,34 @@ function addDataVariable(project, space='data-space', key=undefined) {
     }
 
     var data_types = ['binary', 'float', 'cat'];
+    var input_label = getVarInputLabelHTML(key, space);
 
-    // name input label
-    if (space == 'data-space') {
-        var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
-        'title="Data Variable" data-placement="top"' +
-        'data-content="All selected data variables and data sets are combined and used as input features to predict the target variable.' +
-        'In general, data variables should be used to load heterogenous variables, where more specific input processing might be required ' +
-        'and sets to load larger groups of homogeneous variables."' +
-        '>Data Variable <i class="fas fa-info-circle fa-sm"></i></label>';
-    }
-    else {
-        var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
-        'title="Set Variable" data-placement="top"' +
-        'data-content="Set Variables can be used either to visualize a specific variable from a set, ' +
-        'or even to make changes to how a given variable will be processed. ' +
-        'Specifically, any change made to how a set variable is loaded, e.g., ' +
-        'Data Type, will override the set-wide settings, and upon final data loading ' +
-        'will make use of the set variable specific settings."' +
-        '>Set Variable <i class="fas fa-info-circle fa-sm"></i></label>';
-    }
+    
 
+  
     // Data type label
     var data_type_label = '<label for="'+key+'-buttons"' +
     '><span data-toggle="popover"' +
     'title="Variable Data Type" data-placement="top"' +
-    'data-content="Data Variables can be loaded as different data types.">' +
+    'data-content="Data Variables can be loaded with a few different data types. ' + 
+    
+    '<br><b>Binary</b> ' +
+    'If binary, then the variable of interest will be loaded as just two values, 0 and 1. ' +
+    'There is an option to either just take the most frequent two existing classes, default encoding behavior, ' +
+    'or to optional convert from an originally Continuous variable to catergorical' +
+
+    '<br><b>Continuous</b> ' +
+    'If continuous, then the variable to be loaded will likely be taken as is. This data type represents ' +
+    'a floating point, real or continuous variable. If selected, the variable to be loaded must not have any ' +
+    'string values (with the exception of strings representing NaNs), e.g., if the variable to be loaded contains the ' +
+    'values cat, dog, or Male Female, then they will not load correctly here. Continuous variables have a few special further ' +
+    'options for performing outlier detection.'
+
+    '<br><b>Categorical</b> ' +
+    'If categorical, then the variable to be loaded will be encoded ordinally with 0 to n-1, where n is the ' +
+    'number of unique values for this variable. The categorical data type allows loading with either the default ' +
+    'values already present, i.e., setting existing vales to 0 to n-1, in addition to also allowing a Continuous to Categorical ' +
+    'K-Binning option for originally Cont. variables.">' +    
     'Data Type <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>';
 

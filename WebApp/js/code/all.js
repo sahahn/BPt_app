@@ -354,21 +354,35 @@ function projectDefault(key) {
     jQuery('#top-text').empty();
 }
 
-function noProjectDefault() {
+function clearAll() {
 
+    // Remove any open popovers
     $(".popover").remove();
+
+    // Call remove active projects
     removeActiveProjects();
+
+    // Remove the top text
     jQuery('#top-text').empty();
+
+    // Hide delete project
     jQuery('#delete-project').css('display', 'none');
 
-     // Clear all project steps
-     clearAllProjSteps();
+    // Clear all project steps
+    clearAllProjSteps();
 
-     // If already loaded
-     if (jQuery('#body-noproj').html().length > 30) {
-         jQuery('#body-noproj').css('display', 'block');
-         return;
-     }
+}
+
+function noProjectDefault() {
+
+    // Clear anything open
+    clearAll()
+
+    // If already loaded
+    if (jQuery('#body-noproj').html().length > 30) {
+        jQuery('#body-noproj').css('display', 'block');
+        return;
+    }
 
     var html = '' +
     '<div class="form-row">' +
