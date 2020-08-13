@@ -66,10 +66,21 @@ function getMetricsHTML(key) {
 
 function getEvalSubjectsHTML(key) {
 
-    var file_input_content = 'Placeholder'
+    var subj_overlap_txt = 'Selecting a subset of subjects in which to perform modelling on is foremost an optional step. ' +
+    'If not value is provided here, or to Subset-Subjects by Non-Input Value, then the full avaliable set of subjects will be used. ' +
+    'On the otherhand, if subjects are provided, then the overlap will be computed between the passed subjects and the set of subjects ' +
+    'considered by the type of job submission (i.e., if running Evaluate, then the set of train subjects are used, but if running Test then ' +
+    'train + test  - aka all subjects are used).'
+
+    var file_input_content = 'This option allows you to define that only a subset of subjects be used in modelling via file upload. ' +
+    'The file containing the subjects in which to subset by should be formatted as a text file with one subject per line. ' + subj_overlap_txt;
+
     var file_input_label = getPopLabel(key, 'Subset-Subjects from File ', file_input_content);
 
-    var from_strat_content = 'Placeholder'
+    var from_strat_content = 'This option allows you to define that only a subset of subjects be used in modeling via selecting values from loaded ' +
+    ' Non-Input variables. Note: Load/Show must have been called on the Non-Input variable during Data Loading in order for it to appear as option here. ' +
+    subj_overlap_txt;
+    
     var from_strat_label = getPopLabel(key, 'Subset-Subjects by Non-Input Value ', from_strat_content);
 
     var html = addSubjectsInputRowHTML(key, file_input_label, from_strat_label,

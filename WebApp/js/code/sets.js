@@ -222,6 +222,7 @@ function showSets() {
         var html = getBaseSetsHTML();
         jQuery('#body-sets').append(html);
         jQuery('#body-sets').css('display', 'block');
+        jQuery('#top-text').empty().append('Sets');
 
         // Add each existing set
         sets.forEach(set => {

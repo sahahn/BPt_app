@@ -14,6 +14,7 @@ function showUserSettings() {
     var html = getSettingsHTML();
     jQuery('#body-settings').append(html);
     jQuery('#body-settings').css('display', 'block');
+    jQuery('#top-text').empty().append('Settings');
 
     // If more than one event
     if (all_events.length !== 1) {

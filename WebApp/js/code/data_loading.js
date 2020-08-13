@@ -982,14 +982,29 @@ function addStratVariable(project, key=undefined) {
 
     var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
     'title="Non-Input Variable" data-placement="top"' +
-    'data-content="Placeholder."' +
+    'data-content="' +
+    'Non-Input variables are special in that they are not used to directly predict the target variable. ' +
+    'Instead, loading Non-Input variables here lets you employ them in other contexts. Notably, Non-Input variables ' +
+    'must be categorical. They can be used across the application, typically in defining a validation strategy, or in selecting ' +
+    'a subset of subjects based on the value(s) of a loaded non-input variable. For example, if you want to perform group preserving ' +
+    'validation behavior on site, then site should be loaded as a Non-Input variable.'
+    '"' +
     '>Non-Input Variable <i class="fas fa-info-circle fa-sm"></i></label>';
 
     // Data type label
     var data_type_label = '<label for="'+key+'-buttons"' +
     '><span data-toggle="popover"' +
     'title="Non-Input Data Type" data-placement="top"' +
-    'data-content="Place Holder">' +
+    'data-content="' +
+    'Non-Input variables must ultimately be categorical, which means you must select either ' +
+    'binary or categorical as a data type.' +
+    '<br><b>Binary</b> data type refers to encoding the variable with just two classes (0 and 1). ' +
+    'This data type offers both a default setting, and an option to encode an originally cont. variable as ' +
+    'binary.<br>' +
+    '<b>Categorical</b> data type refers to ordinally encoding a variable. There is both a default option ' +
+    'where the variable is just encoded based on what categories are already present, and an option to perform ' +
+    'kbins encoding on an originally cont. variable.'
+    '">' +
     'Data Type <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>';
 

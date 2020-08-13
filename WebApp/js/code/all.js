@@ -382,6 +382,8 @@ function noProjectDefault() {
     '<p>Select an existing project to work on, or add a new one over on the left menu.</p>' +
     '<p>The left menu also holds links to pages dedicated to general Settings, and for making namedSets of variables.</p>' +
     '<p>Note: you may want to zoom in or out a bit on your browser to your prefered text and button size.</p>'
+    '<p>Warning: BPt is not currently designed to handle multiple tabs of this app open at the same time. If you choose to do so, ' +
+    'it may result in strange behavior.</p>' +
     '<br>' +
     // Hide this for now for the single user version
     //'<p>Press the button below to make all of your custom hyper-parameter distributions public to other users!</p>' +
