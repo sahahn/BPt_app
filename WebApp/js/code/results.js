@@ -598,9 +598,11 @@ function registerJobsShow(project) {
             // Unwrap on show
             jQuery('#'+key+'-collapse').collapse("show");
     
-
             // Make sure updated
             refreshJobProgress(project);
+
+            // Update popovers
+            registerPopovers();
         }
     });
 
