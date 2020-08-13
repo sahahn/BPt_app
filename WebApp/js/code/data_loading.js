@@ -1051,8 +1051,6 @@ function addDataVariable(project, space='data-space', key=undefined) {
     var data_types = ['binary', 'float', 'cat'];
     var input_label = getVarInputLabelHTML(key, space);
 
-    
-
   
     // Data type label
     var data_type_label = '<label for="'+key+'-buttons"' +
@@ -1070,7 +1068,7 @@ function addDataVariable(project, space='data-space', key=undefined) {
     'a floating point, real or continuous variable. If selected, the variable to be loaded must not have any ' +
     'string values (with the exception of strings representing NaNs), e.g., if the variable to be loaded contains the ' +
     'values cat, dog, or Male Female, then they will not load correctly here. Continuous variables have a few special further ' +
-    'options for performing outlier detection.'
+    'options for performing outlier detection.' + 
 
     '<br><b>Categorical</b> ' +
     'If categorical, then the variable to be loaded will be encoded ordinally with 0 to n-1, where n is the ' +
