@@ -164,8 +164,8 @@ function inputSetFormHTML(key) {
         'To add or edit existing sets click the Add Sets button to the right, ' +
         'and once changes are made then press the Refresh Sets button.' +
         ' In general, Sets should be used to load homogenous groupings of conceptually simmilar variables.<br><br>' +
-        'One a set is loaded, a table will appear showing you information about each loaded variable. ' +
-        'Each variable has a button which allows you to set specific loading settings for just that variable. ' +
+        'Once a set is loaded, a table will appear showing some basic information about each loaded variable. ' +
+        'Each variable has an Edit button which allows the seting of specific loading settings for just that variable. ' +
         'When this is done, any parameters will override those for the main set."' +
         '>Data Set <i class="fas fa-info-circle fa-sm"></i></span>' +
         '</label>' +
@@ -455,7 +455,7 @@ function ifCatHTML(key, target) {
         '</div>' + 
         '</div>' + 
 
-        '<label><span data-toggle="popover"' +
+        '<label style="margin-top: 10px;"><span data-toggle="popover"' +
         'title="Categorical Outlier Options" data-placement="left"' +
         'data-content="<b>Drop Category by Percent</b><br>' +
         'Any categories that make up less than the selected percent ' +
