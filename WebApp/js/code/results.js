@@ -82,14 +82,24 @@ function getBarHTML(key, ext, label, job_name) {
 
 function getJobStatusHTML(key, job_name) {
 
-    folds_label = getPopLabel(undefined, 'Folds ', 'test');
+    var repeats_label = getPopLabel(undefined, 'Repeats ', 'Repeats refers to the current number of  finished repeats, where repeats are set ' +
+    'when submitting this job. It is the number of times in which the inner folds of the CV are repeated with different random seeds.');
+
+    var folds_label = getPopLabel(undefined, 'Folds ', 'Folds refers to the current number of completed evaluate folds. ' +
+    'For example, if an Evaluate job is submitted with K-folds set to 5, then this progress bar will be out of ' +
+    '5. Or, if say set to Leave-Out-Group, this this number will reflect the number of unique groups. If any repeats are set ' +
+    'These are considered seperately.');
+
+    var search_label = getPopLabel(undefined, 'Search Params ', 'Search params refers to the current number of ' +
+    'of completed hyper-parameter combinations tested. This will always be out of whatever was set as ' +
+    'the search budget for the current ML Pipeline.');
 
     var html = '' +
     '<div id="'+key+'-progress" class="container-fluid">' +
 
-    getBarHTML(key, 'repeats', 'Repeats', job_name) +
+    getBarHTML(key, 'repeats', repeats_label, job_name) +
     getBarHTML(key, 'folds', folds_label, job_name) +
-    getBarHTML(key, 'search-iter', 'Search Params', job_name) +
+    getBarHTML(key, 'search-iter', search_label, job_name) +
 
     '</div>';
 
