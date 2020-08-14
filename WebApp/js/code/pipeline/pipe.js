@@ -1147,7 +1147,7 @@ function addParameterSearch(project, space) {
     'this will require a far smaller budget then say a really high dimensional search space), The CV strategy (' +
     'The CV strategy defined via splits and repeats may make it easier or harder to overfit when searching for hyper-parameters, ' +
     'thus conceptually a good choice of CV strategy can serve to increase ' +
-    'the budget you can use before overfitting, or conversely a bad choice may limit it.) and the number of data points / subjects.';
+    'the budget you can use before overfitting, or conversely a bad choice may limit it.), and the number of data points / subjects.';
     var n_iter_label = getPopLabel(key, 'Search Budget ', n_iter_descr, '-n-iter');
 
     var splits_descr = 'Splits in this context defines how each set of sampled hyper-parameters ' +
