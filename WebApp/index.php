@@ -161,7 +161,7 @@
   </div>
 
   <!-- Some fixed padding at bottom -->
-  <div style="padding-top: 300px"></div>
+  <div style="padding-top: 600px"></div>
 
   <!-- Base libraries js -->
   <script type="text/javascript" src="js/libraries/jquery-3.2.1.min.js"></script>
