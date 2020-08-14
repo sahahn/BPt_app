@@ -24,15 +24,14 @@
   <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" type="text/css" href="css/buttons.bootstrap4.min.css">
 
-
   <!-- Custom styles -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Fav and touch icons -->
+  <!-- Fav and touch icons
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png"> -->
   <!-- <link rel="shortcut icon" href="/img/favicon.png"> -->
 
 </head>
@@ -59,7 +58,7 @@
     <div class="sidebar-static">
       
       <ul class="nav flex-column">
-      <!--
+      <!-- This is for when integrated with DEAP
         <li class="nav-item" style="padding-top: 50px;">
           <a class="nav-link" href="/index.php">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
@@ -68,6 +67,12 @@
         -->
 
         <li class="nav-item" style="padding-top: 50px;">
+          <a id="home-but" class="nav-link" href="#">
+            <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
+          </a>
+        </li>
+
+        <li class="nav-item">
           <a id="settings" class="nav-link" href="#">
             <span><i class="fas fa-cogs navbutton fa-fw"></i></span> Settings
           </a>

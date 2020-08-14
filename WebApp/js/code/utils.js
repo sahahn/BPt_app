@@ -1,3 +1,11 @@
+function ifExists(val) {
+    
+    if ((val == null) || (val == undefined)) {
+        return false
+    }
+    return true;
+}
+
 function isBool(val) {
     var bool_val = ((val === "true") || (val === true));
     return bool_val;
@@ -42,9 +50,22 @@ function registerPopovers() {
     // Set pop overs, s.t. only one can be up at once
     // since if more then one can be, then can block the button
     // to close them
-    $('[data-toggle="popover"]').popover({html: true}).on("show.bs.popover", function(e){
+
+    var popover_template = '' + 
+    '<div class="popover" role="tooltip">' +
+    '<div class="arrow"></div>' +
+    '<h3 class="popover-header"></h3>' +
+    '<div class="popover-body"></div>' +
+    '<div class="popover-footer">' +
+       '<i>Press again to close this message</i>' +
+    '</div>' +
+    '</div>';
+
+    $('[data-toggle="popover"]').popover({html: true, template: popover_template}).on("show.bs.popover", function(e){
         $(".popover").not(e.target).remove();
     });
+
+    
 }
 
 const findDuplicates = (arr) => {

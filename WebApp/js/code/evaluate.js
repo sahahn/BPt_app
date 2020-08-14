@@ -5,7 +5,10 @@
 
 function getTargetHTML(key) {
 
-    var target_content = 'Select which target to predict.'
+    var target_content = 'Within the context of a BPt job submission, you can only predict a single target at a time. ' +
+    'This variable controls which loaded target (if multiple) should be predicted. Note that depending on the loaded type of this ' +
+    'variable, the options for valid ML Pipelines will be restricted. For example, if loaded as Continuous, then only ML Pipelines set ' +
+    'to type regression will appear as valid options. Likewise, binary for binary and categorical for categorical.';
     var target_label = getPopLabel(key, 'Target ', target_content);
 
     var html = '' +
@@ -66,15 +69,26 @@ function getMetricsHTML(key) {
 
 function getEvalSubjectsHTML(key) {
 
-    var file_input_content = 'Placeholder'
+    var subj_overlap_txt = 'Selecting a subset of subjects in which to perform modeling on is foremost an optional step. ' +
+    'If not value is provided here, or to Subset-Subjects by Non-Input Value, then the full avaliable set of subjects will be used. ' +
+    'On the otherhand, if subjects are provided, then the overlap will be computed between the passed subjects and the set of subjects ' +
+    'considered by the type of job submission (i.e., if running Evaluate, then the set of train subjects are used, but if running Test then ' +
+    'train + test  - aka all subjects are used).'
+
+    var file_input_content = 'This option allows you to define that only a subset of subjects be used in modelling via file upload. ' +
+    'The file containing the subjects in which to subset by should be formatted as a text file with one subject per line. ' + subj_overlap_txt;
+
     var file_input_label = getPopLabel(key, 'Subset-Subjects from File ', file_input_content);
 
-    var from_strat_content = 'Placeholder'
+    var from_strat_content = 'This option allows you to define that only a subset of subjects be used in modeling via selecting values from loaded ' +
+    ' Non-Input variables. Note: Load/Show must have been called on the Non-Input variable during Data Loading in order for it to appear as option here. ' +
+    subj_overlap_txt;
+    
     var from_strat_label = getPopLabel(key, 'Subset-Subjects by Non-Input Value ', from_strat_content);
 
     var html = addSubjectsInputRowHTML(key, file_input_label, from_strat_label,
                                       'eval', row_class=' mb-5 ml-5 mr-5 mt-3');
-    html = '<hr><div class="text-center"><i>Optional</i></div>' + html;
+    html = '<div class="text-center"><i>Optional</i></div><hr>' + html;
     return html;
 
 }
@@ -431,6 +445,30 @@ function registerEvaluate(key, project) {
     registerPopovers();
 }
 
+function registerJobName(key, project) {
+
+    jQuery('#'+key+'-job-name').on('input', function() {
+
+        // make sure no /'s or \s
+        var input = $(this).val().replace(/[\/\\]/g, '');
+        if ($(this).val() !== input) {
+            $(this).val(input).trigger('input');
+        }
+
+        project['data'][key]['-job-name'] = input;
+    });
+
+    // Set existing if any
+    if (project['data'][key]['-job-name'] !== undefined) {
+        jQuery('#'+key+'-job-name').val(project['data'][key]['-job-name']).trigger('input');
+    }
+
+    // Update validation w/ changes
+    jQuery('#'+key+'-job-name').on('input', function() {
+        validateJobName(key, project['data'][key], Object.keys(project['jobs'])); 
+    });
+}
+
 //////////////////////////
 // Params helper funcs //
 ////////////////////////
@@ -551,42 +589,12 @@ function getSumbitJobParams(key, project) {
 // Submit code //
 ////////////////
 
-function registerJobName(key, project) {
 
-    jQuery('#'+key+'-job-name').on('input', function() {
-
-        // make sure no /'s or \s
-        var input = $(this).val().replace(/[\/\\]/g, '');
-        if ($(this).val() !== input) {
-            $(this).val(input).trigger('input');
-        }
-
-        project['data'][key]['-job-name'] = input;
-    });
-
-    // Set existing if any
-    if (project['data'][key]['-job-name'] !== undefined) {
-        jQuery('#'+key+'-job-name').val(project['data'][key]['-job-name']).trigger('input');
-    }
-
-    // Update validation w/ changes
-    jQuery('#'+key+'-job-name').on('input', function() {
-        validateJobName(key, project['data'][key], Object.keys(project['jobs'])); 
-    });
-}
-
-function registerSubmitEval(key, project) {
-
-    // Set HTML
-    jQuery('#' + key + '-submit-body').empty().append(getSubmitEvalHTML(key));
-    jQuery('#' + key + '-modal-label').empty().append('<b>Evaluate</b>');
-
-    // Registers
-    registerJobName(key, project);
-    registerSplitsRow(key, project);
-    registerPopovers();
-
-    jQuery('#'+key+'-job-submit').on('click', function(e) {
+function registerJobSubmit(key, project, script) {
+    
+    // Remove previous register
+    jQuery('#'+key+'-job-submit').off('click');
+    jQuery('#'+key+'-job-submit').on('click', function() {
 
         if (validateSubmitJob(key, project)) {
 
@@ -595,13 +603,15 @@ function registerSubmitEval(key, project) {
 
             // Get the params
             var params = getSumbitJobParams(key, project);
-            params['script'] = 'evaluate.py';
+            params['script'] = script;
             params['n'] = project['data'][key]['-job-name'];
             params['project_id'] = project['id'];
 
             // Submit the job to run
             submitPy(params);
 
+            // Define a local function, checkInitialJob to make
+            // sure job submits correctly before closing screen
             var cnt = 0;
             function checkInitialJob(interval_var, project, params) {
 
@@ -630,7 +640,7 @@ function registerSubmitEval(key, project) {
 
                     // If job hasn't been confirmed as started after 10 seconds
                     cnt += 1
-                    if (cnt == 20) {
+                    if (cnt == 50) {
                         alert('Unknown error!');
                         atEndSubmit(interval_var, key);
                     }
@@ -642,6 +652,7 @@ function registerSubmitEval(key, project) {
                 });
             }
 
+            // Set check to loop every 500ms
             var interval_var = setInterval(function() {
                 checkInitialJob(interval_var, project, params);
             }, 500);
@@ -656,11 +667,33 @@ function atEndSubmit(interval_var, key) {
     jQuery('#' + key + '-loading').css('display', 'none');
 }
 
-function registerSubmitTest(key) {
+function registerSubmitEval(key, project) {
+
+    // Set HTML
+    jQuery('#' + key + '-submit-body').empty().append(getSubmitEvalHTML(key));
+    jQuery('#' + key + '-modal-label').empty().append('<b>Evaluate</b>');
+
+    // Registers
+    registerJobName(key, project);
+    registerSplitsRow(key, project);
+    registerPopovers();
+
+    // Register submit job
+    registerJobSubmit(key, project, 'evaluate.py');
+}
+
+function registerSubmitTest(key, project) {
+
+    // Set HTML
     jQuery('#' + key + '-submit-body').empty().append(getSubmitTestHTML(key));
     jQuery('#' + key + '-modal-label').empty().append('<b>Test</b>');
+
+    // Base registers
     registerJobName(key, project);
     registerPopovers();
+
+    // Register submit job
+    registerJobSubmit(key, project, 'test.py');
 }
 
 ///////////
@@ -683,6 +716,7 @@ function displayEvaluate(project) {
         project['data'][key] = {};
     }
 
+    // Get + set base page HTML
     var html = getEvaluateHTML(key);
     jQuery('#body-evaluate').append(html);
     jQuery('#body-evaluate').css('display', 'block');
@@ -697,7 +731,7 @@ function displayEvaluate(project) {
     // All base registers
     registerEvaluate(key, project);
 
-    // Register submit button popups
+    // Register Eval submit button popup
     jQuery('#'+key+'-eval-submit').on('click', function(e) {
         
         if (!validatePreSubmitJob(key, project['data'][key])) {
@@ -707,7 +741,13 @@ function displayEvaluate(project) {
         registerSubmitEval(key, project);
     });
 
+    // Register Test submit button popup
     jQuery('#'+key+'-test-submit').on('click', function() {
+
+        if (!validatePreSubmitJob(key, project['data'][key])) {
+            e.stopPropagation();
+        }
+
         registerSubmitTest(key, project);
     });
 }

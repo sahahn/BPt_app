@@ -45,13 +45,22 @@ def get_table_html(results):
 
     table_html += '</tr></thead><tbody>'
 
-    for i, scorer in enumerate(results['scorer_strs']):
-        table_html += '<tr>'
-        table_html += '<th>' + scorer + '</th>'
+    # If test
+    if 'scores' in results:
+        for i, scorer in enumerate(results['scorer_strs']):
+            table_html += '<tr>'
+            table_html += '<th>' + scorer + '</th>'
+            table_html += '<td>' + check_round(results['scores'][0][i]) + '</td>'
 
-        for field in results['summary_scores'][i][:len(cols)-1]:
-            table_html += '<td>' + check_round(field) + '</td>'
-        table_html += '</tr>'
+    # If evaluate
+    else:
+        for i, scorer in enumerate(results['scorer_strs']):
+            table_html += '<tr>'
+            table_html += '<th>' + scorer + '</th>'
+
+            for field in results['summary_scores'][i][:len(cols)-1]:
+                table_html += '<td>' + check_round(field) + '</td>'
+            table_html += '</tr>'
 
     table_html += '</tbody></table>'
 
@@ -90,11 +99,9 @@ def get_raw_preds_table_html(results):
 def main(user_dr, job_name):
 
     # Should switch over all quick py runs to using temp
-    # temp_dr = os.path.join(user_dr, 'temp')
-    temp_dr = user_dr
-
-    params_loc = os.path.join(temp_dr, 'ML_Params' + str(job_name) + '.json')
-    output_loc = os.path.join(temp_dr, 'ML_Output' + str(job_name) + '.json')
+    temp_dr = os.path.join(user_dr, 'temp')
+    params_loc = os.path.join(temp_dr, 'ML_Params_' + str(job_name) + '.json')
+    output_loc = os.path.join(temp_dr, 'ML_Output_' + str(job_name) + '.json')
 
     with open(params_loc, 'r') as f:
         params = json.load(f)['params']

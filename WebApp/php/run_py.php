@@ -3,13 +3,12 @@
 include '/var/www/html/data/config.php';
 
 // Make dr if doesnt exist
-$temp_directory = $user_dr."/temp";
-if(!is_dir($temp_directory)){
-    mkdir($temp_directory, 0755);
+if(!is_dir($temp_dr)){
+    mkdir($temp_dr, 0755);
 }
 
-// Save the passed parameters to the user's directory
-$params_loc = $temp_directory.'/ML_Params_'.$_POST['params']['n'].'.json';
+// Save the passed parameters to the user's temp directory
+$params_loc = $temp_dr.'/ML_Params_'.$_POST['params']['n'].'.json';
 file_put_contents($params_loc, json_encode($_POST));
 
 // Generate the py command to run in the background

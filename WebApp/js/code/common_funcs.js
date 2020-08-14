@@ -57,7 +57,7 @@ function registerCloseButton(space, key, n, cnt_field, cnt_id, project) {
         var data = project['loading_spaces'][space];
         data['data_fields'].splice(data['data_fields'].indexOf(n), 1);
         
-        if (cnt_id !== undefined) {
+        if (ifExists(cnt_field)) {
             data[cnt_field] = data[cnt_field] - 1
             jQuery('#'+cnt_id).text(data[cnt_field]);
         }
@@ -285,13 +285,6 @@ function refreshByValueChoices(include_key, project) {
 
 function refreshStratChoices(project) {
 
-    // Only need to refresh choices if within data_loading
-    if (project['last_active'] !== "-data-loading") {
-        return undefined;
-    }
-
-    console.log('refresh strat')
-
     // Strat choices are added when show is called on strat variables
     // this check is essentially just for checking which ones to remove
     // based on either if they got deleted, or maybe the name/eventname changed
@@ -299,8 +292,7 @@ function refreshStratChoices(project) {
     getSubSpaceKeys('strat-space', project).forEach(strat_key => {
         var var_name = jQuery('#'+strat_key+'-input').val();
 
-        if (var_name.length > 0) {
-
+        if (var_name) {
             // Get repr name not base name
             var eventname = jQuery('#'+strat_key+'-eventname').val();
             var repr_name = getReprName(var_name, eventname);
@@ -359,7 +351,7 @@ function registerValueOnChoice(key, project) {
         val.empty();
         val.append('<option item=""></option>');
         var choice_name = $(this).find('option:selected').val();
-        if ((choice_name !== undefined) && (choice_name.length > 0)) {
+        if (ifExists(choice_name) && (choice_name.length > 0)) {
             var c = choices[choice_name];
             for (var i = 0; i < c.length; i++) {
                 val.append('<option item="' +

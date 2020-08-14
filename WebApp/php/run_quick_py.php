@@ -2,13 +2,14 @@
 
 include '/var/www/html/data/config.php';
 
-// Make directory if it doesnt exist
-if(!is_dir($user_dr)){
-    mkdir($user_dr, 0755);
+// Make dr if doesnt exist
+if(!is_dir($temp_dr)){
+    mkdir($temp_dr, 0755);
 }
 
 // Save the passed parameters to the user's directory
-file_put_contents($user_dr.'/ML_Params'.$_POST['params']['n'].'.json', json_encode($_POST));
+$params_loc = $temp_dr.'/ML_Params_'.$_POST['params']['n'].'.json';
+file_put_contents($params_loc, json_encode($_POST));
 
 // Generate the py command - run in foreground
 $cmd_p1 = "/bin/bash -c \". /etc/profile.d/conda.sh; conda activate ML; ";
@@ -17,5 +18,5 @@ $cmd = $cmd_p1.$cmd_p2;
 exec($cmd);
 
 // Once done, echo the contents of the output file
-echo(file_get_contents($user_dr.'/ML_Output'.$_POST['params']['n'].'.json'));
+echo(file_get_contents($temp_dr.'/ML_Output_'.$_POST['params']['n'].'.json'));
 ?>

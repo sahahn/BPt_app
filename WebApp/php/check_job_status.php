@@ -10,7 +10,7 @@ $job_dr = $project_jobs_dr."/".$_GET['job_name'];
 $error_file = $job_dr."/Error_Output.json";
 $progress_file = $job_dr."/progress.txt";
 $results_file = $job_dr."/results.pkl";
-$logs_file = $job_dr."/ML_Logs_".$_GET['job_name']."/logs.txt";
+$logs_file = $job_dr."/temp/ML_Logs_".$_GET['job_name']."/logs.txt";
 
 // Make return array
 $return = array();

@@ -42,9 +42,13 @@ function getEventNameOptionsHTML() {
 
 function inputEventnameHTML(key) {
 
-    var eventname_text = 'If some variables have values for multiple time points, then' +
-    'Eventname is used select a specific timepoint per variable or groups of variables. ' +
-    'This can be particulary useful for longitudinal studies';
+    var eventname_text = 'If some variables have values across multiple time points, then ' +
+    'the Eventname parameter is used select a specific timepoint per variable or groups of variables. ' +
+    'This can be particulary useful for longitudinal studies.<br>Note that a special Append Short Name can be ' +
+    'specified in the global Settings menu (found on the sidebar) for each eventname. The Append Short Name ' +
+    'is a value appended to the end of a variable or set name in order to make it unique, this full name is ' +
+    'the name shown in plots, card titles and option menus. By default this Short Name will just be the exact name ' + 
+    'of the event.'
     
     var html = '' +
     '<div class="form-group col-md-6">' +
@@ -61,6 +65,31 @@ function inputEventnameHTML(key) {
         '</select>' +
     '</div>';
     return html;
+}
+
+function getVarInputLabelHTML(key, space) {
+
+    // If data variable
+    if (space == 'data-space') {
+        var var_title = 'Data Variable '
+        var var_content = 'All selected data variables and data sets are combined and used as input features to predict the target variable.' +
+        'In general, data variables should be used to load heterogenous variables, where more specific input processing might be required ' +
+        'and sets to load larger groups of homogeneous variables.';
+    }
+
+    // If set variable
+    else {
+        var var_title = 'Set Variable '
+        var var_content = 'Set Variables can be used either to visualize a specific variable from a set, ' +
+        'or even to make changes to how a given variable will be processed. ' +
+        'Specifically, any change made to how a set variable is loaded, e.g., ' +
+        'Data Type, will override the set-wide settings, and upon final data loading ' +
+        'will make use of the set variable specific settings. Also keep in mind that when viewing ' +
+        'a single Set Variable, the rest of the Set will still be loading in order to propely ' +
+        'compute the correct overlap of subjects.'
+    }
+
+    return getPopLabel(key, var_title, var_content, '-input');
 }
 
 function inputVariableHTML(key, name_label){
@@ -159,18 +188,21 @@ function inputSetFormHTML(key) {
         'data-content="Data sets can be used to load in multiple data variables at once. ' +
         'To add or edit existing sets click the Add Sets button to the right, ' +
         'and once changes are made then press the Refresh Sets button.' +
-        ' In general, Sets should be used to load homogenous groupings of conceptually simmilar variables."' +
+        ' In general, Sets should be used to load homogenous groupings of conceptually simmilar variables.<br><br>' +
+        'Once a set is loaded, a table will appear showing some basic information about each loaded variable. ' +
+        'Each variable has an Edit button which allows the seting of specific loading settings for just that variable. ' +
+        'When this is done, any parameters will override those for the main set."' +
         '>Data Set <i class="fas fa-info-circle fa-sm"></i></span>' +
         '</label>' +
 
-        '<button type="button" id="'+key+'-refresh-set" class="btn btn-sm float-right" ' +
-        'style="background-color:transparent;">' +
-        'Refresh Sets <i class="fas fa-sync fa-xs"></i>' +
-        '</button>' +
+        //'<button type="button" id="'+key+'-refresh-set" class="btn btn-sm float-right" ' +
+        //'style="background-color:transparent;">' +
+        //'Refresh Sets <i class="fas fa-sync fa-xs"></i>' +
+        //'</button>' +
 
-        '<button id='+key+'-add-set type="button" class="btn btn-sm float-right" ' +
-        'style="background-color:transparent; onclick="showSets">' +
-        '<i class="fas fa-plus fa-sm"></i>' + 
+        '<button type="button" id="'+key+'-add-sets-but" class="btn btn-sm float-right" ' +
+        'style="background-color:transparent;">' +
+        'Add/Edit Sets <i class="fas fa-plus fa-xs"></i>' +
         '</button>' +
 
         //'<a style="color:inherit; text-decoration : none;" target="_blank" ' +
@@ -191,39 +223,6 @@ function getFloatOutlierHTML(key, append='') {
     var a = append;
 
     var html = '' +
-
-    '<!--Display under if % pressed -->' + 
-    '<div class="custom-control custom-checkbox">' +
-        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-percent'+a+'">' +
-        '<label class="custom-control-label" for="'+key+'-outlier-percent'+a+'">Drop Outliers by Percent</label>' +
-    '</div>' +
-
-    '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-percent'+a+'">' +
-
-        '<div class="input-group mb-3" style="margin-top: 10px;">' +
-            '<div class="input-group-prepend">' +
-                '<span class="input-group-text" id="'+key+'-p1'+a+'">Single Percent Threshold</span>' + 
-            '</div>' + 
-            '<input id="'+key+'-range-percent'+a+'" type="number" class="form-control" aria-describedby="'+key+'-p1'+a+'" step="0.1" min="0" max="10" title="Single Percent Value"></input>' + 
-        '</div>' + 
-
-        '<hr>' + 
-
-        '<div class="input-group mb-3">' +
-            '<div class="input-group-prepend">' +
-                '<span class="input-group-text" id="'+key+'-p2'+a+'">Lower Percent Threshold</span>' + 
-            '</div>' + 
-            '<input id="'+key+'-range-percent'+a+'L" type="number" class="form-control" aria-describedby="'+key+'-p2'+a+'" step="0.1" min="0" max="10" title="Lower Percent Value"></input>' + 
-        '</div>' + 
-
-        '<div class="input-group mb-3">' +
-            '<div class="input-group-prepend">' +
-                '<span class="input-group-text" id="'+key+'-p3'+a+'">Upper Percent Threshold</span>' + 
-            '</div>' + 
-            '<input id="'+key+'-range-percent'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-p3'+a+'" step="0.1" min="0" max="10" title="Upper Percent Value"></input>' + 
-        '</div>' + 
-
-    '</div>' +
 
     '<!--Display under if std pressed -->' +
     '<div class="custom-control custom-checkbox">' +
@@ -256,9 +255,65 @@ function getFloatOutlierHTML(key, append='') {
             '<input id="'+key+'-range-std'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-s3'+a+'" step="0.1" min=".1" title="Upper STD Value"></input>' + 
         '</div>' +
 
+    '</div>' +
+
+    '<!--Display under if % pressed -->' + 
+    '<div class="custom-control custom-checkbox">' +
+        '<input type="checkbox" class="custom-control-input" id="'+key+'-outlier-percent'+a+'">' +
+        '<label class="custom-control-label" for="'+key+'-outlier-percent'+a+'">Drop Outliers by Percent</label>' +
+    '</div>' +
+
+    '<div class="form-group col" style="display:none; padding:0px;" id="'+key+'-percent'+a+'">' +
+
+        '<div class="input-group mb-3" style="margin-top: 10px;">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p1'+a+'">Single Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'" type="number" class="form-control" aria-describedby="'+key+'-p1'+a+'" step="0.1" min="0" max="10" title="Single Percent Value"></input>' + 
+        '</div>' + 
+
+        '<hr>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p2'+a+'">Lower Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'L" type="number" class="form-control" aria-describedby="'+key+'-p2'+a+'" step="0.1" min="0" max="10" title="Lower Percent Value"></input>' + 
+        '</div>' + 
+
+        '<div class="input-group mb-3">' +
+            '<div class="input-group-prepend">' +
+                '<span class="input-group-text" id="'+key+'-p3'+a+'">Upper Percent Threshold</span>' + 
+            '</div>' + 
+            '<input id="'+key+'-range-percent'+a+'U" type="number" class="form-control" aria-describedby="'+key+'-p3'+a+'" step="0.1" min="0" max="10" title="Upper Percent Value"></input>' + 
+        '</div>' + 
+
     '</div>';
 
     return html;
+}
+
+function getSTDText() {
+    return '<b>Drop Outliers by STD</b><br>' +
+    'If single percent threshold, then ' +
+    'any data points outside of the selected value multiplied by the standard deviation (for both the upper and lower portions of the distribution)' +
+    ' will be dropped. ' +
+    '<br>If a combination of lower and upper STD threshold, then each parameter controls the threshold for that portion of ' +
+    'the distribution. Further, you may optionally threshold by only one of Upper or Lower if desired by simply leaving the ' +
+    'other empty.';
+}
+
+function getPercentText() {
+    return '<br><b>Drop Outliers by Percent</b><br>' +
+    'If single percent threshold then the selected fixed percent of datapoints from either end of' +
+    'the distribution will be dropped. For example, if set to 1%, then for each feature (if multiple) ' +
+    'all data points with < the value of that feature at the first percentile will be dropped. Likewise, ' +
+    'all values > the value of that feature at the 99th percentile will be dropped. ' +
+    '<br>If instead a combination of Lower and Upper percent thresholds are selected, then a percentile threshold ' +
+    'can be specified seperately for either end of the distribution. You may also choose to not performing filtering ' + 
+    'on one end, e.g., the upper portion, and instead only pass a value to the lower. Note: when passing a value for the ' +
+    'Upper Percent Threshold, you should pass the amount you want taken off. E.g., passing 1% will indicate that values greater ' +
+    'than the 99th percentile should be dropped, and passing 99% would instead only leave the first 1% of the distribution (a bad idea)';
 }
 
 function ifFloatHTML(key) {
@@ -269,14 +324,10 @@ function ifFloatHTML(key) {
     '<label><span data-toggle="popover"' +
     'title="Continuous Outlier Options" data-placement="left"' +
     'data-content="' +
-
-    '<b>Drop Outliers by STD</b><br>' +
-    'Any data points outside of the selected value multiplied by the standard deviation (for both the upper and lower portions of the distribution)' +
-    ' will be dropped.' +
-
-    '<br><b>Drop Outliers by Percent</b><br>' +
-    'The selected fixed percent of datapoints from either end of' +
-    'the distribution will be dropped.' +
+    getSTDText() +
+    '<br>' + 
+    getPercentText() +
+    '"' +
     '">Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
     getFloatOutlierHTML(key) +
     '</div>';
@@ -292,8 +343,15 @@ function ifBinaryHTML(key) {
         'title="Binary Encoding Choices" data-placement="left"' +
         'data-content="<b>Default:</b><br>The top two unique values by occurance will be '+
         'used to define the two valid binary classes, any additional classes will be dropped.' +
-        '<br> <b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
-        'continuous variable via thresholding via different thresholding options."' +
+        '<br><b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
+        'continuous variable via thresholding via different thresholding options.<br>' +
+        'In the case of selecting a single threshold, any value less than the threshold will be set to 0 ' +
+        'and any value greater than or equal to the threshold will be set to 1.<br>' +
+        'In the case of selecting a lower and upper threshold, a value must be set for both. ' +
+        'For the lower threshold any value that is greater than the value will be set to 1, ' +
+        'and any value <= upper and >= lower will be dropped. ' + 
+        'Likewise, for the upper threshold, any value that is less than upper will be set to 0, ' +
+        'and any value <= upper and >= lower will be dropped."' +
         '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="custom-control custom-radio">' +
@@ -358,8 +416,25 @@ function ifCatHTML(key, target) {
     html = html +
         '<label><span data-toggle="popover"' +
         'title="Categorical Encoding Choices" data-placement="left"' +
-        'data-content="<b>Default:</b><br>Placeholder.' +
-        '<br> <b>Continuous to Categorical:</b><br>Placeholder."' +
+        'data-content="<b>Default:</b><br>' +
+        'Default behavior for a categorical variable indicates that the variable ' +
+        'should be ordinally encoded, where each unique value (be it a number or string) ' +
+        'is encoded a 0 to n-1, where n is the number of unique categories.<br>' +
+        'Note: If behavior like one hot encoding is desired, it should be specified when ' +
+        'setting up the model pipeline, as that way it will be properly nested within cross validation.' +
+        '<br> <b>Continuous to Categorical:</b><br>' +
+        'The continuous to categorical option allows you to perform k-bin encoding on a ' +
+        'originally continusous variable, thus transforming it into a categorical variable. ' +
+        'As with the default behavior, the resulting categorical variable will be ordinally encoded after binning.' +
+        '<br>If selected, there are two avaliable parameters.<br>' +
+        '<b>Num. Bins</b> determines the number of k-bins in which to encode the variable.<br>' +
+        '<b>Bin Strategy</b> determines the type of categorical encoding to perform, options are: ' +
+        '<ul>' +
+        '<li><b>Uniform</b> All bins in each feature have identical widths</li>' +
+        '<li><b>Quantile</b> All bins in each feature have the same number of points</li>' +
+        '<li><b>KMeans</b> Values in each bin have the same nearest center of a 1D k-means cluster</li>' +
+        '</ul>' +
+        '"' +
         '>Encoding Type <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="custom-control custom-radio">' +
@@ -405,11 +480,18 @@ function ifCatHTML(key, target) {
         '</div>' + 
         '</div>' + 
 
-        '<label><span data-toggle="popover"' +
+        '<label style="margin-top: 10px;"><span data-toggle="popover"' +
         'title="Categorical Outlier Options" data-placement="left"' +
         'data-content="<b>Drop Category by Percent</b><br>' +
         'Any categories that make up less than the selected percent ' +
-        'of values will be dropped if this option is selected."' +
+        'of values will be dropped if this option is selected. For example, ' +
+        'passing .1, would indicate that any category that makes up less than 10% of ' +
+        'the frequency out of all categories should be dropped.' +
+        '<hr>' +
+        'If Cont. to Categorical is selected, these options are avaliable:<br>' +
+        getSTDText() +
+        getPercentText() +
+        '"' +
         '>Outlier Options <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
         '<div class="'+key+'-if-bins" style="display:none">' + 

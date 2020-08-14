@@ -397,7 +397,7 @@ function updateVariableCardName(key) {
     var col_name = jQuery("#"+key+"-input").val();
     jQuery('#'+key+'-header-text').empty();
 
-    if (col_name !== null) {
+    if ((col_name !== undefined) && (col_name !== null)) {
         if (col_name.length > 0) {
             var eventname = jQuery('#'+key+'-eventname').val()
             var repr_name = getReprName(col_name, eventname);
@@ -982,14 +982,29 @@ function addStratVariable(project, key=undefined) {
 
     var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
     'title="Non-Input Variable" data-placement="top"' +
-    'data-content="Placeholder."' +
+    'data-content="' +
+    'Non-Input variables are special in that they are not used to directly predict the target variable. ' +
+    'Instead, loading Non-Input variables here lets you employ them in other contexts. Notably, Non-Input variables ' +
+    'must be categorical. They can be used across the application, typically in defining a validation strategy, or in selecting ' +
+    'a subset of subjects based on the value(s) of a loaded non-input variable. For example, if you want to perform group preserving ' +
+    'validation behavior on site, then site should be loaded as a Non-Input variable.' +
+    '"' +
     '>Non-Input Variable <i class="fas fa-info-circle fa-sm"></i></label>';
 
     // Data type label
     var data_type_label = '<label for="'+key+'-buttons"' +
     '><span data-toggle="popover"' +
     'title="Non-Input Data Type" data-placement="top"' +
-    'data-content="Place Holder">' +
+    'data-content="' +
+    'Non-Input variables must ultimately be categorical, which means you must select either ' +
+    'binary or categorical as a data type.' +
+    '<br><b>Binary</b> data type refers to encoding the variable with just two classes (0 and 1). ' +
+    'This data type offers both a default setting, and an option to encode an originally cont. variable as ' +
+    'binary.<br>' +
+    '<b>Categorical</b> data type refers to ordinally encoding a variable. There is both a default option ' +
+    'where the variable is just encoded based on what categories are already present, and an option to perform ' +
+    'kbins encoding on an originally cont. variable.' + 
+    '">' +
     'Data Type <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>';
 
@@ -1021,6 +1036,7 @@ function addStratVariable(project, key=undefined) {
     return key;
 }
 
+
 function addDataVariable(project, space='data-space', key=undefined) {
 
     if (key !== undefined) {
@@ -1033,32 +1049,32 @@ function addDataVariable(project, space='data-space', key=undefined) {
     }
 
     var data_types = ['binary', 'float', 'cat'];
+    var input_label = getVarInputLabelHTML(key, space);
 
-    // name input label
-    if (space == 'data-space') {
-        var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
-        'title="Data Variable" data-placement="top"' +
-        'data-content="All selected data variables and data sets are combined and used as input features to predict the target variable.' +
-        'In general, data variables should be used to load heterogenous variables, where more specific input processing might be required ' +
-        'and sets to load larger groups of homogeneous variables."' +
-        '>Data Variable <i class="fas fa-info-circle fa-sm"></i></label>';
-    }
-    else {
-        var input_label = '<label for="'+key+'-input" data-toggle="popover"' +
-        'title="Set Variable" data-placement="top"' +
-        'data-content="Set Variables can be used either to visualize a specific variable from a set, ' +
-        'or even to make changes to how a given variable will be processed. ' +
-        'Specifically, any change made to how a set variable is loaded, e.g., ' +
-        'Data Type, will override the set-wide settings, and upon final data loading ' +
-        'will make use of the set variable specific settings."' +
-        '>Set Variable <i class="fas fa-info-circle fa-sm"></i></label>';
-    }
-
+  
     // Data type label
     var data_type_label = '<label for="'+key+'-buttons"' +
     '><span data-toggle="popover"' +
     'title="Variable Data Type" data-placement="top"' +
-    'data-content="Data Variables can be loaded as different data types.">' +
+    'data-content="Data Variables can be loaded with a few different data types. ' + 
+    
+    '<br><b>Binary</b> ' +
+    'If binary, then the variable of interest will be loaded as just two values, 0 and 1. ' +
+    'There is an option to either just take the most frequent two existing classes, default encoding behavior, ' +
+    'or to optional convert from an originally Continuous variable to catergorical' +
+
+    '<br><b>Continuous</b> ' +
+    'If continuous, then the variable to be loaded will likely be taken as is. This data type represents ' +
+    'a floating point, real or continuous variable. If selected, the variable to be loaded must not have any ' +
+    'string values (with the exception of strings representing NaNs), e.g., if the variable to be loaded contains the ' +
+    'values cat, dog, or Male Female, then they will not load correctly here. Continuous variables have a few special further ' +
+    'options for performing outlier detection.' + 
+
+    '<br><b>Categorical</b> ' +
+    'If categorical, then the variable to be loaded will be encoded ordinally with 0 to n-1, where n is the ' +
+    'number of unique values for this variable. The categorical data type allows loading with either the default ' +
+    'values already present, i.e., setting existing vales to 0 to n-1, in addition to also allowing a Continuous to Categorical ' +
+    'K-Binning option for originally Cont. variables.">' +    
     'Data Type <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>';
 
@@ -1145,6 +1161,9 @@ function addDataSet(project, space='data-space', key=undefined) {
     // Register events
     registerLoadSet(key, data_types, 'load_set.py', 'set', project);
 
+    // Register add set button
+    jQuery('#'+key+'-add-sets-but').on('click', showSets);
+
     // Register close button
     registerCloseButton(space, key, n, 'n_sets', 'set-count', project);
 
@@ -1181,7 +1200,9 @@ function addTarget(project, key=undefined) {
     '<span data-toggle="popover"' +
     'title="Target Variable" data-placement="top"' +
     'data-content="The target variable within a machine learning context is ' +
-    'the variable you are trying to predict."' +
+    'the variable you are trying to predict. Keep in mind, the choice of data-type for this variable will ' +
+    'also restrict the types of ML Pipelines compatible with predicting this variable later on. ' +
+    'You may load multiple target variables, but during Evaluate / Test, you may only predict one at a time."' +
     '>Target Variable <i class="fas fa-info-circle fa-sm"></i></span></label>';
 
     // data type label

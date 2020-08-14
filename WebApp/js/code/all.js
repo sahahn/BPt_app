@@ -354,20 +354,35 @@ function projectDefault(key) {
     jQuery('#top-text').empty();
 }
 
-function noProjectDefault() {
+function clearAll() {
 
+    // Remove any open popovers
+    $(".popover").remove();
+
+    // Call remove active projects
     removeActiveProjects();
+
+    // Remove the top text
     jQuery('#top-text').empty();
+
+    // Hide delete project
     jQuery('#delete-project').css('display', 'none');
 
-     // Clear all project steps
-     clearAllProjSteps();
+    // Clear all project steps
+    clearAllProjSteps();
 
-     // If already loaded
-     if (jQuery('#body-noproj').html().length > 30) {
-         jQuery('#body-noproj').css('display', 'block');
-         return;
-     }
+}
+
+function noProjectDefault() {
+
+    // Clear anything open
+    clearAll()
+
+    // If already loaded
+    if (jQuery('#body-noproj').html().length > 30) {
+        jQuery('#body-noproj').css('display', 'block');
+        return;
+    }
 
     var html = '' +
     '<div class="form-row">' +
@@ -376,12 +391,18 @@ function noProjectDefault() {
     '<br>' + 
     '<h3>Welcome to the Brain Predictability toolbox</h3>' +
     '<br>' + 
-    '<p>Select an existing project to work on, or add a new one.</p>' +
-    '<p>Other random helper/ intro text, etc...</p>' +
+    '<p>This is an early beta release version, so please report any bugs or feel free to contribute any suggestions for ' +
+    'new features on the BPt_app github page!</p>' +
+    '<p>Select an existing project to work on, or add a new one over on the left menu.</p>' +
+    '<p>The left menu also holds links to pages dedicated to general Settings, and for making namedSets of variables.</p>' +
+    '<p>Note: you may want to zoom in or out a bit on your browser to your prefered text and button size.</p>'
+    '<p>Warning: BPt is not currently designed to handle multiple tabs of this app open at the same time. If you choose to do so, ' +
+    'it may result in strange behavior.</p>' +
     '<br>' +
-    '<p>Press the button below to make all of your custom hyper-parameter distributions public to other users!</p>' +
-    '<button id="upload-user-dists" class="btn">Upload User Dists</button>' +
-    '</div>' +
+    // Hide this for now for the single user version
+    //'<p>Press the button below to make all of your custom hyper-parameter distributions public to other users!</p>' +
+    //'<button id="upload-user-dists" class="btn">Upload User Dists</button>' +
+    //'</div>' +
     '<div class="form-group col-md-6">' +
     //'<img src="images/logo.png" class="img-fluid" width="100%" alt="Logo" style="background:transparent;"/>'+
     '</div>' + 
@@ -425,6 +446,11 @@ function startApp() {
         // On click add var, call func
         jQuery('#add-new-project').on('click', function () {
             addNewProject();
+        });
+
+        // Register Settings button
+        jQuery('#home-but').on('click', function () {
+            noProjectDefault();
         });
 
         // Register Settings button
