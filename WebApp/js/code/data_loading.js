@@ -987,7 +987,7 @@ function addStratVariable(project, key=undefined) {
     'Instead, loading Non-Input variables here lets you employ them in other contexts. Notably, Non-Input variables ' +
     'must be categorical. They can be used across the application, typically in defining a validation strategy, or in selecting ' +
     'a subset of subjects based on the value(s) of a loaded non-input variable. For example, if you want to perform group preserving ' +
-    'validation behavior on site, then site should be loaded as a Non-Input variable.'
+    'validation behavior on site, then site should be loaded as a Non-Input variable.' +
     '"' +
     '>Non-Input Variable <i class="fas fa-info-circle fa-sm"></i></label>';
 
@@ -1003,7 +1003,7 @@ function addStratVariable(project, key=undefined) {
     'binary.<br>' +
     '<b>Categorical</b> data type refers to ordinally encoding a variable. There is both a default option ' +
     'where the variable is just encoded based on what categories are already present, and an option to perform ' +
-    'kbins encoding on an originally cont. variable.'
+    'kbins encoding on an originally cont. variable.' + 
     '">' +
     'Data Type <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>';
