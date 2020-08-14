@@ -32,4 +32,6 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
 
 ## **Adding Data**
 ---------------
-An essential step to using to using the application is the ability to have the application access your data. This section will cover how you can go about adding data in the correct format such that BPt can read it into an internal database. 
+An essential step to using to using the application is the ability to have the application access your data. This section will cover how you can go about adding data in the correct format such that BPt can read it into an internal database. (In the future we hope to support a broader range of loading compatibility, especially with non-tabular data!). For now though, we support the following format for adding in tabular data sources. 
+
+1. Locate the data directory within the BPt_app folder. 

@@ -351,7 +351,7 @@ function registerValueOnChoice(key, project) {
         val.empty();
         val.append('<option item=""></option>');
         var choice_name = $(this).find('option:selected').val();
-        if ((choice_name !== undefined) && (choice_name.length > 0)) {
+        if (ifExists(choice_name) && (choice_name.length > 0)) {
             var c = choices[choice_name];
             for (var i = 0; i < c.length; i++) {
                 val.append('<option item="' +
