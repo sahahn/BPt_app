@@ -1119,13 +1119,57 @@ function addParameterSearch(project, space) {
         project['data'][key] = {}
     }
 
-    var obj_descr = 'Selection of which hyper-parameter search type to use';
+    var obj_descr = 'Selection of which hyper-parameter search type to use. By default this is None. ' +
+    'By keeping this as None, no hyper-parameter search will be used with this ML Pipeline. That said, ' +
+    'if there are any hyper-parameter distributions defined, then their NEEDs to be a non-None value set here. ' +
+    'Note the setting any pieces to Select is type of a hyper-parameter and therefore requires a search type ' +
+    'to be set here.<br><br>' +
+    'Hyper-parameters are optimized through facebooks nevergrad library (see: ' +
+    'https://github.com/facebookresearch/nevergrad ). ' +
+    'There are a lot of options here, but a good first choice may be using RandomSearch. ' +
+    'This object explores the hyper-parameter distribution space just through random sampling.';
     var obj_label = getPopLabel(key, 'Search Type ', obj_descr, '-search-type');
 
-    var n_iter_descr = 'Placeholder';
+    var n_iter_descr = 'This parameter controls the number of combinations of different hyper-parameters ' +
+    'which are explored (evaluated via the rest of the settings within this section) at training time. ' +
+    'For example, if set to 60, then 60 different combinations of hyper-parameters will be tested, and the ' +
+    'combination which maximizes the selected metric according to Splits param and Validation Strategy param will ' +
+    'be used. Further, this best selected set of parameter will be used to re-train the ML Pipeline on the whole set of training data ' +
+    '(as defined by whatever the training data is at the time).<br><br>' +
+    'The number of hyper-parameters to try / budget of the underlying search algorithm. ' +
+    'How well a hyper-parameter search works and how long it takes will be very dependent on this parameter ' +
+    'and the defined internal CV strategy (via Splits and Repeats). ' +
+    'In general, if too few choices are provided the algorithm will likely not select high performing hyper-paramers, ' +
+    'and alternatively if too high a value/budget is set, then you may find overfit/non-generalize hyper-parameter choices. ' +
+    'Other factors which will influence the right number are things like the search type ' +
+    '(depending on the underlying search type, it may take a bigger or smaller budget on average to find a good set of hyper-parameters), ' +
+    'the dimensionality of the underlying search space (e.g., If you are only optimizing a few, say 2, underlying parameter distributions, ' +
+    'this will require a far smaller budget then say a really high dimensional search space), The CV strategy (' +
+    'The CV strategy defined via splits and repeats may make it easier or harder to overfit when searching for hyper-parameters, ' +
+    'thus conceptually a good choice of CV strategy can serve to increase ' +
+    'the budget you can use before overfitting, or conversely a bad choice may limit it.) and the number of data points / subjects.';
     var n_iter_label = getPopLabel(key, 'Search Budget ', n_iter_descr, '-n-iter');
 
-    var splits_descr = 'Placeholder';
+    var splits_descr = 'Splits in this context defines how each set of sampled hyper-parameters ' +
+    'will be evaluated internally. Splits is in other words the type of nested cross validation (CV) strategy to use. ' +
+    'There are a few different selectable CV strategies selectable from the tab below:<br>' +
+    '<b>K-Fold</b><br>' +
+    'K-Fold defines that a k-fold cross validation be defined, see: https://en.wikipedia.org/wiki/Cross-validation_(statistics). ' +
+    'Importantly, these k-folds are made with respect to the passed Validation Strategy, as well as with the corresponding Repeats ' +
+    'parameter (which controls the number of times this k-fold CV is repeated with a different random seed).<br>' +
+    '<b>Single Split</b><br>' + 
+    'Simillar to K-fold (in that the splits are made according to the passed Validation Strategy + Repeats), ' +
+    'this parameter allows you to specify that a single train validation split be made. For example, if .2, is passed ' +
+    'here, then 20% of the data will be set as validation and 80% as train. Likewise, if multiple repeats are set, this ' +
+    'split will be repeated with new random seeds.<br>' +
+    '<b>Leave-Out Group</b><br>' + 
+    'This parameter allows to explcitily specify that a leave-out-group cross validation strategy be used. ' +
+    'e.g., if sex is selected as the variable here, then the internal validation performed will first train on one ' +
+    'sex and then validate on the other, and then vice versa. This parameter essentially allows you to conduct this ' +
+    'leave-out-one group type CV across either the unique values from a single variable or a combinarion of variables. ' +
+    'In the case that a combination of variables is passed, then the combination of unique overlapped values across all ' +
+    'passed variables will be used. For example if sex and race are passed, then each group within the leave out CV will be ' +
+    'male and race 0, female and race 0, male and race 1, etc...';
     var splits_label = getPopLabel(key, 'Splits ', splits_descr, '-splits');
 
     var metric_content = 'Select a hyper-parameter metric to use!'

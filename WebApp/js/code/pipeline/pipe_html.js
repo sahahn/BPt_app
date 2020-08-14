@@ -97,7 +97,9 @@ function getModelHTML(key, prepend='') {
 
 function getBaseEnsembleModelHTML(key) {
 
-    var model_descr = 'Selection of which Base ML Model piece to use';
+    var model_descr = 'Selection of which Base ML Model piece to use. Within BPt, base ML model pieces ' +
+    'are those which are used by another pieces. For example, the base ML model(s) to an ensemble can represent the ' +
+    'base predictive models which are employed by that top level object.';
     var model_label = getPopLabel(key, "Base Model ", model_descr, '-obj-input');
     var html = getBaseObjHTML(key, model_label);
 

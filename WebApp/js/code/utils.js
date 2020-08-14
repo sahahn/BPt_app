@@ -456,6 +456,9 @@ function registerCardDragBehavior(key) {
 
     jQuery('#'+key+'-collapse').on('hidden.bs.collapse', function() {
         jQuery('#'+key+'-space').prop('draggable', true);
+
+        // Also remove any popovers
+        $(".popover").remove();
     });
 }
 
