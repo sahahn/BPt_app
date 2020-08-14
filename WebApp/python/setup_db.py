@@ -43,13 +43,16 @@ def check_data(data, params):
     data = data.rename(params['mapping'], axis=1)
     
     if 'subject_id' not in data:
-        if 'participant_id' in data:
-            data = data.rename({'participant_id': 'subject_id'}, axis=1)
-        elif 'src_subject_id' in data:
-            data = data.rename({'src_subject_id': 'subject_id'}, axis=1)
-        else:
-            print('warning no valid subject data found')
-            return None
+
+        subj_ids = ['participant_id', 'src_subject_id', 'subject', 'id']
+        for s_id in subj_ids:
+            if s_id in data:
+                data = data.rename({s_id: 'subject_id'}, axis=1)
+
+    # If still not in data
+    if 'subject_id' not in data:
+        print('warning no valid subject data found')
+        return None
         
     if 'eventname' not in data:
         if 'session_id' in data:
