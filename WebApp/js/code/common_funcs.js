@@ -57,7 +57,7 @@ function registerCloseButton(space, key, n, cnt_field, cnt_id, project) {
         var data = project['loading_spaces'][space];
         data['data_fields'].splice(data['data_fields'].indexOf(n), 1);
         
-        if (cnt_id !== undefined) {
+        if (ifExists(cnt_field)) {
             data[cnt_field] = data[cnt_field] - 1
             jQuery('#'+cnt_id).text(data[cnt_field]);
         }
@@ -292,8 +292,7 @@ function refreshStratChoices(project) {
     getSubSpaceKeys('strat-space', project).forEach(strat_key => {
         var var_name = jQuery('#'+strat_key+'-input').val();
 
-        if ((var_name !== undefined) && (var_name.length > 0)) {
-
+        if (var_name) {
             // Get repr name not base name
             var eventname = jQuery('#'+strat_key+'-eventname').val();
             var repr_name = getReprName(var_name, eventname);

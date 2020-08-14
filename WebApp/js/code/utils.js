@@ -1,3 +1,11 @@
+function ifExists(val) {
+    
+    if ((val == null) || (val == undefined)) {
+        return false
+    }
+    return true;
+}
+
 function isBool(val) {
     var bool_val = ((val === "true") || (val === true));
     return bool_val;
