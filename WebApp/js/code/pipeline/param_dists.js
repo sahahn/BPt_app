@@ -117,7 +117,7 @@ function getEditParamsHTML(key) {
               '</div>' +
               '</div>' +
               
-              '<div class="col-sm-1">' +
+              '<div class="col-sm-1" style="padding-right: 0px;">' +
               '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
               '<span aria-hidden="true">&times;</span>' +
               '</button>' +
