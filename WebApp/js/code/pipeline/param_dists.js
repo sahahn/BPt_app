@@ -71,6 +71,7 @@ function getEditParamsHTML(key) {
               '<div class="col-sm-4" style="padding-left:0px;">' +
               '<h5 class="modal-title" id="'+key+'-modal-label">' +
               '<b><a id="'+key+'-params-name"></a>' + '</b></h5>' +
+              '<br>test' +
               '</div>' +
 
               '<div class="col-sm-7" style="padding-left:10px;">' +

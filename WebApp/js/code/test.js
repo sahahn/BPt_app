@@ -5,7 +5,7 @@
 function getTestTypeRowHTML() {
 
     var test_txt = 'A global training test split based off the intersection of currently loaded subjects is highly reccomended ' +
-    'within BPt. The provided options on this page allow customization of how this split is performed.'
+    'within BPt. The provided options on this page allow customization of how this split is performed.' + 
     'The type of test split refers to the choice between two general options for specifying a train test split. ' +
     'These are: <br><br>' +
     '<b>New Split</b><br>' +
@@ -95,7 +95,13 @@ function getTestSizeHTML(key) {
 
 function getTestParamsRowHTML(key) {
 
-    var vs_label = "Select a validation strategy to use for this split";
+    var vs_label = 'Select a validation strategy to use for this split. ' +
+    ' Validation strategies are as defined within the validation project tab with the expection of ' +
+    'the fixed Random Splits option, which is avaliable by default. If chosen, Random Splits will as the name ' +
+    'suggests, perform the testing split randomly. Note: this parameter is used along with Test Set Size in order to ' +
+    'define the testing set, therefore you should make sure to read the help info on testing set size about a few of the ' +
+    'odd interactions you can get between strategy and test set size.';
+    
     var val_strat_label = getPopLabel(key, "Validation Strategy ", vs_label);
 
     var html = '' +
