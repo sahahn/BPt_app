@@ -77,6 +77,9 @@ function getEditParamsHTML(key) {
     'distributions may contain parameters set to themselves a distribution of parameters. In this case, if a parameter is set to a range of values to search over, then a ' + 
     'Parameter Search must be defined for this pipeline!';
 
+    var type_descr = 'The parameter type button for each parameter is toggle-able. ';
+    var type_label = getPopLabel(undefined, 'Type ', type_descr);
+
     var html = '' +
     
     '<div class="modal fade" id="'+key+'-edit-popup" role="dialog"' +
@@ -120,7 +123,7 @@ function getEditParamsHTML(key) {
               '</button>' +
               '<br><br>' + 
               '<div class="text-center" style="margin-top: 15px;">' +
-              'test' +
+              type_label +
               '</div>' + 
               
               '</div>' +
