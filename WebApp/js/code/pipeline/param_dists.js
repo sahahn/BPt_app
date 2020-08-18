@@ -77,7 +77,23 @@ function getEditParamsHTML(key) {
     'distributions may contain parameters set to themselves a distribution of parameters. In this case, if a parameter is set to a range of values to search over, then a ' + 
     'Parameter Search must be defined for this pipeline!';
 
-    var type_descr = 'The parameter type button for each parameter is toggle-able. ';
+    var type_descr = 'The parameter type button for each parameter is change-able. To change the type of a parameter ' +
+    'click the type button until the desired type appears (which each press the type will change). The following types can be chosen:<br>' +
+    '<br><b>-</b><br>' +
+    'The - type is a special type which indicates that native python syntax should be used in order to determine the ' +
+    'the type internally. E.g., by passing a value wrapped in \" or \', for example, \"value\", then the str type will be inferred.' +
+    'Further, passing a single number, e.g., 6, the int type will be inferred. By passing a number with a decimal, e.g., 6.5, the float ' +
+    'type will be inferred. By passing values wrapped in a tuple, e.g., (5,5), then a tuple with two ints inside will be inferred. Check the ' +
+    'syntax of base python for more information / examples.' +
+    '<br><b>str</b><br>' +
+
+    '<br><b>bool</b><br>' +
+
+    '<br><b>float</b><br>' +
+
+    '<br><b>int</b><br>' +
+
+    '<br><b>tuple</b><br>';
     var type_label = getPopLabel(undefined, 'Type ', type_descr);
 
     var html = '' +
