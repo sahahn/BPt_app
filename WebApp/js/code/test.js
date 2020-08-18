@@ -11,8 +11,8 @@ function getTestTypeRowHTML() {
     '<b>New Split</b><br>' +
     'New split provides options for generating a new training test-split. The options for new ' +
     'splits involve specifying the size of the test split, and a validation strategy in which the split should ' +
-    'be based off.' +
-    '<br><b><From File/Val</b><br>' + 
+    'be based off.<br>' +
+    '<b><From File \/ Val</b><br>' + 
     'In contrast to New Split, from file/val allows one to specify a test split via ' +
     'an either already defined and saved set of test subjects (as provided via a local file), or by ' +
     'specifying that subjects as defined by a certain Non-Input variable be used to define the testing set.';

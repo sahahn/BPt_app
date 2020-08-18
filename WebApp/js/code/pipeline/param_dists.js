@@ -65,11 +65,12 @@ function getEditParamsHTML(key) {
     '<i class=\'fa fa-industry\'></i></button>' +
     '<br><br>Note: in order to change the value of a hyper-parameter, you must first be on a user defined param dist. A user generated copy can be made ' +
     'from any of the existing default or public distributions via either the copy dist button, or by simply typing in a custom name into the  ' +
-    'Parameter Distribution search select, and select that new custom value instead of an existing one. Also note: the specific parameter descriptions ' + 
+    'Parameter Distribution search select, and select that new custom value instead of an existing one. <br><br>Also note: the specific parameter descriptions ' + 
     'for each parameter (via the help icon) is automatically scraped from that objects base python documentation. Therefore, in some cases the descriptions may ' +
     'include non-relevant descriptions or other oddities.';
-
     var p_label = getPopLabel(undefined, '<b>Parameters</b> ', p_descr);
+
+    var p_dist_txt = ''
 
     var html = '' +
     
