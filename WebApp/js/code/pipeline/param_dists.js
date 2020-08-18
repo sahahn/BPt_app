@@ -58,6 +58,9 @@ function uploadPublicDists() {
 
 function getEditParamsHTML(key) {
 
+    var p_descr = 'Test';
+    var p_label = getPopLabel(undefined, 'Parameters ', p_descr);
+
     var html = '' +
     
     '<div class="modal fade" id="'+key+'-edit-popup" role="dialog"' +
@@ -71,7 +74,7 @@ function getEditParamsHTML(key) {
               '<div class="col-sm-4" style="padding-left:0px;">' +
               '<h5 class="modal-title" id="'+key+'-modal-label">' +
               '<b><a id="'+key+'-params-name"></a>' + '</b></h5>' +
-              '<br>test' +
+              '<br>' + p_label +
               '</div>' +
 
               '<div class="col-sm-7" style="padding-left:10px;">' +
