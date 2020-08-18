@@ -115,16 +115,13 @@ function getEditParamsHTML(key) {
               '</div>' +
               
               '<div class="col-sm-1">' +
-
-              '<div class="row"><div class="col">' +
               '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
               '<span aria-hidden="true">&times;</span>' +
               '</button>' +
-              '</div></div>' +
               
-              '<div class="row"><div class="col">' +
+              '<div class="text-center" style="margin-top: 15px;">' +
               'test' +
-              '</div></div>' +
+              '</div>' + 
               
               '</div>' +
 
