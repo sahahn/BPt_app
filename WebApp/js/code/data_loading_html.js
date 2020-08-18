@@ -177,6 +177,30 @@ function inputDataTypeHTML(key, label, target, data_types) {
     return html;
 }
 
+function getDataTypeBaseLabelHTML() {
+
+    var txt = '' +
+    '<br><b>Binary</b><br>' +
+    'If binary, then the variable(s) of interest will be loaded with just two values, 0 and 1. ' +
+    'Further, there are two different behaviors avaliable. One, the default option, is to simply keep just the ' +
+    'two most frequent classes (dropping anything else). The other, is to convert from an originally continuous variable to binary.' +
+
+    '<br><b>Continuous</b><br>' +
+    'If continuous, then the variable(s) to be loaded will likely be taken as is. This data type represents ' +
+    'a floating point, real / continuous variable. If selected, the variable(s) to be loaded must not have any ' +
+    'string values (with the exception of strings representing NaNs), e.g., if the variable to be loaded contains the ' +
+    'values: cat and dog, or Male and Female, then they will not load correctly here. continuous variables likewise have a few special further ' +
+    'options for performing outlier detection.' + 
+
+    '<br><b>Categorical</b><br>' +
+    'If categorical, then the variable(s) to be loaded will be encoded ordinally with values 0 to n-1, where n is the ' +
+    'number of unique class values for this variable. The categorical data type allows loading with either the default ' +
+    'values already present, i.e., setting existing values to 0 to n-1, in addition to also allowing a Continuous to Categorical ' +
+    'K-Binning option for converting originally continuous variables to categorical.';
+
+    return txt;
+}
+
 function inputSetFormHTML(key) {
 
     html = '' +
