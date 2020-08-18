@@ -5,8 +5,8 @@ function inputDropNaHTML(key) {
     '<label for="'+key+'-drop-buttons">' +
     '<span data-toggle="popover"' +
     'title="Drop NaN" data-placement="top"' +
-    'data-content="Data Variables with missing values can either be dropped, or imputed later on.' +
-    'If set to True, they will be dropped, if False, then they will be kept"' +
+    'data-content="Data Variables with missing values can either be dropped, or imputed later on. ' +
+    'If set to True, any subjects with missing values in this/these variable(s) will be dropped, if False, then the specific values will instead be kept as a missing value."' +
     '>Drop Missing <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
     '<div class="btn-group-toggle btn-group"' +
@@ -365,9 +365,9 @@ function ifBinaryHTML(key) {
 
         '<label><span data-toggle="popover"' +
         'title="Binary Encoding Choices" data-placement="left"' +
-        'data-content="<b>Default:</b><br>The top two unique values by occurance will be '+
+        'data-content="<b>Default</b><br>The top two unique values by occurance will be '+
         'used to define the two valid binary classes, any additional classes will be dropped.' +
-        '<br><b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
+        '<br><b>Continuous to Binary</b><br>A binary variable will be created from an originally ' +
         'continuous variable via thresholding via different thresholding options.<br>' +
         'In the case of selecting a single threshold, any value less than the threshold will be set to 0 ' +
         'and any value greater than or equal to the threshold will be set to 1.<br>' +

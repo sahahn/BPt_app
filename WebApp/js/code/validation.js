@@ -54,13 +54,13 @@ function addValidationHTML(key) {
     'A validation strategy can be passed when defining a single split, such as a ' +
     'train test split, or in the context of repeated or K-fold splits used internally during ' +
     'a hyper-parameter search.' +
-    'There are three distinct options, these are:<br>' +
+    'There are three distinct options, these are:<br><br>' +
     '<b>Random</b><br>' +
-    'Random splits dictates that splits are made psuedo-randomly (according to the projects random seed)<br>' +
+    'Random splits dictates that splits are made psuedo-randomly (according to the projects random seed)' +
     '<br><b>Stratify</b><br>' +
     'Stratifying splits dictates that splits preserve the relative class frequency of the selected Straify By variable(s). ' +
     'For example, if Sex was selected, and then used for a train test split, then the training set would have the same ratio of Males vs. Females ' +
-    'as in the testing set.<br>' +
+    'as in the testing set.' +
     '<br><b>Group Preserving</b><br>' +
     'Group preserving behavior dictates that subjects with the same value according to the passed Preserve Groups By variable(s) ' +
     'should be preserved within the same fold. For example, if preserving group by site, then all subjects from a given site will always ' +

@@ -4,11 +4,23 @@
 
 function getTestTypeRowHTML() {
 
+    var test_txt = 'A global training test split based off the intersection of currently loaded subjects is highly reccomended ' +
+    'within BPt. The provided options on this page allow customization of how this split is performed.'
+    'The type of test split refers to the choice between two general options for specifying a train test split. ' +
+    'These are: <br><br>' +
+    '<b>New Split</b><br>' +
+    'New split provides options for generating a new training test-split. The options for new ' +
+    'splits involve specifying the size of the test split, and a validation strategy in which the split should ' +
+    'be based off.' +
+    '<br><b><From File/Val</b><br>' + 
+    'In contrast to New Split, from file/val allows one to specify a test split via ' +
+    'an either already defined and saved set of test subjects (as provided via a local file), or by ' +
+    'specifying that subjects as defined by a certain Non-Input variable be used to define the testing set.';
+
     var test_label = '<label for="test-buttons"' +
                      '><span data-toggle="popover"' +
                      'title="Type of Test Split" data-placement="top"' +
-                     'data-content="New allows you to define a new testing set,' +
-                     ' and From File/Val allows you to define a test set from a file or variable value.">' +
+                     'data-content="' + test_txt + '">' +
                      'Type of Test Split <i class="fas fa-info-circle fa-sm"></i>' +
                      '</span></label>';
 
@@ -38,7 +50,23 @@ function getTestTypeRowHTML() {
 
 function getTestSizeHTML(key) {
 
-    var vt_label = "This determines the size of the testing set";
+    var vt_label = 'This determines the size of the testing set, and together with the passed Validation Strategy ' + 
+    'will be used to generate the test split. There are two options in the dropdown menu for selecting a Test Size. These are: ' +
+    '<br><br><b>Percentage (%)</b><br>' +
+    'Percentage allows specifying that the size of the test set be determined from a fixed percentage of the total subjects. For example ' +
+    'if 20 is passed, then 20% of the currently loaded subjects will be used. Note there are a few nuances to be aware of: First, if there ' +
+    'are any train only subjects defined in the selected validation strategy, then the percent selected here will be applied to the number of ' +
+    'non train only subjects NOT the total number of loaded subjects (Note: you can always iteratively call show test split to make sure you ' +
+    'are defining a test set with a suitable size). Second, if the selected validation strategy is group preserving, then the percentage will be applied ' +
+    'to the total number of groups. For example, if there are 5 unique groups to preserve, and a 20% test split is requested, then a single group be selected ' +
+    'as the test set, regardless of the number of subjects in that group, i.e., even if there are 10000 subjects loaded, if that group only has 20 subjects, it ' +
+    'will still be used as the test set - so just be careful if the distribution of groups to preserve is far from uniform.' +
+    '<br><b>Fixed Number (#)</b><br>' +
+    'Fixed Number will set the size of the testing set explicitly to the number of subjects requested. Note that as with specifying ' +
+    'the split by percentage, there are some caveats to be aware of when the selected Validation Strategy is group preserving. Specifically in this case, ' +
+    'the fixed test set size will be applied to the unique groups NOT the actual subjects. For example if only 5 unique groups, and 2 is passed here, then ' +
+    'two of the unique groups will be used to define the test set. Whereas, if there is not a group preserving behavior specified, the fixed number will be ' +
+    'represent the actual requested test set size.';
     var val_test_label = getPopLabel(key, "Testing Set Size ", vt_label);
 
     var html = '' +
