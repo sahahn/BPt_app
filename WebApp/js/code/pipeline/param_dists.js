@@ -58,8 +58,18 @@ function uploadPublicDists() {
 
 function getEditParamsHTML(key) {
 
-    var p_descr = 'Test';
-    var p_label = getPopLabel(undefined, 'Parameters ', p_descr);
+    var p_descr = 'Parameters represent changable values for this object. Each parameter can either have a fixed ' + 
+    'single value, or can alternatively be set with a distribution of values (to be searched over within the context of a hyper-parameter search). ' +
+    'To toggle a parameter as a hyper-parameter you can press the button to the right of the parameter name ' +
+    '<button class="btn btn-outline-dark btn-block dist-button" style="padding: 6px;">' +
+    '<i class="fa fa-industry"></i></button>' + ' which will trigger a new menu. ' +
+    'Note: in order to change the value of a hyper-parameter, you must first be on a user defined param dist. A user generated copy can be made ' +
+    'from any of the existing default or public distributions via either the copy dist button, or by simply typing in a custom name into the  ' +
+    'Parameter Distribution search select, and select that new custom value instead of an existing one. Also note: the specific parameter descriptions ' + 
+    'for each parameter (via the help icon) is automatically scraped from that objects base python documentation. Therefore, in some cases the descriptions may ' +
+    'include non-relevant descriptions or other oddities.';
+
+    var p_label = getPopLabel(undefined, '<b>Parameters</b> ', p_descr);
 
     var html = '' +
     
