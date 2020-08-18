@@ -23,7 +23,7 @@ function addIfSelRowHTML(key) {
     '<label for="'+key+'-stratify-by">' +
     '<span data-toggle="popover"' +
     'title="Stratify By" data-placement="top"' +
-    'data-content="' + strat_text + '>' +
+    'data-content="' + strat_text + '">' +
     'Stratify By <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>' + 
     '<select id="'+key+'-stratify-by" class="form-control" data-width="100%" multiple="multiple"></select>' +
@@ -33,7 +33,7 @@ function addIfSelRowHTML(key) {
     '<label for="'+key+'-group-by">' +
     '<span data-toggle="popover"' +
     'title="Preserve Groups By" data-placement="top"' +
-    'data-content="' + group_text + '>' +
+    'data-content="' + group_text + '">' +
     'Preserve Groups By <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>' + 
     '<select id="'+key+'-group-by" class="form-control" data-width="100%" multiple="multiple"></select>' +
