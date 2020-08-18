@@ -79,17 +79,10 @@ function getEditParamsHTML(key) {
 
     var type_descr = 'The parameter type button for each parameter is change-able. To change the type of a parameter ' +
     'click the type button until the desired type appears (which each press the type will change). The following types can be chosen:<br>' +
-    '<br><b>-</b><br>' +
-    'The - type is a special type which indicates that native python syntax should be used in order to determine the ' +
-    'the type internally. E.g., by passing a value wrapped in single or double quotations, then the str type will be inferred.' +
-    'Further, passing a single number, e.g., 6, the int type will be inferred. By passing a number with a decimal, e.g., 6.5, the float ' +
-    'type will be inferred. By passing values wrapped in a tuple, e.g., (5,5), then a tuple with two ints inside will be inferred. ' +
-    'Note also that passing None with this type will pass the python value of None, which is a special type often used in parameters.'
-    '+Check the syntax of base python for more information / examples. Note also that in special cases small code blocks can be passed here.' +
     
     '<br><b>str</b><br>' +
     'The str, or string python data type refers to non-numeric input values. These are often used ' +
-    'to specify the choice of a specific parameter'
+    'to specify the choice of a specific parameter' +
 
     '<br><b>bool</b><br>' +
     'The bool type specifies that this value should be explicitly True or False. In python, 0 can also refer to False, and 1 to True. ' +
@@ -106,8 +99,16 @@ function getEditParamsHTML(key) {
 
     '<br><b>tuple</b><br>' +
     'The tuple represents a special python object sometimes used in parameters. Tuples are ordered ' +
-    'non mutable list-like objects in python, e.g., (5,5) is a tuple with first element 5 and second element also 5.';
-    
+    'non mutable list-like objects in python, e.g., (5,5) is a tuple with first element 5 and second element also 5.' +
+
+    '<br><b>-</b><br>' +
+    'The - type is a special type which indicates that native python syntax should be used in order to determine the ' +
+    'the type internally. E.g., by passing a value wrapped in single or double quotations, then the str type will be inferred.' +
+    'Further, passing a single number, e.g., 6, the int type will be inferred. By passing a number with a decimal, e.g., 6.5, the float ' +
+    'type will be inferred. By passing values wrapped in a tuple, e.g., (5,5), then a tuple with two ints inside will be inferred. ' +
+    'Note also that passing None with this type will pass the python value of None, which is a special type often used in parameters.' +
+    '+Check the syntax of base python for more information / examples. Note also that in special cases small code blocks can be passed here.';
+
     var type_label = getPopLabel(undefined, 'Type ', type_descr);
 
     var html = '' +
