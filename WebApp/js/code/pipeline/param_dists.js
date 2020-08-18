@@ -61,7 +61,7 @@ function getEditParamsHTML(key) {
     var p_descr = 'Parameters represent changable values for this object. Each parameter can either have a fixed ' + 
     'single value, or can alternatively be set with a distribution of values (to be searched over within the context of a hyper-parameter search). ' +
     'To toggle a parameter as a hyper-parameter you can press the button to the right of the parameter name ' +
-    '<button class=\'btn btn-outline-dark btn-block dist-button\' style=\'padding: 6px;\'>' +
+    '<button class=\'btn btn-sm btn-outline-dark\' style=\'padding: 6px;\'>' +
     '<i class=\'fa fa-industry\'></i></button> which will trigger a new menu. ' +
     'Note: in order to change the value of a hyper-parameter, you must first be on a user defined param dist. A user generated copy can be made ' +
     'from any of the existing default or public distributions via either the copy dist button, or by simply typing in a custom name into the  ' +
