@@ -68,9 +68,14 @@ function getEditParamsHTML(key) {
     'Parameter Distribution search select, and select that new custom value instead of an existing one. <br><br>Also note: the specific parameter descriptions ' + 
     'for each parameter (via the help icon) is automatically scraped from that objects base python documentation. Therefore, in some cases the descriptions may ' +
     'include non-relevant descriptions or other oddities.';
-    var p_label = getPopLabel(undefined, '<b>Parameters</b> ', p_descr);
+    var p_label = getPopLabel(undefined, 'Parameters ', p_descr);
 
-    var p_dist_txt = ''
+    var p_dist_txt = 'Parameter Distributions represent collections of parameter values. They are split into default / unchangable pre-set distributions, ' +
+    'user defined custom distributions and shared public distributions from other users (if this feature is enabled). The drop down menu below allows you to ' +
+    'either select from an existing distribution or create a new distribution by typing in a custom name, and then selecting it. As a short hand, the Copy Dist button ' + 
+    'is avaliable. Note that some parameter distributions, especially the first preset default ones, ussually contain only fixed values. On the other hand, some preset / default ' +
+    'distributions may contain parameters set to themselves a distribution of parameters. In this case, if a parameter is set to a range of values to search over, then a ' + 
+    'Parameter Search must be defined for this pipeline!';
 
     var html = '' +
     
@@ -94,7 +99,7 @@ function getEditParamsHTML(key) {
               '<label for="'+key+'-param-dist">' +
               '<span data-toggle="popover"' +
               'title="Parameter Distributions" data-placement="left"' +
-              'data-content="Placeholder">' +
+              'data-content="' + p_dist_txt + '">' +
               'Parameter Distributions <i class="fas fa-info-circle fa-sm"></i></span>' +
               '</label>' +
 
@@ -105,6 +110,7 @@ function getEditParamsHTML(key) {
               'Copy Dist</button>' +
 
               '<select id="'+key+'-param-dist" class="form-control" data-width="100%"></select>' +
+              'test' + 
               
               '</div>' +
               '</div>' +
