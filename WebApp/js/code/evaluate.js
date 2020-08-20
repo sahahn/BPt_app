@@ -50,7 +50,10 @@ function getPipelineHTML(key) {
 
 function getMetricsHTML(key) {
 
-    var metrics_content = 'Select one or more metrics to evaluate!'
+    var metrics_content = 'Select one or more metrics to comptue for this evaluation. Avaliable ' +
+    'metrics are determined by the problem type (e.g., regression). Please refer to the ' +
+    'scikit-learn documentation (https://scikit-learn.org/stable/modules/model_evaluation.html) for more information on ' +
+    'what each metric specifically computes.'
     var metrics_label = getPopLabel(key, 'Metrics ', metrics_content);
 
     var html = '' +
@@ -155,7 +158,8 @@ function getBaseSubmitHTML(key) {
 
 function addJobNameHTML(key) {
 
-    var job_name_content = 'The name this job should be submitted under.';
+    var job_name_content = 'The name this job should be submitted under. Note, this is the name this ' + 
+    'job will appear under within the Results table. This job name must also be unique.';
     var job_name_label = getPopLabel(key, 'Job Name ', job_name_content);
     
     var html = '' +
@@ -198,12 +202,16 @@ function addSubmitButtonHTML(key) {
 
 function getSubmitEvalHTML(key) {
 
+    var splits_content = 'Splits in this context defines the outer CV behavior for this Evaluation. ' +
+    'Evaluate represents testing a Model Pipeline in a specific context on the training set, or a sub-sample of ' +
+    'the training set. This option allows you to define the specific splits of the CV behavior in which the Pipeline ' +
+    'should be evaluated. ' +  
+    'There are a few different selectable CV strategies selectable from the tab below:<br>' +
+    getEachSplitInfoText();
 
-    var splits_content = 'Placeholder';
     var splits_label = getPopLabel(key, 'Splits ', splits_content);
 
-    var val_strat_content = 'Placeholder';
-    var val_strat_label = getPopLabel(key, 'Validation Strategy ', val_strat_content);
+    var val_strat_label = getPopLabel(key, 'Validation Strategy ', getValidationStratText());
     
     var html = '' +
     addJobNameHTML(key) + 

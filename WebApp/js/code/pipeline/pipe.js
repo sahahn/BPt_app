@@ -1153,30 +1153,18 @@ function addParameterSearch(project, space) {
     var splits_descr = 'Splits in this context defines how each set of sampled hyper-parameters ' +
     'will be evaluated internally. Splits is in other words the type of nested cross validation (CV) strategy to use. ' +
     'There are a few different selectable CV strategies selectable from the tab below:<br>' +
-    '<b>K-Fold</b><br>' +
-    'K-Fold defines that a k-fold cross validation be defined, see: https://en.wikipedia.org/wiki/Cross-validation_(statistics). ' +
-    'Importantly, these k-folds are made with respect to the passed Validation Strategy, as well as with the corresponding Repeats ' +
-    'parameter (which controls the number of times this k-fold CV is repeated with a different random seed).<br>' +
-    '<b>Single Split</b><br>' + 
-    'Simillar to K-fold (in that the splits are made according to the passed Validation Strategy + Repeats), ' +
-    'this parameter allows you to specify that a single train validation split be made. For example, if .2, is passed ' +
-    'here, then 20% of the data will be set as validation and 80% as train. Likewise, if multiple repeats are set, this ' +
-    'split will be repeated with new random seeds.<br>' +
-    '<b>Leave-Out Group</b><br>' + 
-    'This parameter allows to explcitily specify that a leave-out-group cross validation strategy be used. ' +
-    'e.g., if sex is selected as the variable here, then the internal validation performed will first train on one ' +
-    'sex and then validate on the other, and then vice versa. This parameter essentially allows you to conduct this ' +
-    'leave-out-one group type CV across either the unique values from a single variable or a combinarion of variables. ' +
-    'In the case that a combination of variables is passed, then the combination of unique overlapped values across all ' +
-    'passed variables will be used. For example if sex and race are passed, then each group within the leave out CV will be ' +
-    'male and race 0, female and race 0, male and race 1, etc...';
+    getEachSplitInfoText();
     var splits_label = getPopLabel(key, 'Splits ', splits_descr, '-splits');
 
-    var metric_content = 'Select a hyper-parameter metric to use!'
+    var metric_content = 'Select a single metric here to use within the hyper-parameter search when comparing the ' +
+    'Pipelines trained with different parameters. I.e., at each iteration of the parameter search the Pipeline is evaluated ' +
+    'with a different combination of parameters. This metric is used to provide a score to that evaluation. ' +
+    'The choice of avaliable metrics is dependent on the type of the Model Pipeline. This type can be toggeled next to the pipeline ' +
+    'name by clicking on it (this will toggle through the different options). Be warned though, when changing Pipeline type, as pipeline ' +
+    'piece or parameter (like this one), might changed if it or its equivilent is not avaliable for the new Pipeline type.';
     var metric_label = getPopLabel(key, 'Metric ', metric_content);
 
-    var vs_label = "Select a validation strategy to use for these splits";
-    var val_strat_label = getPopLabel(key, "Validation Strategy ", vs_label);
+    var val_strat_label = getPopLabel(key, "Validation Strategy ", getValidationStratText());
 
     var html = '' + 
     '<div class="form-row">' +
