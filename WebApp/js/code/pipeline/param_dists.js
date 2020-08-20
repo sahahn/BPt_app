@@ -699,11 +699,51 @@ function getDistTypeHTML(key, n) {
 
     var dist_options_k = key+'-dist-'+n+'-choice';
 
+    var hyp_txt = 'This option allows to specify this parameter as instead of one specific value, a ' +
+    'distribution over different possible values (the choice of value to be optimized by the Parameter Search). ' +
+    'There are a few different options for different types of hyper-parameter distributions, they are explained below: <br>' +
+    '<br><b>Normal</b><br>' +
+    'This represents a scalar variable with gaussian mutations, or in other words, ' +
+    'a set of values spanning a Noraml distribution. One may set the initial value as well as ' +
+    'an upper or lower bound. Note: that Type will be avaliable for this choice of distribution. If ' +
+    'float, then floating point real values will be used, but if int, then values will be casted to integers ' +
+    'before being passed as parameters.' +
+
+    '<br><b>Log</b><br>' +
+    'Log distributions are simmilar to Normal distributions, expect that the mutations occur in Log scale. ' +
+    'That means this type of distribution is especially suitable for searching values of hyper-parameters which ' +
+    'are distributed in log-space. The type for this distribution is fixed as float. You may set in addition to ' +
+    'the initial value, upper and lower bounds, an exponent for the log mutation.' +
+
+    '<br><b>Choice</b><br>' +
+    'This represents an unordered categorical parameter, randomly choosing one of the provided choice options as a value. ' +
+    'The choices can be further be nested distributions themselves (i.e., nested Log or Choice options). ' 
+    'The chosen parameter is drawn randomly from the softmax of weights which are updated during the optimization. ' +
+    'Since the chosen value is drawn randomly, the use of this variable makes deterministic functions become stochastic, hence adding noise. ' +
+    'Note: types for values in choice are restricted to ' +
+    'the - option, so they must be written in python style syntax.';
+
+    '<br><b>Transition</b><br>' +
+    'Transition represent a transition choice, which is simillar to the choice distribution, but difers ' +
+    'importantly in that it represents an ordered (vs. unordered) categorical variable. ' +
+    'As with Choice, this parameter can accept nested hyper-parameter distributions as valid choices. ' +
+    'On the backend, it tunes the weights between choices as the probability of a continuous transition. ' +
+    'Note: types for values in transition choice are restricted to ' +
+    'the - option, so they must be written in python style syntax.';
+
+    '<br><b>Code</b><br>' +
+    'This last option represents a special advanced usage. Specifically, it allows the user ' +
+    'to pass in a nevergrad valid distribution in python code. Code should be passed with the assumption ' +
+    'that numpy is imported as np, and nevergrad is imported as ng. For example, you could pass ' +
+    'ng.p.Choice(np.arange(0, 10)) to request the choice between integers 0 to 10. ' +
+    'Please look up nevergrad for more specific advice on how to get started writing your own custom ' +
+    'distributions in code.';
+
     var html = '' +
     '<label style="padding-left:0px; padding-right:20px;">' +
     '<span data-toggle="popover"' +
     'title="Hyper-Parameter Distribution Type" data-placement="left"' +
-    'data-content="Placeholder">' +
+    'data-content="'+hyp_txt+'">' +
     'Dist. Type <i class="fas fa-info-circle fa-sm"></i></span>' +
     '</label>' +
 
@@ -757,9 +797,19 @@ function getDistFieldHTML(key, title, content, select=false, textarea=false) {
 function getBaseScalerDistHTML(if_key) {
 
     var html = '' +
-    getDistFieldHTML(if_key+'-init', 'Init.', 'Placeholder') +
-    getDistFieldHTML(if_key+'-lower', 'Lower', 'Placeholder') +
-    getDistFieldHTML(if_key+'-upper', 'Upper', 'Placeholder');
+    getDistFieldHTML(if_key+'-init', 'Init.', 'Init represents the initial value that this ' +
+    'either Normal or Log distribution should start at. By default, if left empty, this will default to 0 (assuming also no value is passed to Upper ' +
+    'or Lower). In the case that a value is passed to Upper and Lower, then this value if left empty will default to halfway between the passed bounds. ' +
+    'If this is a log distribution, this value is still an absolute number, but you can pass python shorthands such as 1e5 for 10,000 or 1e-2 for .001.') +
+    
+    getDistFieldHTML(if_key+'-lower', 'Lower', 'The minimum value, if any, that this parameter can take. It is okay to leave this value empty ' +
+    'if there is no minimum. This value should be smaller than any value passed to Upper. ' +
+    'If this is a log distribution, this value is still an absolute number, but you can pass python shorthands such as 1e5 for 10,000 or 1e-2 for .001. ' +
+    'Likewise, if a log distribution this value should be greater than 0!') +
+    
+    getDistFieldHTML(if_key+'-upper', 'Upper', 'The maximum value, if any, that this parameter can take. It is okay to leave this value empty ' +
+    'if there is no maximum. This value should be greater than any value passed to Lower. ' +
+    'If this is a log distribution, this value is still an absolute number, but you can pass python shorthands such as 1e5 for 10,000 or 1e-2 for .001.');
 
     return html;
 }
@@ -794,23 +844,41 @@ function getLogParamDistHTML(if_key, subtitle=undefined, type_key=undefined) {
     
     var html = '' +
     getBaseScalerDistHTML(if_key) + 
-    getDistFieldHTML(if_key+'-exponent', 'Exp.', 'Placeholder');
+    getDistFieldHTML(if_key+'-exponent', 'Exp.', 'This is the exponent for the log mutation. ' +
+    'An exponent of 2.0 will lead to mutations by factors between around 0.5 and 2.0. ' +
+    'By default, it is set to either 2.0, or if the parameter is completely bounded ' +
+    'to a factor so that bounds are at 3 sigma in the transformed space.');
     return wrapBaseParamDistHTML(if_key, html, subtitle, type_key);
 }
 
 function getChoiceParamDistHTML(if_key, subtitle=undefined, type_key=undefined) {
 
+    var txt = 'This input field is used to select the values in which should be choices with the Choice or Transition Choice ' +
+    'distribution. You may either select from any automatically generated values, add new values (by typing in what you want, and then clicking ' +
+    'the choice as it appears, i.e., the select2 tagging feature), or select a nested hyper-parameter distribution as one of the choices. ' +
+    'If selecting a nested hyper-parameter dist, the relevant params for that dist will pop up below. Note: types for values in choice are restricted to ' +
+    'the - option, so they must be written in python style syntax.';
+
     return wrapBaseParamDistHTML(
         if_key, 
-        getDistFieldHTML(if_key+'-choices', 'Choices', 'Placeholder', select=true),
+        getDistFieldHTML(if_key+'-choices', 'Choices', txt, select=true),
         subtitle, type_key);
 }
 
 function getCodeParamDistHTML(if_key, subtitle=undefined, type_key=undefined) {
 
+    var txt = 'This is an advanced usage option. A nevergrad valid distribution can ' +
+    'be specified here assuming that nevergrad is imported as ng and numpy is imported as np. ' +
+    'Please view nevergrads documentation on how values should be formatted. This option is not ' +
+    'reccomended for new users, but just provided if advanced users wish to specify a distribution ' +
+    'not allowable via the other distribution choices. For example: <br>' +
+    'ng.p.Array(init=(100, 100, 100)).set_mutation(sigma=50).set_bounds(lower=1, upper=300).set_integer_casting()<br>' +
+    'Which specifies that an array of three values, each which takes on an initial value of 100, e.g., (100, 100, 100), be ' +
+    'created, with bounds 1 to 300 for each one, a mutation of sigma 50, and forced integer casting.';
+
     return wrapBaseParamDistHTML(
         if_key, 
-        getDistFieldHTML(if_key+'-code', 'Code', 'Placeholder', select=false, textarea=true),
+        getDistFieldHTML(if_key+'-code', 'Code', txt, select=false, textarea=true),
         subtitle, type_key);
 }
 
