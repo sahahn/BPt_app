@@ -721,7 +721,7 @@ function getDistTypeHTML(key, n) {
     'The chosen parameter is drawn randomly from the softmax of weights which are updated during the optimization. ' +
     'Since the chosen value is drawn randomly, the use of this variable makes deterministic functions become stochastic, hence adding noise. ' +
     'Note: types for values in choice are restricted to ' +
-    'the - option, so they must be written in python style syntax.';
+    'the - option, so they must be written in python style syntax.' +
 
     '<br><b>Transition</b><br>' +
     'Transition represent a transition choice, which is simillar to the choice distribution, but difers ' +
@@ -729,7 +729,7 @@ function getDistTypeHTML(key, n) {
     'As with Choice, this parameter can accept nested hyper-parameter distributions as valid choices. ' +
     'On the backend, it tunes the weights between choices as the probability of a continuous transition. ' +
     'Note: types for values in transition choice are restricted to ' +
-    'the - option, so they must be written in python style syntax.';
+    'the - option, so they must be written in python style syntax.' +
 
     '<br><b>Code</b><br>' +
     'This last option represents a special advanced usage. Specifically, it allows the user ' +
