@@ -72,7 +72,7 @@ def add_col(data, col, con):
     print('add ', col)
     
     try:
-        data[col].to_sql(col, con, if_exists='fail')
+        data[col].to_sql(col, con, if_exists='fail', method='multi')
     
     except ValueError:
 
@@ -90,7 +90,7 @@ def add_col(data, col, con):
                 merged = merged.rename({col+'_x': col}, axis=1)
                 merged = merged.drop(col+'_y', axis=1)
             
-        merged.to_sql(col, con, if_exists='replace', index=False)
+        merged.to_sql(col, con, if_exists='replace', index=False, method='multi')
 
         
 def upload_dataset(data, file, con):
