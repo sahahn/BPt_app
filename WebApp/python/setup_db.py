@@ -94,13 +94,15 @@ def add_col(data, col, con):
 
         
 def upload_dataset(data, file, con):
+
+    data.to_sql(file, con, if_exists='replace', method='multi')
     
-    for col in list(data):
-        add_col(data, col, con)
+    #for col in list(data):
+    #    add_col(data, col, con)
         
-    loaded = set(pd.read_sql_query("SELECT * from __loaded__", con)['loaded'])
-    loaded.add(file)
-    pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
+    # loaded = set(pd.read_sql_query("SELECT * from __loaded__", con)['loaded'])
+    # loaded.add(file)
+    # pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
     
 
 def upload_custom_data(custom_dr, con, all_events):
@@ -185,10 +187,10 @@ def main():
 
         # When done with uploads, save a json with the
         # current loaded tables
-        loaded_loc = '/var/www/html/data/bpt/loaded.json'
-        loaded = get_all_tables(con)
-        with open(loaded_loc, 'w') as f:
-            json.dump(loaded, f)
+        # loaded_loc = '/var/www/html/data/bpt/loaded.json'
+        # loaded = get_all_tables(con)
+        # with open(loaded_loc, 'w') as f:
+        #    json.dump(loaded, f)
 
         # Save all events
         with open(all_events_loc, 'w') as f:
