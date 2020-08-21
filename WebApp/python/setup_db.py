@@ -103,9 +103,9 @@ def upload_dataset(data, file, con):
     for col in list(data):
         add_col(data, col, con)
         
-     loaded = set(pd.read_sql_query("SELECT * from __loaded__", con)['loaded'])
-     loaded.add(file)
-     pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
+    loaded = set(pd.read_sql_query("SELECT * from __loaded__", con)['loaded'])
+    loaded.add(file)
+    pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
     
 
 def upload_custom_data(custom_dr, con, all_events):
