@@ -14,19 +14,19 @@ def get_all_tables(con):
 
 def load_dataset(source, load_params, con):
     
-    try:
-        pd.DataFrame({'loaded': []}).to_sql('__loaded__',
-                                            con,
-                                            if_exists='fail',
-                                            index=False)
-        loaded = set()
-    except ValueError:
-        loaded =\
-            set(pd.read_sql_query("SELECT * from __loaded__",
-                                  con)['loaded'])
+    # try:
+    #    pd.DataFrame({'loaded': []}).to_sql('__loaded__',
+    #                                        con,
+    #                                        if_exists='fail',
+    #                                        index=False)
+    #    loaded = set()
+    #except ValueError:
+    #    loaded =\
+    #        set(pd.read_sql_query("SELECT * from __loaded__",
+    #                              con)['loaded'])
         
-    if source in loaded:
-        return None
+    #if source in loaded:
+    #    return None
     
     data = pd.read_csv(source, low_memory=False, **load_params)
     
