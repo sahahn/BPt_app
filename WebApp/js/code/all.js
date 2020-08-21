@@ -189,6 +189,7 @@ function projectOn(key, project) {
 
     // Unsure if I want to keep this... but can init the full project upon selection
     // Or do the option below instead
+    jQuery('#settings').click();
     project_steps.forEach(step => {
         jQuery('#'+key+step).click();
     });
