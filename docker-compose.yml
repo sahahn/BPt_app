@@ -1,0 +1,20 @@
+version: "3"
+services:
+  
+  app:
+    container_name: bpt
+    build: .
+    ports:
+      - "8008:80"
+    volumes : 
+      - ./data:/var/www/html/data
+  
+  postgres:
+    image: postgres
+    env_file:
+      - database.env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+    db-data:

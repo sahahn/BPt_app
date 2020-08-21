@@ -14,15 +14,14 @@ from caching import (save_cache_subjects, get_subj_param_hash,
                      check_loading_cache, save_to_loading_cache,
                      incr_input_cache, move_img_to_cache, check_loaded_cache,
                      save_to_loaded_cache)
-import sqlite3
-
-db_dr = '/var/www/html/data/bpt/db'
-con = sqlite3.connect(db_dr)
+from sqlalchemy import create_engine
 settings = {}
 
 # Replace this w/ load from DB
 
 def load_from_df(variables):
+
+    con = create_engine('postgres+psycopg2://user:bpt_is_great@postgres:5432/data')
 
     if not isinstance(variables, list):
         variables = [variables]

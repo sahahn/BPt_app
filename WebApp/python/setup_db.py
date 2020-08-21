@@ -1,5 +1,4 @@
-import sqlite3
-from sqlite3 import DatabaseError
+from sqlalchemy import create_engine
 import numpy as np
 import pandas as pd
 import time
@@ -9,7 +8,7 @@ import os
 def get_all_tables(con):
     
     c = con.cursor()
-    c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    c.execute("SELECT * FROM information_schema.tables WHERE table_schema='public';")
     tables = c.fetchall()
     c.close()
 
@@ -173,8 +172,7 @@ def main():
     try:
 
         # Make connection
-        db_dr = '/var/www/html/data/bpt/db'
-        con = sqlite3.connect(db_dr)
+        con = create_engine('postgres+psycopg2://user:bpt_is_great@postgres:5432/data')
 
         # Load or init all events
         all_events_loc = '/var/www/html/data/bpt/all_events.json'
