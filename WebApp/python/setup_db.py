@@ -5,15 +5,12 @@ import time
 import json
 import os
 
+
 def get_all_tables(con):
-    
-    c = con.cursor()
-    c.execute("SELECT * FROM information_schema.tables WHERE table_schema='public';")
-    tables = c.fetchall()
-    c.close()
 
-    return [t[0] for t in tables if t[0] != '__loaded__']
-
+    tables_df = pd.read_sql("SELECT * FROM information_schema.tables WHERE table_schema='public';", con)
+    tables = list(tables_df['table_name'])
+    return [t for t in tables if t != '__loaded__']
 
 def load_dataset(source, load_params, con):
     
@@ -79,7 +76,7 @@ def add_col(data, col, con):
     
     except ValueError:
 
-        existing = pd.read_sql_query("SELECT * from [" + col + "]", con)
+        existing = pd.read_sql_query("SELECT * from " + col + "", con)
         current = data[col].reset_index()
         
         if current.shape == existing.shape:

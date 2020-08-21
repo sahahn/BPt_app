@@ -26,6 +26,7 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && git clone https://github.com/sahahn/BPt.git /var/www/html/BPt \
     && git clone https://github.com/sahahn/BPt_app.git /var/www/html/BPt_app \
     && pip install /var/www/html/BPt/ \
+    && pip install sqlalchemy \
     && pip install psycopg2-binary \
     && sed -i '/post_max_size = 8M/cpost_max_size = 5000M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/memory_limit = 128M/cmemory_limit = 1024M' /etc/php/7.2/apache2/php.ini \
