@@ -1242,7 +1242,12 @@ function getDefaultType(project) {
 
     // Grab the type of the first target
     // This one is unremovable !
-    return getTargetType('target-space-0', project);
+    var def_type = getTargetType('target-space-0', project);
+
+    if ((def_type == undefined) || (def_type == null)) {
+        return 'float';
+    }
+    return def_type
 }
 
 function checkDefaultPipeType(key, project) {
