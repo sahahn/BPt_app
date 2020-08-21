@@ -28,7 +28,7 @@ def load_from_df(variables):
 
     dfs = []
     for variable in variables:
-        df = pd.read_sql_query("SELECT * from [" + variable + ']', con)
+        df = pd.read_sql_query("SELECT * from " + variable + '', con)
         df = df.set_index(['subject_id', 'eventname'])
         dfs.append(df)
 
