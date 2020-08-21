@@ -95,7 +95,8 @@ def add_col(data, col, con):
         
 def upload_dataset(data, file, con):
 
-    data.to_sql(file, con, if_exists='replace', method='multi')
+    output = data.to_sql(file, con, if_exists='replace', method='multi')
+    print(output)
     
     #for col in list(data):
     #    add_col(data, col, con)
