@@ -14,19 +14,19 @@ def get_all_tables(con):
 
 def load_dataset(source, load_params, con):
     
-    # try:
-    #    pd.DataFrame({'loaded': []}).to_sql('__loaded__',
-    #                                        con,
-    #                                        if_exists='fail',
-    #                                        index=False)
-    #    loaded = set()
-    #except ValueError:
-    #    loaded =\
-    #        set(pd.read_sql_query("SELECT * from __loaded__",
-    #                              con)['loaded'])
+    try:
+        pd.DataFrame({'loaded': []}).to_sql('__loaded__',
+                                            con,
+                                            if_exists='fail',
+                                            index=False)
+        loaded = set()
+    except ValueError:
+        loaded =\
+            set(pd.read_sql_query("SELECT * from __loaded__",
+                                  con)['loaded'])
         
-    #if source in loaded:
-    #    return None
+    if source in loaded:
+        return None
     
     data = pd.read_csv(source, low_memory=False, **load_params)
     
@@ -95,17 +95,17 @@ def add_col(data, col, con):
         
 def upload_dataset(data, file, con):
 
-    start = time.time()
-    output = data.to_sql(file, con, if_exists='replace', method='multi')
-    print(time.time() - start)
-    print(output)
+    # start = time.time()
+    # output = data.to_sql(file, con, if_exists='replace', method='multi')
+    # print(time.time)
+    # print(output)
     
-    #for col in list(data):
-    #    add_col(data, col, con)
+    for col in list(data):
+        add_col(data, col, con)
         
-    # loaded = set(pd.read_sql_query("SELECT * from __loaded__", con)['loaded'])
-    # loaded.add(file)
-    # pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
+     loaded = set(pd.read_sql_query("SELECT * from __loaded__", con)['loaded'])
+     loaded.add(file)
+     pd.DataFrame({'loaded': list(loaded)}).to_sql('__loaded__', con, if_exists='replace', index=False)
     
 
 def upload_custom_data(custom_dr, con, all_events):
@@ -190,10 +190,10 @@ def main():
 
         # When done with uploads, save a json with the
         # current loaded tables
-        # loaded_loc = '/var/www/html/data/bpt/loaded.json'
-        # loaded = get_all_tables(con)
-        # with open(loaded_loc, 'w') as f:
-        #    json.dump(loaded, f)
+        loaded_loc = '/var/www/html/data/bpt/loaded.json'
+        loaded = get_all_tables(con)
+        with open(loaded_loc, 'w') as f:
+            json.dump(loaded, f)
 
         # Save all events
         with open(all_events_loc, 'w') as f:
