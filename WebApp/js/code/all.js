@@ -189,7 +189,6 @@ function projectOn(key, project) {
 
     // Unsure if I want to keep this... but can init the full project upon selection
     // Or do the option below instead
-    jQuery('#settings').click();
     project_steps.forEach(step => {
         jQuery('#'+key+step).click();
     });
@@ -441,9 +440,6 @@ function startApp() {
             });
         };
 
-        // Set w/ default no- project entry screen
-        noProjectDefault();
-
         // On click add var, call func
         jQuery('#add-new-project').on('click', function () {
             addNewProject();
@@ -467,11 +463,14 @@ function startApp() {
         // Register save projects button
         jQuery('#save-projects').on('click', save_all);
 
-
         // Save the updated projects on leaving the window
         $(window).bind('beforeunload', function () {
             save_all();
         });
+
+         // Set w/ default no- project entry screen
+         jQuery('#settings').click();
+         noProjectDefault();
     });
 }
 
