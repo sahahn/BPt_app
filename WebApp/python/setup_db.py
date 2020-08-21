@@ -95,7 +95,9 @@ def add_col(data, col, con):
         
 def upload_dataset(data, file, con):
 
+    start = time.time()
     output = data.to_sql(file, con, if_exists='replace', method='multi')
+    print(time.time() - start)
     print(output)
     
     #for col in list(data):
