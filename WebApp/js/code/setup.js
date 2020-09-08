@@ -65,7 +65,7 @@ function displaySetup(project) {
     
     '<div class="form-row m-5">' +
     '<div class="form-group col-md-6">' +
-    <select id="event_default" class="form-control" data-width="100%"></select>
+    '<select id="event_default" class="form-control" data-width="100%"></select>' +
     '</div>' +
     '</div>' +
 
