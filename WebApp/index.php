@@ -105,12 +105,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
-          Select a dataset for this project
+          New Project
           </h5>
           <br>
         </div>
 
          <div class="modal-body text-center">
+          <label for="data=source">Select a source dataset to use with this this project</label>
           <select id="data-source" class="form-control" data-width="100%"></select>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button id="create-project" type="button" class="btn btn-success">Create Project <i class="fas plus"></i></button>
