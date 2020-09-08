@@ -52,7 +52,7 @@ function getMetricsHTML(key) {
 
     var metrics_content = 'Select one or more metrics to comptue for this evaluation. Avaliable ' +
     'metrics are determined by the problem type (e.g., regression). Please refer to the ' +
-    '<a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn documentation</a>'
+    '<a href=\"https://scikit-learn.org/stable/modules/model_evaluation.html\">scikit-learn documentation</a>'
     'for more information on ' +
     'what each metric specifically computes.'
     var metrics_label = getPopLabel(key, 'Metrics ', metrics_content);

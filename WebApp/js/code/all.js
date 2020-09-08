@@ -316,6 +316,8 @@ function deleteProject(project) {
 
 function addNewProject() {
 
+    jQuery('#select-data-source').modal('show');
+
     removeActiveProjects();
 
     var data_fields = [];
@@ -514,7 +516,7 @@ jQuery(document).ready(function() {
             jQuery("#body-db-loading").css('display', 'block');
 
              // Start loop to check if db ready
-            db_interval = setInterval(function() {
+            var db_interval = setInterval(function() {
                 checkDBReady(db_interval);
             }, 5000);
         }

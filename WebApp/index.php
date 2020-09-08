@@ -99,6 +99,25 @@
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
 
+  <!-- Modal for darta source -->
+  <div class="modal fade" id="select-data-source" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
+          bleh
+        </h5>
+        </div>
+
+         <div class="modal-body text-center">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="create-project" type="button" class="btn btn-success">Create Project <i class="fas fa-trash-alt"></i></button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 15px;">
     <div class="row px-5">
