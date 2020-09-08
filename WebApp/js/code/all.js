@@ -316,8 +316,6 @@ function deleteProject(project) {
 
 function addNewProject() {
 
-    jQuery('#select-data-source').modal('show');
-
     removeActiveProjects();
 
     var data_fields = [];
@@ -441,7 +439,12 @@ function startApp() {
         };
 
         // On click add var, call func
-        jQuery('#add-new-project').on('click', function () {
+        jQuery('#add-new-project').on('click', function() {
+            jQuery('#select-data-source').modal('show');
+        });
+
+        // On submit modal, create project
+        jQuery('#create-project').on('click', function() {
             addNewProject();
         });
 
