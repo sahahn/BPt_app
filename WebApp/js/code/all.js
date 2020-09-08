@@ -233,23 +233,11 @@ function removeActiveProjects() {
 
 function loadProject(project) {
 
-    // Load dataset variables, events
-    jQuery.getJSON('php/load_dataset.php',
-        {'dataset': project['dataset']},
-        function (data) {
+    // Init various project pieces if undefined
+    checkProject(project);
 
-        // Unpack to global vars
-        variables = JSON.parse(data['variables']);
-        events = JSON.parse(data['events']);
-        variable_choices = arrayToChoices(variables);
-
-        // Init various project pieces if undefined
-        checkProject(project);
-
-        // Project registers
-        registerLoadProject(project);
-
-    });
+    // Project registers
+    registerLoadProject(project);
 }
 
 function checkProject(project) {
@@ -285,8 +273,6 @@ function checkProject(project) {
 }
 
 function registerLoadProject(project) {
-
-    console.log('reg load')
     
     var key = project['key'];
 
@@ -318,8 +304,20 @@ function registerLoadProject(project) {
         if ($(this).hasClass('active')) {
             projectOff(key);
         }
+       
         else {
-            projectOn(key, project);
+            jQuery.getJSON('php/load_dataset.php',
+                {'dataset': project['dataset']},
+                function (data) {
+
+                // Unpack to global vars
+                variables = JSON.parse(data['variables']);
+                events = JSON.parse(data['events']);
+                variable_choices = arrayToChoices(variables);
+                
+                // Trigger project on
+                projectOn(key, project);
+            });
         }
     });
 }
