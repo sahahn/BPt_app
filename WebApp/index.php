@@ -107,6 +107,7 @@
           <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
           Select a dataset for this project
           </h5>
+          <br>
           <select id="data-source" class="form-control" data-width="100%"></select>
         </div>
 
