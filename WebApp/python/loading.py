@@ -378,8 +378,9 @@ def _proc_na(params):
 
 
 def _proc_eventname(params):
-    
+
     return params['-eventname'], '.'+settings['event_mapping'][params['-eventname']]
+
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
 

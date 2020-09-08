@@ -27,7 +27,7 @@ function inputDropNaHTML(key) {
 function getEventNameOptionsHTML() {
 
     var html = '';
-    Object.keys(settings['event_mapping']).forEach(event => {
+    events.forEach(event => {
 
         if (event == settings['event_default']) {
             html += '<option selected value="' + event + '">'+event+'</option>';   

@@ -80,4 +80,5 @@ function ifEvents() {
             $(this).val(settings['event_mapping'][event]).trigger('change');
         }
     });
+
 }
