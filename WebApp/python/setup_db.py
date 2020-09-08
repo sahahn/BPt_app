@@ -30,6 +30,17 @@ def process_datasets(base_loc):
     with open(datasets_loc, 'w') as f:
         json.dump(datasets, f)
 
+    # Get and save all events across all datasets
+    all_events = set()
+    for dataset in datasets:
+        event_file = os.path.join(data_info_loc, dataset, 'eventnames.json')
+        with open(event_file, 'r') as f:
+            all_events.update(set(json.load(f)))
+
+    all_events_loc = os.path.join(base_loc, 'bpt/all_events.json')
+    with open(all_events_loc, 'w') as f:
+        json.dump(all_events, f)
+
 
 def main():
 

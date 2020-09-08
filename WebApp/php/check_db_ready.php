@@ -1,11 +1,15 @@
 <?php
 include '/var/www/html/data/config.php';
 
-$datasets_loc = $data_dr.'datasets.json';
+$loaded_loc = $data_dr.'datasets.json';
+$all_events_loc = $data_dr.'all_events.json';
 
-// Return the loaded datasets
-if (file_exists($datasets_loc)) {
-    echo json_encode(file_get_contents($datasets_loc));
+if (file_exists($loaded_loc)) {
+
+    $return = array();
+    $return['datasets'] = file_get_contents($loaded_loc);
+    $return['all_events'] = file_get_contents($all_events_loc);
+    echo json_encode($return);
 }
 else {
     echo json_encode('not ready');

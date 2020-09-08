@@ -1,4 +1,5 @@
 var datasets;
+var all_events;
 var projects = [];
 var settings = {};
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
@@ -413,7 +414,6 @@ function noProjectDefault() {
     jQuery('#upload-user-dists').on('click', uploadPublicDists);
 }
 
-
 function startApp() {
 
     // It is important to get if the user has any existing projects
@@ -486,7 +486,8 @@ function checkDBReady(db_interval) {
 
 function isReady(data) {
 
-    datasets = JSON.parse(data);
+    datasets = JSON.parse(data['datasets']);
+    all_events = JSON.parse(data['all_events']);
     jQuery("#body-db-loading").css('display', 'none');
     startApp();
 }
