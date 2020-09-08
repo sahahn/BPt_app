@@ -1,5 +1,9 @@
 var datasets;
 var all_events;
+var variables;
+var variable_choices;
+var events;
+
 var projects = [];
 var settings = {};
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
@@ -135,6 +139,7 @@ function registerProjectOptionsClick(project, ext, text, func) {
 
     var key = project['key'];
 
+    jQuery('#'+key+ext).off('click');
     jQuery('#'+key+ext).on('click', function() {
 
         if (!$(this).hasClass('sec-active')) {
@@ -228,11 +233,31 @@ function removeActiveProjects() {
 
 function loadProject(project) {
 
-    // Init various project pieces if undefined
+    // Load dataset variables, events
+    jQuery.getJSON('php/load_dataset.php',
+        {'dataset': project['dataset']},
+        function (data) {
+
+        // Unpack to global vars
+        variables = data['variables'];
+        variable_choices = arrayToChoices(variables);
+        events = data['events']
+
+        // Init various project pieces if undefined
+        checkProject(project);
+
+        // Project registers
+        registerProject(project);
+
+    });
+}
+
+function checkProject(project) {
+    
     if (project['jobs'] == undefined) {
         project['jobs'] = {};
     }
-    
+
     if (project['files'] == undefined) {
         project['files'] = {};
     }
@@ -257,19 +282,22 @@ function loadProject(project) {
     if (project['loading_spaces'] == undefined) {
         project['loading_spaces'] = {};
     }
+}
 
+function registerProject(project) {
+    
     var key = project['key'];
 
     var html = '' +
-    '<div id="'+key+'-entry">' + 
-    '<li class="nav-item">' +
-    '<a id="'+key+'-project-button" class="nav-link" href="#">' + 
-    '<span><i class="fas fa-book navbutton"></i>&nbsp;</span>' +
-    '<span id="'+key+'-project-name">' + project['name'] +
-    '</a>' +
-    '</li>' +
-    projectOptionsHTML(key) +
-    '</div>';
+        '<div id="' + key + '-entry">' +
+        '<li class="nav-item">' +
+        '<a id="' + key + '-project-button" class="nav-link" href="#">' +
+        '<span><i class="fas fa-book navbutton"></i>&nbsp;</span>' +
+        '<span id="' + key + '-project-name">' + project['name'] +
+        '</a>' +
+        '</li>' +
+        projectOptionsHTML(key) +
+        '</div>';
 
     jQuery('#projects-list').append(html);
 
@@ -281,9 +309,9 @@ function loadProject(project) {
     registerProjectOptionsClick(project, '-ml-pipe', 'ML Pipeline', displayMLPipe);
     registerProjectOptionsClick(project, '-evaluate', 'Evaluate', displayEvaluate);
     registerProjectOptionsClick(project, '-results', 'Results', displayResults);
-    
+
     // Register on project button click actions
-    jQuery('#'+key+'-project-button').on('click', function() {
+    jQuery('#' + key + '-project-button').on('click', function () {
 
         if ($(this).hasClass('active')) {
             projectOff(key);
@@ -316,8 +344,6 @@ function deleteProject(project) {
 
 function addNewProject() {
 
-    console.log(jQuery('#data-source').val());
-
     removeActiveProjects();
 
     var data_fields = [];
@@ -329,6 +355,7 @@ function addNewProject() {
     var key = 'project-' + n.toString();
 
     var project = {
+        'dataset': jQuery('#data-source').val(),
         'key': key,
         'n': n,
         'name': 'My Project',
