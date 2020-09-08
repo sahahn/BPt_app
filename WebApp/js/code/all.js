@@ -247,7 +247,7 @@ function loadProject(project) {
         checkProject(project);
 
         // Project registers
-        registerProject(project);
+        registerLoadProject(project);
 
     });
 }
@@ -284,7 +284,7 @@ function checkProject(project) {
     }
 }
 
-function registerProject(project) {
+function registerLoadProject(project) {
     
     var key = project['key'];
 
