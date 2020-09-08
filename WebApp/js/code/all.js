@@ -239,10 +239,9 @@ function loadProject(project) {
         function (data) {
 
         // Unpack to global vars
-        variables = data['variables'];
-        console.log(variables);
+        variables = JSON.parse(data['variables']);
+        events = JSON.parse(data['events']);
         variable_choices = arrayToChoices(variables);
-        events = data['events']
 
         // Init various project pieces if undefined
         checkProject(project);
