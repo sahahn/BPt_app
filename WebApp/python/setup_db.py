@@ -39,7 +39,7 @@ def process_datasets(base_loc):
 
     all_events_loc = os.path.join(base_loc, 'bpt/all_events.json')
     with open(all_events_loc, 'w') as f:
-        json.dump(all_events, f)
+        json.dump(list(all_events), f)
 
 
 def main():
