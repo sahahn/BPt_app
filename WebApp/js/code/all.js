@@ -1,6 +1,4 @@
-var variables;
-var all_events;
-var variable_choices;
+var datasets;
 var projects = [];
 var settings = {};
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
@@ -487,11 +485,8 @@ function checkDBReady(db_interval) {
 }
 
 function isReady(data) {
-    
-    variables = JSON.parse(data['loaded']);
-    all_events = JSON.parse(data['all_events']);
-    variable_choices = arrayToChoices(variables);
 
+    datasets = JSON.parse(data);
     jQuery("#body-db-loading").css('display', 'none');
     startApp();
 }

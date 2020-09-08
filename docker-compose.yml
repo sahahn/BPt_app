@@ -8,13 +8,3 @@ services:
       - "8008:80"
     volumes : 
       - ./data:/var/www/html/data
-  
-  postgres:
-    image: postgres
-    env_file:
-      - database.env
-    volumes:
-      - db-data:/var/lib/postgresql/data
-
-volumes:
-    db-data:

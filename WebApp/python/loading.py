@@ -19,6 +19,7 @@ settings = {}
 
 # Replace this w/ load from DB
 
+
 def load_from_df(variables):
 
     con = create_engine('postgres+psycopg2://user:bpt_is_great@postgres:5432/data')
