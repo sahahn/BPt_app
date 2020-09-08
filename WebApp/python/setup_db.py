@@ -44,8 +44,7 @@ def process_datasets(base_loc):
 
 def main():
 
-    base_loc = '/home/sage/BPt_app/data'
-    # base_loc = '/var/www/html/data'
+    base_loc = '/var/www/html/data'
 
     # Locs + checks
     lock_loc = os.path.join(base_loc, 'bpt/lock')
