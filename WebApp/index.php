@@ -108,10 +108,10 @@
           Select a dataset for this project
           </h5>
           <br>
-          <select id="data-source" class="form-control" data-width="100%"></select>
         </div>
 
          <div class="modal-body text-center">
+          <select id="data-source" class="form-control" data-width="100%"></select>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button id="create-project" type="button" class="btn btn-success">Create Project <i class="fas plus"></i></button>
 
