@@ -32,5 +32,5 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
 
 EXPOSE 80
 ENTRYPOINT echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-&& chown www-data /var/www/html/data/ \
+&& chown -R www-data /var/www/html/data/ \
 && apache2ctl -D FOREGROUND
