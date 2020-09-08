@@ -285,6 +285,8 @@ function checkProject(project) {
 }
 
 function registerLoadProject(project) {
+
+    console.log('reg load')
     
     var key = project['key'];
 
