@@ -240,6 +240,7 @@ function loadProject(project) {
 
         // Unpack to global vars
         variables = data['variables'];
+        console.log(variables);
         variable_choices = arrayToChoices(variables);
         events = data['events']
 
