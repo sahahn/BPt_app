@@ -114,7 +114,7 @@
           <label for="data=source">Select a source dataset to use with this this project</label>
           <select id="data-source" class="form-control" data-width="100%"></select>
 
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-top: 5%;">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-top: 5%;">Close</button>
           <button id="create-project" type="button" class="btn btn-success">Create Project <i class="fas plus"></i></button>
 
         </div>
