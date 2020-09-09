@@ -26,7 +26,6 @@ function showUserSettings() {
         settings['event_mapping'] = {};
         settings['event_mapping'][single_event] = '';
     }
-
 }
 
 function ifEvents() {
@@ -38,12 +37,14 @@ function ifEvents() {
     }
 
     var header_html = '<div class="row form-group">' +
+        '<div class="col-sm-1"></div>' +
         '<div class="col-sm-5">' +
         '<b>Eventname</b>' +
         '</div>' +
         '<div class="col-sm-5">' +
         '<b>Append Short Name</b>' +
         '</div>' +
+        '<div class="col-sm-1"></div>' +
         '</div><hr>';
     jQuery('#settings-event-rename').append(header_html);
 
@@ -55,10 +56,12 @@ function ifEvents() {
 
         var r_html = '' +
         '<div class="row form-group">' +
+        '<div class="col-sm-1"></div>' +
         '<label for="' + r_id + '" class="col-sm-5 col-form-label">' + event + '</label>' +
         '<div class="col-sm-5">' +
         '<input data-eventname="' + event + '" type="text" class="form-control short-name" id="' + r_id + '">' +
         '</div>' +
+        '<div class="col-sm-1"></div>' +
         '</div>';
 
         jQuery('#settings-event-rename').append(r_html);
