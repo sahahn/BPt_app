@@ -9,8 +9,9 @@ var slider_keys = ["percent", "std", "cat", "percent-cat", "std-cat"];
 // Set functions //
 //////////////////
 
-function getAllSets() {
-    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
+function getAllSets(project) {
+    jQuery.getJSON('php/getSets.php', { "action": "get",
+                                        "dataset": project['dataset']}, function(data) {
 	    sets = data;
     });
 }
@@ -435,7 +436,7 @@ function setSet(data_sets, set_id) {
 }
 
 function refreshAllSets(project) {
-    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
+    jQuery.getJSON('php/getSets.php', { "action": "get", "dataset": project['dataset']}, function(data) {
         
         sets = data;
         getSubSpaceKeys('data-space', project).forEach(key => {
@@ -1474,8 +1475,4 @@ jQuery(document).ready(function() {
 
     // Load the input variable cache
     getInputCache();
-
-    // Add all known sets
-    getAllSets();
-
 });

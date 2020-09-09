@@ -1,7 +1,6 @@
 
 import json
 import sys
-import os
 
 
 def save_error(msg, output_loc, e=None):

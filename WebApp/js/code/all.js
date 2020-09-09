@@ -179,6 +179,9 @@ function projectOn(key, project) {
     // Set dataset to settings
     settings['dataset'] = project['dataset'];
 
+    // Add all known sets for this project
+    getAllSets(project);
+
     // Remove other active projects
     removeActiveProjects();
 
