@@ -24,10 +24,10 @@ function getBaseSetCardsHTML() {
 function getBaseSetsHTML() {
 
     var html = '' +
-    '<label for="set-dataset">Select a source dataset to view / edit sets for</label>' +
+    '<label for="set-dataset">Select a source dataset to view / edit sets for:\u00A0</label>' +
     '<select id="set-dataset" class="form-control" data-width="60%"></select>' +
 
-    '<div id="card-sets" style="margin-top=5%;">' +
+    '<div id="card-sets" style="margin-top: 5%;">' +
     '</div>';
 
     return html;
