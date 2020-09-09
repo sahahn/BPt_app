@@ -41,7 +41,7 @@ def load_subjects(loc, as_set=True):
 
 def proc_title_length(title, br='-<br>'):
 
-    LIM = 60
+    LIM = 55
 
     new_title = ''
     for i in range(LIM, len(title)+(LIM-1), LIM):
