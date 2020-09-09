@@ -284,8 +284,6 @@ function onShowTest(key, project) {
         var data = $(this).data();
         var n_key = data['key'] + '-view';
 
-        console.log($(this).data());
-
         if (jQuery('#'+n_key+'-space').html() == undefined) {
 
             var card_body = '' +
@@ -296,7 +294,6 @@ function onShowTest(key, project) {
                 '</div>';
 
             var card_name = '<b>' + data['source'] + '</b>: <i>' + data['name'] + '</i>';
-            console.log(card_name);
             var card_html = cardWrapHTML(card_name, n_key, card_body, false);
             jQuery('#' + key + '-extra-dist-space').prepend(card_html);
             
@@ -307,7 +304,7 @@ function onShowTest(key, project) {
             var params = {};
             params['loading_params'] = getAllLoadedDataParams(project);
             params['test_params'] = getTestParams(key, project);
-            params['show_params'] = data;
+            params['show_params'] = JSON.parse(JSON.stringify(data));
             params['script'] = 'show_test_split.py';
 
             // Change show params if set
