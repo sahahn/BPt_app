@@ -8,7 +8,7 @@ from BPt import BPt_ML, CV
 import numpy as np
 import scipy.stats as stats
 
-from utils import save_error
+from utils import save_error, proc_title_length
 from caching import (save_cache_subjects, get_subj_param_hash,
                      cache_just_subjects, load_cache_subjects,
                      check_loading_cache, save_to_loading_cache,
@@ -1458,7 +1458,7 @@ def get_variable_table_html(d_dfs):
 
     # Create header
     for col in list(df):
-        t_output += '<th scope="col">' + str(col) + '</th>'
+        t_output += '<th scope="col">' + str(proc_title_length(col)) + '</th>'
     t_output += '</tr></thead><tbody>'
 
     # Create body
