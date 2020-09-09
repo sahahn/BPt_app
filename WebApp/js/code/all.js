@@ -176,6 +176,9 @@ function projectOff(key) {
 
 function projectOn(key, project) {
 
+    // Set dataset to settings
+    settings['dataset'] = project['dataset'];
+
     // Remove other active projects
     removeActiveProjects();
 
