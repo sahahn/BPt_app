@@ -25,9 +25,9 @@ function getBaseSetsHTML() {
 
     var html = '' +
     '<label for="set-dataset">Select a source dataset to view / edit sets for</label>' +
-    '<select id="set-dataset" class="form-control" data-width="100%"></select>' +
+    '<select id="set-dataset" class="form-control" data-width="60%"></select>' +
 
-    '<div id="card-sets">' +
+    '<div id="card-sets" style="marginb>' +
     '</div>';
 
     return html;
