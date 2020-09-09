@@ -284,6 +284,8 @@ function onShowTest(key, project) {
         var data = $(this).data();
         var n_key = data['key'] + '-view';
 
+        console.log($(this).data());
+
         if (jQuery('#'+n_key+'-space').html() == undefined) {
 
             var card_body = '' +
@@ -294,6 +296,7 @@ function onShowTest(key, project) {
                 '</div>';
 
             var card_name = '<b>' + data['source'] + '</b>: <i>' + data['name'] + '</i>';
+            console.log(card_name);
             var card_html = cardWrapHTML(card_name, n_key, card_body, false);
             jQuery('#' + key + '-extra-dist-space').prepend(card_html);
             
