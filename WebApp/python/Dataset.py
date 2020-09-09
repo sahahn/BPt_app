@@ -359,7 +359,7 @@ class Dataset():
         # Union / update with existing eventnames
         self.eventnames.update(u_events)
 
-     def _save(self):
+    def _save(self):
 
         # Cast back to str
         self.eventnames = list(self.eventnames)
