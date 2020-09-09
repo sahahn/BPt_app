@@ -31,6 +31,8 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && sed -i '/; max_input_vars = 5000/cmax_input_vars = 100000' /etc/php/7.2/apache2/php.ini
 
 EXPOSE 80
+
+# Change chown to maybe just change rwx permissions ??? or for atleast sources folder
 ENTRYPOINT echo "ServerName localhost" >> /etc/apache2/apache2.conf \
 && chown -R www-data /var/www/html/data/ \
 && apache2ctl -D FOREGROUND
