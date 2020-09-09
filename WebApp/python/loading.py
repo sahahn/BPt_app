@@ -47,9 +47,10 @@ def load_vars(variables):
     dfs = []
     for file_loc in by_file_locs:
 
+        inds = ['subject_id', 'eventname']
         df = pd.read_csv(file_loc,
-                         index_col=['subject_id', 'eventname'],
-                         usecols=by_file_locs[file_loc])
+                         usecols=inds + by_file_locs[file_loc],
+                         index_col=inds)
         dfs.append(df)
 
     # If more than one df, calling concat should merge them propely
