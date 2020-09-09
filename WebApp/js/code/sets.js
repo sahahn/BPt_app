@@ -27,7 +27,7 @@ function getBaseSetsHTML() {
     '<label for="set-dataset">Select a source dataset to view / edit sets for</label>' +
     '<select id="set-dataset" class="form-control" data-width="60%"></select>' +
 
-    '<div id="card-sets" style="marginb>' +
+    '<div id="card-sets" style="margin-top=5%;">' +
     '</div>';
 
     return html;
