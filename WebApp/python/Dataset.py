@@ -171,6 +171,10 @@ class Dataset():
 
         file_locs = self._get_file_locs()
 
+        # If no files, return True to signal delete
+        if len(file_locs) == 0:
+            return True
+
         # Check if last time proc'ed exists, load if it does
         if os.path.exists(self.lp_loc):
             with open(self.lp_loc, 'r') as f:
@@ -247,26 +251,6 @@ class Dataset():
 
             # Finish by saving
             self._save()
-
-    def _save(self):
-
-        # Cast back to str
-        self.eventnames = list(self.eventnames)
-        self.loaded_files = list(self.loaded_files)
-
-        # Also save a list-like with variables loaded
-        self.loaded = list(self.vars_to_loc)
-
-        for to_save in ['vars_to_loc', 'eventnames', 'loaded_files', 'loaded']:
-            loc = os.path.join(self.info_loc, to_save + '.json')
-
-            # Save new json
-            with open(loc, 'w') as f:
-                json.dump(getattr(self, to_save), f)
-
-        # Write time of last changes
-        with open(self.lp_loc, 'w') as f:
-            f.write(str(time.time()))
 
     def _process_files(self):
 
@@ -374,3 +358,23 @@ class Dataset():
 
         # Union / update with existing eventnames
         self.eventnames.update(u_events)
+
+     def _save(self):
+
+        # Cast back to str
+        self.eventnames = list(self.eventnames)
+        self.loaded_files = list(self.loaded_files)
+
+        # Also save a list-like with variables loaded
+        self.loaded = list(self.vars_to_loc)
+
+        for to_save in ['vars_to_loc', 'eventnames', 'loaded_files', 'loaded']:
+            loc = os.path.join(self.info_loc, to_save + '.json')
+
+            # Save new json
+            with open(loc, 'w') as f:
+                json.dump(getattr(self, to_save), f)
+
+        # Write time of last changes
+        with open(self.lp_loc, 'w') as f:
+            f.write(str(time.time()))

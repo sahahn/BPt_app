@@ -25,21 +25,30 @@ def process_datasets(base_loc):
     for dataset in datasets:
         process_dataset(base_loc, dataset)
 
-    # Save datasets.json w/ current datasets
-    datasets_loc = os.path.join(base_loc, 'bpt/datasets.json')
-    with open(datasets_loc, 'w') as f:
-        json.dump(datasets, f)
-
-    # Get and save all events across all datasets
+    # Check each dataset for its events
+    # Also check to make sure dataset isnt empty
+    non_empty_datasets = []
     all_events = set()
+
     for dataset in datasets:
         event_file = os.path.join(data_info_loc, dataset, 'eventnames.json')
         with open(event_file, 'r') as f:
-            all_events.update(set(json.load(f)))
+            events = set(json.load(f))
+            all_events.update(events)
 
+            # Only add dataset if atleast 1 event (only 0 events when empty)
+            if len(events) > 0:
+                non_empty_datasets.append(dataset)
+
+    # Save overlapped events
     all_events_loc = os.path.join(base_loc, 'bpt/all_events.json')
     with open(all_events_loc, 'w') as f:
         json.dump(list(all_events), f)
+
+    # Save datasets.json w/ non-empty datasets
+    datasets_loc = os.path.join(base_loc, 'bpt/datasets.json')
+    with open(datasets_loc, 'w') as f:
+        json.dump(sorted(non_empty_datasets), f)
 
 
 def main():

@@ -399,7 +399,7 @@ function updateVariableCardName(key) {
 
     if ((col_name !== undefined) && (col_name !== null)) {
         if (col_name.length > 0) {
-            var eventname = jQuery('#'+key+'-eventname').val()
+            var eventname = jQuery('#'+key+'-eventname').val();
             var repr_name = getReprName(col_name, eventname);
             jQuery('#'+key+'-header-text').append(':  <i>' + repr_name + '</i>');
         }
