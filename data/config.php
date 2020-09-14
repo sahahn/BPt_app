@@ -1,7 +1,7 @@
 <?php
 
 // Change this
-$user_name = "fake_user";
+$user_name = "user";
 
 // Don't change these
 $data_dr = "/var/www/html/data/bpt/";

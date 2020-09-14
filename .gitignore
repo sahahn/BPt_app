@@ -5,4 +5,5 @@ data/bpt*
 data/tab_data/
 db/*
 data/sources/*
+!data/sources/.keep
 *.pyc
