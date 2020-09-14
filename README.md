@@ -63,3 +63,7 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
     This will take care of building the docker image and application. There are a number of different tweaks here that you can make as desired, some of these are listed below:
     - You may pass the flag "-d", so "docker-compose up -d", which will run the docker container in the background, otherwise the docker instance will be tied to your current terminal (and therefore shutdown if you close that terminal). See https://docs.docker.com/compose/reference/up/ for other simmilar options.
     - Before running docker-compose up, you can optionally modify the docker-compose.yml file. One perhaps useful modification is to change the value of restart: no, to restart: always what this will do is restart BPt_app whenever it goes down, e.g., when you restart your computer. Otherwise, you must start the container manually everytime you wish to use BPt_app after a restart.
+    - You can use the command 'docker-compose start' from the BPt_app directory to restart the container
+    - Likewise, you can use the command 'docker-compose stop' to stop the web app
+
+6. After the container is running, navigate to http://localhost:8008/BPt_app/WebApp/index.php this is the web address of the app, and should bring you to the home page!
