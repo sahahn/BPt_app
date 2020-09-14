@@ -758,7 +758,8 @@ def load_set(ML, params, output_loc, drops=True):
     # For now load data as covars, since want to handle types
     try:
         start = time.time()
-        log_dr = ML.log_dr
+
+        log_file = ML.log_file
         ML.log_dr = None
 
         ML.Load_Covars(df=data_df,
@@ -772,8 +773,8 @@ def load_set(ML, params, output_loc, drops=True):
                        categorical_drop_percent=cdp,
                        float_bins=fb_s,
                        float_bin_strategy=fbs_s)
-                       
-        ML.log_dr = log_dr
+
+        ML.log_file = log_file
         ML._print('Loaded set into BPt in', time.time() - start)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
