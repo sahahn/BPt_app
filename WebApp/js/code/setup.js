@@ -62,6 +62,13 @@ function displaySetup(project) {
         '</div>' +
 
     '</div>' +
+    
+    '<div class="form-row m-5">' +
+    '<div class="form-group col-md-6">' +
+    '<select id="event_default" class="form-control" data-width="100%"></select>' +
+    '</div>' +
+    '</div>' +
+
     '<div class="form-row m-5">' +
 
         '<div class="form-group col-md-3">' +
@@ -154,4 +161,24 @@ function displaySetup(project) {
         pd_val = isBool(project['data'][key]['-public-dist'])
     }
     jQuery('#'+key+'-public-dist').prop('checked', pd_val).trigger('change');
+
+
+    // Register choice of event default
+    jQuery('#event_default').select2({
+        data: arrayToChoices(events)
+    });
+
+    // On change event default, save to project + update val in settings
+    jQuery('#event_default').on('change', function() {
+        project['data'][key]['event_default'] = $(this).val();
+        settings['event_default'] = $(this).val();
+    });
+
+    // If undefined, set to first event
+    if (project['data'][key]['event_default'] == undefined) {
+        project['data'][key]['event_default'] = events[0];
+    }
+
+    // Set with current value   
+    jQuery('#event_default').val(project['data'][key]['event_default']).trigger('change');        
 }

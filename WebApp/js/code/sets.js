@@ -1,6 +1,8 @@
+var set_variables;
 
-function getBaseSetsHTML() {
 
+function getBaseSetCardsHTML() {
+    
     var html = '' +
     '<div id="card-cols" class="card-columns">' +
 
@@ -17,7 +19,18 @@ function getBaseSetsHTML() {
     '</div>';
 
     return html;
+}
 
+function getBaseSetsHTML() {
+
+    var html = '' +
+    '<label for="set-dataset">Select a source dataset to view / edit sets for:\u00A0</label>' +
+    '<select id="set-dataset" class="form-control" data-width="60%"></select>' +
+
+    '<div id="card-sets" style="margin-top: 5%;">' +
+    '</div>';
+
+    return html;
 }
 
 function getSetTableHTML(set_id) {
@@ -101,7 +114,9 @@ function registerSetTable(set_id, variables) {
             jQuery.post('php/getSets.php',
                 {"action": "removeMeasure",
                  "id": set_id,
-                 "variable": row_val});
+                 "variable": row_val,
+                 "dataset": $('#set-dataset').val()
+                });
 
             dt.row($(this).parents('tr')).remove().draw();
         });
@@ -130,7 +145,8 @@ function registerAddNewSet() {
         jQuery.getJSON('php/getSets.php', {
             "action": "create",
             "name": "unnamed",
-            "variables": []
+            "variables": [],
+            "dataset": $('#set-dataset').val()
         }, function (data) {
             addSet(data);
             refreshSetRegisters();
@@ -157,7 +173,9 @@ function registerRemoveSet() {
 
         jQuery.post('php/getSets.php',
          {'action': "delete",
-          "id": set_id });
+          "id": set_id,
+          "dataset": $('#set-dataset').val()
+        });
 
         jQuery('#card-' + set_id).remove();
     });
@@ -171,7 +189,8 @@ function registerSetNameChange() {
         jQuery.post('php/getSets.php',
             {"action": "save",
              "name": $(this).val(),
-             "id": $(this).data()['id']
+             "id": $(this).data()['id'],
+             "dataset": $('#set-dataset').val()
             });
     });
 }
@@ -185,7 +204,7 @@ function registerSetSearch() {
         var set_id = $(this).data('id');
 
         if (search.length !== 0) {
-            var results = variables.filter(entry => entry.match(RegExp(search)));
+            var results = set_variables.filter(entry => entry.match(RegExp(search)));
 
             if (results.length < 10000) {
 
@@ -194,7 +213,8 @@ function registerSetSearch() {
                 jQuery.post('php/getSets.php',
                     {"action": "save",
                     "variables": results,
-                    "id": $(this).data()['id']
+                    "id": $(this).data()['id'],
+                    "dataset": $('#set-dataset').val()
                     });
             }
             else {
@@ -207,24 +227,53 @@ function registerSetSearch() {
     });
 }
 
-
 function showSets() {
 
     // Clear everything
     clearAll();
 
-    // Make sure to refresh sets everytime show sets is called
-    jQuery.getJSON('php/getSets.php', { "action": "get" }, function(data) {
-        sets = data;
-        
-        // Get base html and add + display
-        var html = getBaseSetsHTML();
-        jQuery('#body-sets').append(html);
-        jQuery('#body-sets').css('display', 'block');
-        jQuery('#top-text').empty().append('Sets');
+    // Get base html and add + display
+    var html = getBaseSetsHTML();
+    jQuery('#body-sets').append(html);
+    jQuery('#body-sets').css('display', 'block');
+    jQuery('#top-text').empty().append('Sets');
+
+    // Register choice of dataset
+    jQuery('#set-dataset').select2({
+        data: arrayToChoices(datasets)
+    });
+
+    // Register on change dataset, re-display sets
+    jQuery('#set-dataset').on('change', function() {
+
+        // Refresh the card sets body of current sets
+        jQuery('#card-sets').empty().append(getBaseSetCardsHTML());
+
+        // Load according to current dataset
+        jQuery.getJSON('php/load_dataset.php',
+                {'dataset': $('#set-dataset').val()},
+            function (data) {
+            
+            // Unpack possible set_variables
+            set_variables = JSON.parse(data['variables']);
+
+            // Re-display with new dataset
+            displaySets(); 
+        });
+    });
+
+    // Set by default to first dataset
+    jQuery('#set-dataset').val(datasets[0]).trigger('change');
+}
+
+function displaySets() {
+    
+    jQuery.getJSON('php/getSets.php', {"action": "get",
+                                       "dataset": $('#set-dataset').val()},
+                   function (data) {
 
         // Add each existing set
-        sets.forEach(set => {
+        data.forEach(set => {
             addSet(set);
         });
 
@@ -233,14 +282,6 @@ function showSets() {
 
         // After existing added, call the registers
         refreshSetRegisters();
-
     });
 }
-
-
-
-
-
-
-
 

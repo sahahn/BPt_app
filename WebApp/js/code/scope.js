@@ -3,7 +3,7 @@ function getScopeLabelHTML(key) {
     var scope_descr = 'Scope refers to an optional subset of features that this object (if within model building) ' +
     'or evaluation should be limited to. Note that selecting multiple scopes indicates that the union or combination of all selected scopes be used. ' +
     'Their are a few special scope options listed under By Type, these are All, for indiciating that all avaliable features should be used, ' +
-    'Continuous to indicate that all Cont. / float type variables should be used, and Categorical to indivate that all binary + categorical ' +
+    'Continuous to indicate that all Cont. / float type variables should be used, and Categorical to indicate that all binary + categorical ' +
     'variables should be selected.';
 
     var scope_label = getPopLabel(key, "Scope ", scope_descr, '-scope-input');

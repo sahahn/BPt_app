@@ -1119,20 +1119,52 @@ function addParameterSearch(project, space) {
         project['data'][key] = {}
     }
 
-    var obj_descr = 'Selection of which hyper-parameter search type to use';
+    var obj_descr = 'Selection of which hyper-parameter search type to use. By default this is None. ' +
+    'By keeping this as None, no hyper-parameter search will be used with this ML Pipeline. That said, ' +
+    'if there are any hyper-parameter distributions defined, then their NEEDs to be a non-None value set here. ' +
+    'Note the setting any pieces to Select is type of a hyper-parameter and therefore requires a search type ' +
+    'to be set here.<br><br>' +
+    'Hyper-parameters are optimized through facebooks nevergrad library (see: ' +
+    'https://github.com/facebookresearch/nevergrad ). ' +
+    'There are a lot of options here, but a good first choice may be using RandomSearch. ' +
+    'This object explores the hyper-parameter distribution space just through random sampling.';
     var obj_label = getPopLabel(key, 'Search Type ', obj_descr, '-search-type');
 
-    var n_iter_descr = 'Placeholder';
+    var n_iter_descr = 'This parameter controls the number of combinations of different hyper-parameters ' +
+    'which are explored (evaluated via the rest of the settings within this section) at training time. ' +
+    'For example, if set to 60, then 60 different combinations of hyper-parameters will be tested, and the ' +
+    'combination which maximizes the selected metric according to Splits param and Validation Strategy param will ' +
+    'be used. Further, this best selected set of parameter will be used to re-train the ML Pipeline on the whole set of training data ' +
+    '(as defined by whatever the training data is at the time).<br><br>' +
+    'The number of hyper-parameters to try / budget of the underlying search algorithm. ' +
+    'How well a hyper-parameter search works and how long it takes will be very dependent on this parameter ' +
+    'and the defined internal CV strategy (via Splits and Repeats). ' +
+    'In general, if too few choices are provided the algorithm will likely not select high performing hyper-paramers, ' +
+    'and alternatively if too high a value/budget is set, then you may find overfit/non-generalize hyper-parameter choices. ' +
+    'Other factors which will influence the right number are things like the search type ' +
+    '(depending on the underlying search type, it may take a bigger or smaller budget on average to find a good set of hyper-parameters), ' +
+    'the dimensionality of the underlying search space (e.g., If you are only optimizing a few, say 2, underlying parameter distributions, ' +
+    'this will require a far smaller budget then say a really high dimensional search space), The CV strategy (' +
+    'The CV strategy defined via splits and repeats may make it easier or harder to overfit when searching for hyper-parameters, ' +
+    'thus conceptually a good choice of CV strategy can serve to increase ' +
+    'the budget you can use before overfitting, or conversely a bad choice may limit it.), and the number of data points / subjects.';
     var n_iter_label = getPopLabel(key, 'Search Budget ', n_iter_descr, '-n-iter');
 
-    var splits_descr = 'Placeholder';
+    var splits_descr = 'Splits in this context defines how each set of sampled hyper-parameters ' +
+    'will be evaluated internally. Splits is in other words the type of nested cross validation (CV) strategy to use. ' +
+    'There are a few different selectable CV strategies selectable from the tab below:<br>' +
+    getEachSplitInfoText();
     var splits_label = getPopLabel(key, 'Splits ', splits_descr, '-splits');
 
-    var metric_content = 'Select a hyper-parameter metric to use!'
+    var metric_content = 'Select a single metric here to use within the hyper-parameter search when comparing the ' +
+    'Pipelines trained with different parameters. I.e., at each iteration of the parameter search the Pipeline is evaluated ' +
+    'with a different combination of parameters. This metric is used to provide a score to that evaluation. ' +
+    'The choice of avaliable metrics is dependent on the type of the Model Pipeline. This type can be toggeled next to the pipeline ' +
+    'name by clicking on it (this will toggle through the different options). Be warned though, when changing Pipeline type, as pipeline ' +
+    'piece or parameter (like this one), might changed if it or its equivilent is not avaliable for the new Pipeline type.';
     var metric_label = getPopLabel(key, 'Metric ', metric_content);
 
-    var vs_label = "Select a validation strategy to use for these splits";
-    var val_strat_label = getPopLabel(key, "Validation Strategy ", vs_label);
+    var val_strat_label = getPopLabel(key, "Validation Strategy ", getValidationStratText());
 
     var html = '' + 
     '<div class="form-row">' +
@@ -1210,7 +1242,12 @@ function getDefaultType(project) {
 
     // Grab the type of the first target
     // This one is unremovable !
-    return getTargetType('target-space-0', project);
+    var def_type = getTargetType('target-space-0', project);
+
+    if ((def_type == undefined) || (def_type == null)) {
+        return 'float';
+    }
+    return def_type
 }
 
 function checkDefaultPipeType(key, project) {

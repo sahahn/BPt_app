@@ -99,6 +99,29 @@
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
 
+  <!-- Modal for darta source -->
+  <div class="modal fade" id="select-data-source" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
+          New Project
+          </h5>
+          <br>
+        </div>
+
+         <div class="modal-body text-center">
+          <label for="data=source">Select a source dataset to use with this this project</label>
+          <select id="data-source" class="form-control" data-width="100%"></select>
+
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-top: 5%;">Close</button>
+          <button id="create-project" type="button" class="btn btn-success" style="margin-top: 5%;">Create Project <i class="fas plus"></i></button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 15px;">
     <div class="row px-5">
@@ -134,12 +157,11 @@
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
         <div id="body-db-loading" style="display: none">
-          <h1>Please wait... the backend database is still being built!</h1>
-          <h3>If you have passed a large amount of data this could take a long time.</h3>
-          <h3>Note: You do not need to have this screen up while the uploading is taking place, but
+          <h1>Please wait... the initial backend datasets are still being processed!</h1>
+          <h3>If you have passed a large amount of data this could take some time.</h3>
+          <h3>Note: You do not need to have this screen up while the processing is taking place, but
           you should make sure that the docker container is left running (which means do not log or turn off your
-          device). That said, if the upload is interupted for whatever reason, you should be able to pick up wherever
-          it was left off by returning to this page.</h3>
+          device).</h3>
 
         </div>
         <div id="body-noproj"></div>
@@ -161,7 +183,7 @@
   </div>
 
   <!-- Some fixed padding at bottom -->
-  <div style="padding-top: 300px"></div>
+  <div style="padding-top: 1000px"></div>
 
   <!-- Base libraries js -->
   <script type="text/javascript" src="js/libraries/jquery-3.2.1.min.js"></script>

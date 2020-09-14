@@ -58,6 +58,59 @@ function uploadPublicDists() {
 
 function getEditParamsHTML(key) {
 
+    var p_descr = 'Parameters represent changable values for this object. Each parameter can either have a fixed ' + 
+    'single value, or can alternatively be set with a distribution of values (to be searched over within the context of a hyper-parameter search). ' +
+    'To toggle a parameter as a hyper-parameter you can press the button to the right of the parameter name ' +
+    'which will trigger a new menu: <button class=\'btn btn-sm btn-outline-dark\'>' +
+    '<i class=\'fa fa-industry\'></i></button>' +
+    '<br><br>Note: in order to change the value of a hyper-parameter, you must first be on a user defined param dist. A user generated copy can be made ' +
+    'from any of the existing default or public distributions via either the copy dist button, or by simply typing in a custom name into the  ' +
+    'Parameter Distribution search select, and select that new custom value instead of an existing one. <br><br>Also note: the specific parameter descriptions ' + 
+    'for each parameter (via the help icon) is automatically scraped from that objects base python documentation. Therefore, in some cases the descriptions may ' +
+    'include non-relevant descriptions or other oddities.';
+    var p_label = getPopLabel(undefined, 'Parameters ', p_descr);
+
+    var p_dist_txt = 'Parameter Distributions represent collections of parameter values. They are split into default / unchangable pre-set distributions, ' +
+    'user defined custom distributions and shared public distributions from other users (if this feature is enabled). The drop down menu below allows you to ' +
+    'either select from an existing distribution or create a new distribution by typing in a custom name, and then selecting it. As a short hand, the Copy Dist button ' + 
+    'is avaliable. Note that some parameter distributions, especially the first preset default ones, ussually contain only fixed values. On the other hand, some preset / default ' +
+    'distributions may contain parameters set to themselves a distribution of parameters. In this case, if a parameter is set to a range of values to search over, then a ' + 
+    'Parameter Search must be defined for this pipeline!';
+
+    var type_descr = 'The parameter type button for each parameter is change-able. To change the type of a parameter ' +
+    'click the type button until the desired type appears (which each press the type will change). The following types can be chosen:<br>' +
+    
+    '<br><b>str</b><br>' +
+    'The str, or string python data type refers to non-numeric input values. These are often used ' +
+    'to specify the choice of a specific parameter' +
+
+    '<br><b>bool</b><br>' +
+    'The bool type specifies that this value should be explicitly True or False. In python, 0 can also refer to False, and 1 to True. ' +
+    'This type is often used to turn a certain feature of an object on or off.' +
+
+    '<br><b>float</b><br>' +
+    'The float type refers that the value should be loaded as a python floating point number. This ' + 
+    'type is used to represent any numeric input, regardless of if it is an ordinal integer number.' +
+
+    '<br><b>int</b><br>' +
+    'The int type is used to specify explicitly that the value is an interger. E.g., 5. ' +
+    'In some cases you may need to distinguish between integers and floats depending on how the ' +
+    'argument structure of the parameter is setup. '+
+
+    '<br><b>tuple</b><br>' +
+    'The tuple represents a special python object sometimes used in parameters. Tuples are ordered ' +
+    'non mutable list-like objects in python, e.g., (5,5) is a tuple with first element 5 and second element also 5.' +
+
+    '<br><b>-</b><br>' +
+    'The - type is a special type which indicates that native python syntax should be used in order to determine the ' +
+    'the type internally. E.g., by passing a value wrapped in single or double quotations, then the str type will be inferred.' +
+    'Further, passing a single number, e.g., 6, the int type will be inferred. By passing a number with a decimal, e.g., 6.5, the float ' +
+    'type will be inferred. By passing values wrapped in a tuple, e.g., (5,5), then a tuple with two ints inside will be inferred. ' +
+    'Note also that passing None with this type will pass the python value of None, which is a special type often used in parameters.' +
+    '+Check the syntax of base python for more information / examples. Note also that in special cases small code blocks can be passed here.';
+
+    var type_label = getPopLabel(undefined, 'Type ', type_descr);
+
     var html = '' +
     
     '<div class="modal fade" id="'+key+'-edit-popup" role="dialog"' +
@@ -71,6 +124,7 @@ function getEditParamsHTML(key) {
               '<div class="col-sm-4" style="padding-left:0px;">' +
               '<h5 class="modal-title" id="'+key+'-modal-label">' +
               '<b><a id="'+key+'-params-name"></a>' + '</b></h5>' +
+              '<br>' + p_label +
               '</div>' +
 
               '<div class="col-sm-7" style="padding-left:10px;">' +
@@ -79,7 +133,7 @@ function getEditParamsHTML(key) {
               '<label for="'+key+'-param-dist">' +
               '<span data-toggle="popover"' +
               'title="Parameter Distributions" data-placement="left"' +
-              'data-content="Placeholder">' +
+              'data-content="' + p_dist_txt + '">' +
               'Parameter Distributions <i class="fas fa-info-circle fa-sm"></i></span>' +
               '</label>' +
 
@@ -94,10 +148,14 @@ function getEditParamsHTML(key) {
               '</div>' +
               '</div>' +
               
-              '<div class="col-sm-1">' +
+              '<div class="col-sm-1" style="padding-right: 0px;">' +
               '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
               '<span aria-hidden="true">&times;</span>' +
               '</button>' +
+              '<br><br>' + 
+              '<div class="text-center" style="margin-top: 15px;">' +
+              type_label +
+              '</div>' + 
               
               '</div>' +
 
@@ -641,11 +699,51 @@ function getDistTypeHTML(key, n) {
 
     var dist_options_k = key+'-dist-'+n+'-choice';
 
+    var hyp_txt = 'This option allows to specify this parameter as instead of one specific value, a ' +
+    'distribution over different possible values (the choice of value to be optimized by the Parameter Search). ' +
+    'There are a few different options for different types of hyper-parameter distributions, they are explained below: <br>' +
+    '<br><b>Normal</b><br>' +
+    'This represents a scalar variable with gaussian mutations, or in other words, ' +
+    'a set of values spanning a Noraml distribution. One may set the initial value as well as ' +
+    'an upper or lower bound. Note: that Type will be avaliable for this choice of distribution. If ' +
+    'float, then floating point real values will be used, but if int, then values will be casted to integers ' +
+    'before being passed as parameters.' +
+
+    '<br><b>Log</b><br>' +
+    'Log distributions are simmilar to Normal distributions, expect that the mutations occur in Log scale. ' +
+    'That means this type of distribution is especially suitable for searching values of hyper-parameters which ' +
+    'are distributed in log-space. The type for this distribution is fixed as float. You may set in addition to ' +
+    'the initial value, upper and lower bounds, an exponent for the log mutation.' +
+
+    '<br><b>Choice</b><br>' +
+    'This represents an unordered categorical parameter, randomly choosing one of the provided choice options as a value. ' +
+    'The choices can be further be nested distributions themselves (i.e., nested Log or Choice options). ' 
+    'The chosen parameter is drawn randomly from the softmax of weights which are updated during the optimization. ' +
+    'Since the chosen value is drawn randomly, the use of this variable makes deterministic functions become stochastic, hence adding noise. ' +
+    'Note: types for values in choice are restricted to ' +
+    'the - option, so they must be written in python style syntax.' +
+
+    '<br><b>Transition</b><br>' +
+    'Transition represent a transition choice, which is simillar to the choice distribution, but difers ' +
+    'importantly in that it represents an ordered (vs. unordered) categorical variable. ' +
+    'As with Choice, this parameter can accept nested hyper-parameter distributions as valid choices. ' +
+    'On the backend, it tunes the weights between choices as the probability of a continuous transition. ' +
+    'Note: types for values in transition choice are restricted to ' +
+    'the - option, so they must be written in python style syntax.' +
+
+    '<br><b>Code</b><br>' +
+    'This last option represents a special advanced usage. Specifically, it allows the user ' +
+    'to pass in a nevergrad valid distribution in python code. Code should be passed with the assumption ' +
+    'that numpy is imported as np, and nevergrad is imported as ng. For example, you could pass ' +
+    'ng.p.Choice(np.arange(0, 10)) to request the choice between integers 0 to 10. ' +
+    'Please look up nevergrad for more specific advice on how to get started writing your own custom ' +
+    'distributions in code.';
+
     var html = '' +
     '<label style="padding-left:0px; padding-right:20px;">' +
     '<span data-toggle="popover"' +
     'title="Hyper-Parameter Distribution Type" data-placement="left"' +
-    'data-content="Placeholder">' +
+    'data-content="'+hyp_txt+'">' +
     'Dist. Type <i class="fas fa-info-circle fa-sm"></i></span>' +
     '</label>' +
 
@@ -699,9 +797,19 @@ function getDistFieldHTML(key, title, content, select=false, textarea=false) {
 function getBaseScalerDistHTML(if_key) {
 
     var html = '' +
-    getDistFieldHTML(if_key+'-init', 'Init.', 'Placeholder') +
-    getDistFieldHTML(if_key+'-lower', 'Lower', 'Placeholder') +
-    getDistFieldHTML(if_key+'-upper', 'Upper', 'Placeholder');
+    getDistFieldHTML(if_key+'-init', 'Init.', 'Init represents the initial value that this ' +
+    'either Normal or Log distribution should start at. By default, if left empty, this will default to 0 (assuming also no value is passed to Upper ' +
+    'or Lower). In the case that a value is passed to Upper and Lower, then this value if left empty will default to halfway between the passed bounds. ' +
+    'If this is a log distribution, this value is still an absolute number, but you can pass python shorthands such as 1e5 for 10,000 or 1e-2 for .001.') +
+    
+    getDistFieldHTML(if_key+'-lower', 'Lower', 'The minimum value, if any, that this parameter can take. It is okay to leave this value empty ' +
+    'if there is no minimum. This value should be smaller than any value passed to Upper. ' +
+    'If this is a log distribution, this value is still an absolute number, but you can pass python shorthands such as 1e5 for 10,000 or 1e-2 for .001. ' +
+    'Likewise, if a log distribution this value should be greater than 0!') +
+    
+    getDistFieldHTML(if_key+'-upper', 'Upper', 'The maximum value, if any, that this parameter can take. It is okay to leave this value empty ' +
+    'if there is no maximum. This value should be greater than any value passed to Lower. ' +
+    'If this is a log distribution, this value is still an absolute number, but you can pass python shorthands such as 1e5 for 10,000 or 1e-2 for .001.');
 
     return html;
 }
@@ -736,23 +844,41 @@ function getLogParamDistHTML(if_key, subtitle=undefined, type_key=undefined) {
     
     var html = '' +
     getBaseScalerDistHTML(if_key) + 
-    getDistFieldHTML(if_key+'-exponent', 'Exp.', 'Placeholder');
+    getDistFieldHTML(if_key+'-exponent', 'Exp.', 'This is the exponent for the log mutation. ' +
+    'An exponent of 2.0 will lead to mutations by factors between around 0.5 and 2.0. ' +
+    'By default, it is set to either 2.0, or if the parameter is completely bounded ' +
+    'to a factor so that bounds are at 3 sigma in the transformed space.');
     return wrapBaseParamDistHTML(if_key, html, subtitle, type_key);
 }
 
 function getChoiceParamDistHTML(if_key, subtitle=undefined, type_key=undefined) {
 
+    var txt = 'This input field is used to select the values in which should be choices with the Choice or Transition Choice ' +
+    'distribution. You may either select from any automatically generated values, add new values (by typing in what you want, and then clicking ' +
+    'the choice as it appears, i.e., the select2 tagging feature), or select a nested hyper-parameter distribution as one of the choices. ' +
+    'If selecting a nested hyper-parameter dist, the relevant params for that dist will pop up below. Note: types for values in choice are restricted to ' +
+    'the - option, so they must be written in python style syntax.';
+
     return wrapBaseParamDistHTML(
         if_key, 
-        getDistFieldHTML(if_key+'-choices', 'Choices', 'Placeholder', select=true),
+        getDistFieldHTML(if_key+'-choices', 'Choices', txt, select=true),
         subtitle, type_key);
 }
 
 function getCodeParamDistHTML(if_key, subtitle=undefined, type_key=undefined) {
 
+    var txt = 'This is an advanced usage option. A nevergrad valid distribution can ' +
+    'be specified here assuming that nevergrad is imported as ng and numpy is imported as np. ' +
+    'Please view nevergrads documentation on how values should be formatted. This option is not ' +
+    'reccomended for new users, but just provided if advanced users wish to specify a distribution ' +
+    'not allowable via the other distribution choices. For example: <br>' +
+    'ng.p.Array(init=(100, 100, 100)).set_mutation(sigma=50).set_bounds(lower=1, upper=300).set_integer_casting()<br>' +
+    'Which specifies that an array of three values, each which takes on an initial value of 100, e.g., (100, 100, 100), be ' +
+    'created, with bounds 1 to 300 for each one, a mutation of sigma 50, and forced integer casting.';
+
     return wrapBaseParamDistHTML(
         if_key, 
-        getDistFieldHTML(if_key+'-code', 'Code', 'Placeholder', select=false, textarea=true),
+        getDistFieldHTML(if_key+'-code', 'Code', txt, select=false, textarea=true),
         subtitle, type_key);
 }
 

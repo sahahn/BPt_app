@@ -82,7 +82,7 @@ function getBarHTML(key, ext, label, job_name) {
 
 function getJobStatusHTML(key, job_name) {
 
-    var repeats_label = getPopLabel(undefined, 'Repeats ', 'Repeats refers to the current number of  finished repeats, where repeats are set ' +
+    var repeats_label = getPopLabel(undefined, 'Repeats ', 'Repeats refers to the current number of finished repeats, where repeats are set ' +
     'when submitting this job. It is the number of times in which the inner folds of the CV are repeated with different random seeds.');
 
     var folds_label = getPopLabel(undefined, 'Folds ', 'Folds refers to the current number of completed evaluate folds. ' +
@@ -727,7 +727,11 @@ function loadResults(job_name, key, project) {
 
         // Add summary table
         var sum_table_key = key +'-summary-table';
-        var summary_descr = 'placeholder';
+        var summary_descr = 'Summary Scores contains a table with computed scores from the either Evaluae or Test job. ' +
+        'Metric refers to the metric listed in the rest of the Row. Mean Score, is the mean metric as computed across all of the folds + repeats. ' +
+        'Score referes to a single score, e.g., in the case of a Test job. STD refers to the standard deviation across folds in computed score. Macro STD ' +
+        'refers to the standard deviation across repeats (i.e., between the mean metrics from each set of folds). Micro STD refers to the standard deviation across ' +
+        'all folds, regardless of which repeat it was part of. Note the buttons at the bottom for downloading or exporting these results.';
         var summary_label = getPopLabel(key, "Summary Scores ", summary_descr);
         var summary_html = procBaseTableResults(sum_table_key, 
                                                 output['table_html'],
@@ -755,7 +759,12 @@ function loadResults(job_name, key, project) {
         table.buttons().container().appendTo($('#'+sum_table_key+'-buttons'));
 
         var raw_table_key = key +'-raw-table'
-        var raw_descr = 'placeholder';
+        var raw_descr = 'These are the raw computed predictions from this Evaluate or Test run. This table includes ' +
+        'the baseline target in addition to the predicted values (which will vary based on problem type, e.g., binary will include ' +
+        'thresholded predictions and raw probability predictions). Likewise, if an Evaluate job, the predicted scores will be in a column with ' +
+        'the name of that Repeat, e.g., column 1 will represent the predicted scores from the first repeat, and column 2 from the second. The column ' +
+        '1_fold, will then listen which fold for the first repeat each prediction was made in. If a prediction was not made for a subject within a repeat, ' +
+        'then it will contain an NaN. Note that you may also download a csv or excel spreadsheet with these raw predictions.';
         var raw_label = getPopLabel(key, "Raw Predictions ", raw_descr);
         var raw_html = procBaseTableResults(raw_table_key, 
                                             output['raw_preds'],

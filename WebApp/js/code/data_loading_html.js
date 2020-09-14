@@ -5,8 +5,8 @@ function inputDropNaHTML(key) {
     '<label for="'+key+'-drop-buttons">' +
     '<span data-toggle="popover"' +
     'title="Drop NaN" data-placement="top"' +
-    'data-content="Data Variables with missing values can either be dropped, or imputed later on.' +
-    'If set to True, they will be dropped, if False, then they will be kept"' +
+    'data-content="Data Variables with missing values can either be dropped, or imputed later on. ' +
+    'If set to True, any subjects with missing values in this/these variable(s) will be dropped, if False, then the specific values will instead be kept as a missing value."' +
     '>Drop Missing <i class="fas fa-info-circle fa-sm"></i></span></label>' +
 
     '<div class="btn-group-toggle btn-group"' +
@@ -27,7 +27,7 @@ function inputDropNaHTML(key) {
 function getEventNameOptionsHTML() {
 
     var html = '';
-    Object.keys(settings['event_mapping']).forEach(event => {
+    events.forEach(event => {
 
         if (event == settings['event_default']) {
             html += '<option selected value="' + event + '">'+event+'</option>';   
@@ -175,6 +175,30 @@ function inputDataTypeHTML(key, label, target, data_types) {
 
     html = html + '</div>';
     return html;
+}
+
+function getDataTypeBaseLabelHTML() {
+
+    var txt = '' +
+    '<br><b>Binary</b><br>' +
+    'If binary, then the variable(s) of interest will be loaded with just two values, 0 and 1. ' +
+    'Further, there are two different behaviors avaliable. One, the default option, is to simply keep just the ' +
+    'two most frequent classes (dropping anything else). The other, is to convert from an originally continuous variable to binary.' +
+
+    '<br><b>Continuous</b><br>' +
+    'If continuous, then the variable(s) to be loaded will likely be taken as is. This data type represents ' +
+    'a floating point, real / continuous variable. If selected, the variable(s) to be loaded must not have any ' +
+    'string values (with the exception of strings representing NaNs), e.g., if the variable to be loaded contains the ' +
+    'values: cat and dog, or Male and Female, then they will not load correctly here. continuous variables likewise have a few special further ' +
+    'options for performing outlier detection.' + 
+
+    '<br><b>Categorical</b><br>' +
+    'If categorical, then the variable(s) to be loaded will be encoded ordinally with values 0 to n-1, where n is the ' +
+    'number of unique class values for this variable. The categorical data type allows loading with either the default ' +
+    'values already present, i.e., setting existing values to 0 to n-1, in addition to also allowing a Continuous to Categorical ' +
+    'K-Binning option for converting originally continuous variables to categorical.';
+
+    return txt;
 }
 
 function inputSetFormHTML(key) {
@@ -341,9 +365,9 @@ function ifBinaryHTML(key) {
 
         '<label><span data-toggle="popover"' +
         'title="Binary Encoding Choices" data-placement="left"' +
-        'data-content="<b>Default:</b><br>The top two unique values by occurance will be '+
+        'data-content="<b>Default</b><br>The top two unique values by occurance will be '+
         'used to define the two valid binary classes, any additional classes will be dropped.' +
-        '<br><b>Continuous to Binary:</b><br>A binary variable will be created from an originally ' +
+        '<br><b>Continuous to Binary</b><br>A binary variable will be created from an originally ' +
         'continuous variable via thresholding via different thresholding options.<br>' +
         'In the case of selecting a single threshold, any value less than the threshold will be set to 0 ' +
         'and any value greater than or equal to the threshold will be set to 1.<br>' +

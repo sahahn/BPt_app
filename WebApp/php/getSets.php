@@ -10,8 +10,17 @@ if (isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
-$fn_all = "/var/www/html/data/".$project."/Sets/data/sets_".$project."_all.json";
-$fn = "/var/www/html/data/".$project."/Sets/data/sets_".$project."_".$user_name.".json";
+// Get dataset
+$dataset = 'fake';
+if (isset($_GET['dataset'])) {
+    $dataset = $_GET['dataset'];
+}
+if (isset($_POST['dataset'])) {
+    $dataset = $_POST['dataset'];
+}
+
+$fn_all = "/var/www/html/data/".$project."/Sets/data/sets_".$dataset."_all.json";
+$fn = "/var/www/html/data/".$project."/Sets/data/sets_".$dataset."_".$user_name.".json";
 
 if (!is_dir("/var/www/html/data/".$project."/Sets/data/")) {
   // dir doesn't exist, make it

@@ -1,3 +1,40 @@
+
+function getEachSplitInfoText() {
+
+    var txt = '' +
+    '<b>K-Fold</b><br>' +
+    'K-Fold defines that a k-fold cross validation be defined, see: https://en.wikipedia.org/wiki/Cross-validation_(statistics). ' +
+    'Importantly, these k-folds are made with respect to the passed Validation Strategy, as well as with the corresponding Repeats ' +
+    'parameter (which controls the number of times this k-fold CV is repeated with a different random seed).<br>' +
+
+    '<b>Single Split</b><br>' + 
+    'Simillar to K-fold (in that the splits are made according to the passed Validation Strategy + Repeats), ' +
+    'this parameter allows you to specify that a single train validation split be made. For example, if .2, is passed ' +
+    'here, then 20% of the data will be set as validation and 80% as train. Likewise, if multiple repeats are set, this ' +
+    'split will be repeated with new random seeds.<br>' +
+
+    '<b>Leave-Out Group</b><br>' + 
+    'This parameter allows to explcitily specify that a leave-out-group cross validation strategy be used. ' +
+    'e.g., if sex is selected as the variable here, then the internal validation performed will first train on one ' +
+    'sex and then validate on the other, and then vice versa. This parameter essentially allows you to conduct this ' +
+    'leave-out-one group type CV across either the unique values from a single variable or a combinarion of variables. ' +
+    'In the case that a combination of variables is passed, then the combination of unique overlapped values across all ' +
+    'passed variables will be used. For example if sex and race are passed, then each group within the leave out CV will be ' +
+    'male and race 0, female and race 0, male and race 1, etc...';
+
+    return txt;
+}
+
+function getValidationStratText() {
+    var txt = 'Optionally, select a validation strategy in which the specified Splits should repsect. ' +
+    'By default, the pre-defined choice Random Splits will be used, where splits will be made at random. ' +
+    'Otherwise, you may specify a custom validation behavior as defined within the Validation tab for this project. ' +
+    'Note that this option is not avaliable when Leave-Out Group is selected as the split strategy.';
+
+    return txt;
+}
+
+
 function resultsHTML(key, button_label) {
     
     var html = '<hr>' +

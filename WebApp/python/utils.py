@@ -1,7 +1,6 @@
 
 import json
 import sys
-import os
 
 
 def save_error(msg, output_loc, e=None):
@@ -37,3 +36,18 @@ def load_subjects(loc, as_set=True):
         subjs = set(subjs)
 
     return subjs
+
+
+def proc_title_length(title, br='-<br>'):
+
+    LIM = 55
+
+    new_title = ''
+    for i in range(LIM, len(title)+(LIM-1), LIM):
+
+        if i >= len(title):
+            new_title += title[i-LIM:]
+        else:
+            new_title += title[i-LIM:i] + br
+
+    return new_title

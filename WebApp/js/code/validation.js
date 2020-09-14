@@ -2,12 +2,72 @@
 // Validation Specific HTML //
 /////////////////////////////
 
+
+function addIfSelRowHTML(key) {
+
+    var strat_text = 'Select a variable (or combination) to stratify by. This choice represents the variable(s) value ' + 
+    'in which to preserve the percentage of samples for each class. If multiple variables are selected, then ' +
+    'the combination of the variables will be used, where the combinarion refers explicitly to the crosstab of unique values. ' +
+    'For example, if sex and race are selected, then a new combination internal variable will be created with unique values for ' +
+    'sex 1 race 1, sex 1 race 2, etc... and then stratifying behavior set on that combination.';
+
+    var group_text = 'Select a variable (or combination) to preserve groups by. Note that if multiple variables are selected, ' +
+    'the the unique overlap will first be computed, and then groups preserved by that value instead. Preserving groups ensures that ' +
+    'samples with the same class value are always in the same validation fold as other samples with the same value.';
+    
+    var html = '' +
+    
+    '<div class="form-row">' +
+    
+    '<div id="'+key+'-if-stratify" class="form-group col-md-4" style="display:none">' +
+    '<label for="'+key+'-stratify-by">' +
+    '<span data-toggle="popover"' +
+    'title="Stratify By" data-placement="top"' +
+    'data-content="' + strat_text + '">' +
+    'Stratify By <i class="fas fa-info-circle fa-sm"></i>' +
+    '</span></label>' + 
+    '<select id="'+key+'-stratify-by" class="form-control" data-width="100%" multiple="multiple"></select>' +
+    '</div>' +
+
+    '<div id="'+key+'-if-group" class="form-group col-md-4" style="display:none">' +
+    '<label for="'+key+'-group-by">' +
+    '<span data-toggle="popover"' +
+    'title="Preserve Groups By" data-placement="top"' +
+    'data-content="' + group_text + '">' +
+    'Preserve Groups By <i class="fas fa-info-circle fa-sm"></i>' +
+    '</span></label>' + 
+    '<select id="'+key+'-group-by" class="form-control" data-width="100%" multiple="multiple"></select>' +
+    '</div>' +
+    
+    '</div>';
+
+    return html;
+}
+
+
 function addValidationHTML(key) {
 
     var val_type_label = '<label for="'+key+'-val-buttons"' +
     '><span data-toggle="popover"' +
     'title="Validation Split Behavior" data-placement="top"' +
-    'data-content="This defines the behavior of this validation">' +
+    'data-content="This defines the behavior of this validation strategy. ' +
+    'A validation strategy can be passed when defining a single split, such as a ' +
+    'train test split, or in the context of repeated or K-fold splits used internally during ' +
+    'a hyper-parameter search.' +
+    'There are three distinct options, these are:<br><br>' +
+    '<b>Random</b><br>' +
+    'Random splits dictates that splits are made psuedo-randomly (according to the projects random seed)' +
+    '<br><b>Stratify</b><br>' +
+    'Stratifying splits dictates that splits preserve the relative class frequency of the selected Straify By variable(s). ' +
+    'For example, if Sex was selected, and then used for a train test split, then the training set would have the same ratio of Males vs. Females ' +
+    'as in the testing set.' +
+    '<br><b>Group Preserving</b><br>' +
+    'Group preserving behavior dictates that subjects with the same value according to the passed Preserve Groups By variable(s) ' +
+    'should be preserved within the same fold. For example, if preserving group by site, then all subjects from a given site will always ' +
+    'be in the same training or test fold with other subjects from that same site. This is useful when you dont want leakage from the training ' +
+    'set to the validation/test set on some value, like site, as a way of more explicitly testing generalization. E.g., if group preserving on Sex ' +
+    'then you would essentially be testing if a model trained on only Males could generalize to Females, and vice versa.' +
+    '">' +
     'Validation Split Behavior <i class="fas fa-info-circle fa-sm"></i>' +
     '</span></label>';
 
@@ -53,29 +113,7 @@ function addValidationHTML(key) {
     '</div>' + 
     '</div>' +
 
-    '<div class="form-row">' +
-    
-    '<div id="'+key+'-if-stratify" class="form-group col-md-4" style="display:none">' +
-    '<label for="'+key+'-stratify-by">' +
-    '<span data-toggle="popover"' +
-    'title="Stratify By" data-placement="top"' +
-    'data-content="Select a variable to stratify by">' +
-    'Stratify By <i class="fas fa-info-circle fa-sm"></i>' +
-    '</span></label>' + 
-    '<select id="'+key+'-stratify-by" class="form-control" data-width="100%" multiple="multiple"></select>' +
-    '</div>' +
-
-    '<div id="'+key+'-if-group" class="form-group col-md-4" style="display:none">' +
-    '<label for="'+key+'-group-by">' +
-    '<span data-toggle="popover"' +
-    'title="Preserve Groups By" data-placement="top"' +
-    'data-content="Select a variable to preserve groups by">' +
-    'Preserve Groups By <i class="fas fa-info-circle fa-sm"></i>' +
-    '</span></label>' + 
-    '<select id="'+key+'-group-by" class="form-control" data-width="100%" multiple="multiple"></select>' +
-    '</div>' +
-    
-    '</div>' +
+    addIfSelRowHTML(key) +
     resultsHTML(key, 'Show Info');
 
     return html;

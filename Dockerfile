@@ -24,13 +24,14 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && conda init bash && . ~/.bashrc && conda update -n base -c defaults conda -y \
     && conda create --name ML -y && conda activate ML && conda install pip \
     && git clone https://github.com/sahahn/BPt.git /var/www/html/BPt \
-    && git clone https://github.com/sahahn/BPt_app.git /var/www/html/BPt_app \
+    && git clone https://github.com/sahahn/BPt_app.git -b dev /var/www/html/BPt_app \
     && pip install /var/www/html/BPt/ \
     && sed -i '/post_max_size = 8M/cpost_max_size = 5000M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/memory_limit = 128M/cmemory_limit = 1024M' /etc/php/7.2/apache2/php.ini \
     && sed -i '/; max_input_vars = 5000/cmax_input_vars = 100000' /etc/php/7.2/apache2/php.ini
 
 EXPOSE 80
+
 ENTRYPOINT echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-&& chown www-data /var/www/html/data/ \
+&& chmod -R 777 /var/www/html/data/ \
 && apache2ctl -D FOREGROUND

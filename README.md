@@ -10,108 +10,60 @@ The main python library (that serves as a backend for this application) can be f
 ## **Installation**
 ---------------
 
-As it currently stands, BPt_app is designed to be created and run in a docker container. In the future we would like to provide an easier to use installation script, but for now please follow the below instructions.
+As it currently stands, BPt_app is designed to be created and run in a docker container. Please follow the below instructions:
 
 1. Make sure you have docker installed on your device. See: https://docs.docker.com/get-docker/
+
+2. Secondly, we make use of docker-compose to make the installation process overall more painless. On some systems with will already be installed with docker, but on others you may need to perform additional steps to download it, see: https://docs.docker.com/compose/install/
    
-2. The next step involves building the docker container for this application. All you need to do this, is the Dockerfile hosted at the top level of this repository. To get this file locally clone this repository, on unix based systems this command is:
+3. Next, you will clone this repository to your local device. On unix based systems, the command is as follows:
+
    <pre><code>git clone https://github.com/sahahn/BPt_app.git</code></pre>
 
-3. Next, navigate within the repository BPt_app and run:
+4. An essential step to using to using the application is the ability to have the application access your datasets of interest. Importantly, adding datasets can be done either before installation or after - though the app will not function correctly if there are no datasets added, so it is reccomended to add atleast one now (before the rest of the installation).
    
-    <pre><code>docker build . -t bpt</code></pre>
-
-    This will build the docker image.
-
-4. Once this completes, you need to build the docker image:
-    <pre><code>docker run -d --name bpt -p 8008:80 -v `pwd`/data:/var/www/html/data bpt</code></pre>
-    One flexible part of this command is the 8008 part, this is the port number on your machine that you will access the app through. If for whatever reason this port is already taken, you can just change to this another port.
-
-5. The other portion that the last command does is sets the 'data' folder within BPt_app as a shared volume (essentially storage which the app via docker can access and which you can access). This is the folder where data should be placed. See the following section for a tutorial on how to add data.
-
-
-## **Adding Data**
----------------
-An essential step to using to using the application is the ability to have the application access your data. This section will cover how you can go about adding data in the correct format such that BPt can read it into an internal database. (In the future we hope to support a broader range of loading compatibility, especially with non-tabular data!). For now though, we support the following format for adding in tabular data sources. 
-
-1. Locate the data directory within the BPt_app main directory (as cloned from this github). Within the data directory, there should be a folder called 'sources'. Lastly, ythere should be
-   a further directory called 'custom', navigate within that one (full path data/sources/custom/). 
+   1. Datasets are saved within BPt_app in the folder 'BPt_app/data/sources'
    
-2. The way this custom folder works is as follows. New datasets, where in this sense a dataset is defined just as any collection of tabular-csv style data that should be loaded with the same parameters, should be added as a folder. This folder can be called whatever you want. For example, lets say we create a folder called dataset1. Then inside dataset1, lets say we have 3 csv's with the data we would like to upload. The directory structure would look like this:
-    - data/sources/custom/dataset1/
-    - data/sources/custom/dataset1/data1.csv
-    - data/sources/custom/dataset1/data2.csv
-    - data/sources/custom/dataset1/data3.csv
+   2. Datasets must be compatible with BPt, this requires the user to format the dataset accordingly, before adding it to the sources directory. Specifically, datasets are comprised of a folder (where the name of the folder is name of the dataset), and within that folder 1 or more csv files with the datasets data. For example:
 
-3. We are not quite done, there are a few more considerations to make. By default, BPt_app will try to load each csv with the python pandas library read_csv function (see: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html). That means that the files are assumed to be comma seperated in addition to other preset values. In the likely case that you would like to load in your dataset with different parameters, a json specification file should be created at the same directory level as your main dataset folder. Importantly, it must have the same name as the folder, but just with .json appeneded. What this looks like according to our previous example is:
-   - data/sources/custom/dataset1.json
+    <pre><code>
+    BPt_app/data/sources/my_dataset/
+    BPt_app/data/sources/my_dataset/data1.csv
+    BPt_app/data/sources/my_dataset/data2.csv
+    BPt_app/data/sources/my_dataset/data3.csv
+    </code></pre>
 
-    An empty version of this config file is shown below.
+   3. Each file with data (data1.csv, data2.csv data3.csv above) must also be formatted in a specific way. Specifically- all data files must be comma seperated and contain only one header row with the name of each feature (or an index name / eventname - described in the next steps). For example (where note the \n character is ussually hidden in most text editors):
 
-    <pre><code>{
-        "load_params": {},
-        "ignore_cols": [],
-        "mapping": {}
-    }</code></pre>
-    
+    <pre><code>
+    subject_id,feat1,feat2,feat3\n
+    a,1.4,9,1.22\n
+    b,1.3,9,0.8\n
+    c,2,10,1.9\n
+    </code></pre>
 
-4. The first parameter above, load_params, allows you to pass in any of the arguments from the pandas read csv function (https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html). For example, if we wanted to change it to loading all of our dataset files within dataset1 to tab seperated, and also we wanted to add MISSING as a NaN value, we would change load_params to:
-    
-    <pre><code>{
-        "load_params": {"sep": "\t", "na_values": "MISSING"},
-        "ignore_cols": [],
-        "mapping": {}
-    } </code></pre>
-    
-    As mentioned before, load_params can take any of the valid arguments from the pandas function.
+   4. Each file must have a column with a stored subject id. Valid names for this subject id column are currently: 
+    ['subject_id', 'participant_id', 'src_subject_id', 'subject', 'id', 'sbj', 'sbj_id', 'subjectkey', 'ID', 'UID', 'GUID']
+    As long as a column is included and saved under one of those names, then that column will be used iternally as the subject id. In the example above, 'subject_id' is used as the subject id column.
 
-5. The second parameter, ignore_cols, allows us to pass in columns which should not be loaded into the backend database. For example, lets say there is a column in all of our data csvs called 'data', and another called 'col6' that we want to ignore. We would change ignore cols to:
-    
-    <pre><code>{
-        "load_params": {"sep": "\t", "na_values": "MISSING"},
-        "ignore_cols": ["date", "col6"],
-        "mapping": {}
-    }</code></pre>
-    
-    These columns will then be skipped if they appear in any of the data sources.
+   5. Next, each data file can optionally be stored with a valid 'event name' column. This column should be stored in the same way as the subject id column, and is used in cases where the underlying dataset is for example longitudinal or any case where a feature contains multiple values for the same subject. Valid column names for this are currently:
+   ['eventname', 'event', 'events', 'session_id', 'session', 'time_point', 'event_name', 'event name']
+   Within BPt_app, this column lets you filter data by a specific eventname value.
 
-6. The last parameter, mapping, is used to provide an optional name mapping between the saved named of a column, and the name that column should be loaded internally into BPt as (the way you will access it via the app!). This parameter will likely be useful if you need to change the name of the unique subject id to one that BPt recognizes. Specifically: all data needs a subject id, which must be a column named one of ['subject_id', 'participant_id', 'src_subject_id', 'subject', 'id']. This means that if for example the index / subject column in our data to load is called day 'src_id', we will need to pass a name mapping. This can be done as:
+   6. A few general notes about adding data to BPt:
+      - You may add multiple datasets, just with different folder names
+      - Data will be processed by BPt upon launch of the web application, this means that if you add a new dataset once the application has already been launched initially, that dataset will be processed in the background upon the next launch of the application. It will then not appear as an option until done processing and again re-launched. 
+      - If a feature / column overlaps across different data sources, e.g., data1.csv, data2.csv, then that feature will be merged across all data files, and saved in a new file. Merge behavior is if new values are found (as indexed by subject id and eventname overlap) they are simply added. If overlapped values are found, the newer value for that subject_id / eventname pair will be used. 
+      - You can change or delete data files or datasets at will, this will just prompt BPt to re-index that dataset and changes will be made accordingly. 
 
-    <pre><code>{
-        "load_params": {"sep": "\t", "na_values": "MISSING"},
-        "ignore_cols": ["date", "col6"],
-        "mapping": {"src_id": "subject_id"}
-    }</code></pre>
-    
-
-    Multiple values can be passed here. Another option as well, which may be helpful if your mapping is especially large, is to pass instead the name of a saved json mapping file (at the same directory level as this config json). For example, lets say we save a file called mapping.json (data/sources/custom/mapping.json) with something like:
-    
-    <pre><code>{
-        "column1": "col1",
-        "column2": "col2",
-        "src_id": "subject_id",
-    }</code></pre>
+5. Now, to install the application, navigate within the main BPt_app folder/repository and run the docker compose command:
    
-    We can then change "mapping" to:
+    <pre><code>docker-compose up</code></pre>
 
+    This will take care of building the docker image and application. There are a number of different tweaks here that you can make as desired, some of these are listed below:
+    - You may pass the flag "-d", so "docker-compose up -d", which will run the docker container in the background, otherwise the docker instance will be tied to your current terminal (and therefore shutdown if you close that terminal). See https://docs.docker.com/compose/reference/up/ for other simmilar options.
+    - Before running docker-compose up, you can optionally modify the docker-compose.yml file. One perhaps useful modification is to change the value of restart: no, to restart: always what this will do is restart BPt_app whenever it goes down, e.g., when you restart your computer. Otherwise, you must start the container manually everytime you wish to use BPt_app after a restart.
+    - You can use the command 'docker-compose start' from the BPt_app directory to restart the container
+    - Likewise, you can use the command 'docker-compose stop' to stop the web app
 
-    <pre><code>{
-        "load_params": {"sep": "\t", "na_values": "MISSING"},
-        "ignore_cols": ["date", "col6"],
-        "mapping": "mapping.json"
-    }</code></pre>
-
-
------
-
-The above represents general instructions for how adding a dataset can currently be done. That said, there are a few other key points to keep in mind!
-
-- All data source files must have a valid subject column. This column must be named one of ['subject_id', 'participant_id', 'src_subject_id', 'subject', 'id']. If it is not, then you should provide a mapping from whatever it is saved as to one of the valid names!
-  
-- Simmilarly, all data source files can have an optional eventname column. An eventname column is used in the case of longitudinal or multiple point studies where a specific subject has multiple values for a given measurement. If your data is not structured in this way, you can ignored this point. If it is, then you need to provide an 'eventname' column simmilarly to how you must provide a 'subject_id', where the eventname column must be named one of ['eventname', 'session_id']. If it is not, then you must either provide a "mapping" to one of those valid names, or the eventname will just be loaded in by default for every datapoint without a provided valid eventname column as None. 
-
-- The database will be built with whatever data is in this data/sources/custom folder everytime the web application is launched. That said, once a file has been uploaded, it will be skipped upon every subsequent launch. This means that you can always go back and add new files even after the original database has been built. On the otherhand, if you make changes to the values in an already uploaded file, they will not be updated. Right now the only way to delete data from the database is to delete the whole database (which after constructed can be found at (data/bpt/db). 
-
-- If a feature / column already exists within the database, it is updated as follows. If the new values contain any unique subject / eventname combinations, they will be added as new entries. If instead any overlapping subject / eventname data points are added, they will override the existing value. For example, if a data file was originally passed for feature 1, with subject x at eventname y and value z, but you upload a new datafile with the same feature 1, subject x and eventname y, but a different value, then the new value will override the previous one.
-
-- The web app will not let you in until the first database, with atleast some data has been built. That said, if you add new data afterwards, it will be uploaded in the background, and therefore not be avaliable right away. 
+6. After the container is running, navigate to http://localhost:8008/BPt_app/WebApp/index.php this is the web address of the app, and should bring you to the home page!

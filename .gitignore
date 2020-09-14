@@ -4,6 +4,6 @@ js/old/old_data_loading.js
 data/bpt*
 data/tab_data/
 db/*
-data/sources/custom/*
-data/sources/BIDS/*
-data/sources/temp
+data/sources/*
+!data/sources/.keep
+*.pyc

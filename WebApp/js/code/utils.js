@@ -57,7 +57,7 @@ function registerPopovers() {
     '<h3 class="popover-header"></h3>' +
     '<div class="popover-body"></div>' +
     '<div class="popover-footer">' +
-       '<i>Press again to close this message</i>' +
+       '<i>Press again to close this message - or open any other tooltip.</i>' +
     '</div>' +
     '</div>';
 
@@ -456,6 +456,9 @@ function registerCardDragBehavior(key) {
 
     jQuery('#'+key+'-collapse').on('hidden.bs.collapse', function() {
         jQuery('#'+key+'-space').prop('draggable', true);
+
+        // Also remove any popovers
+        $(".popover").remove();
     });
 }
 

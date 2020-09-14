@@ -1,6 +1,9 @@
-var variables;
+var datasets;
 var all_events;
+var variables;
 var variable_choices;
+var events;
+
 var projects = [];
 var settings = {};
 var project_steps = ['-setup', '-data-loading', '-val', '-test-split',
@@ -136,6 +139,7 @@ function registerProjectOptionsClick(project, ext, text, func) {
 
     var key = project['key'];
 
+    jQuery('#'+key+ext).off('click');
     jQuery('#'+key+ext).on('click', function() {
 
         if (!$(this).hasClass('sec-active')) {
@@ -172,6 +176,9 @@ function projectOff(key) {
 
 function projectOn(key, project) {
 
+    // Set dataset to settings
+    settings['dataset'] = project['dataset'];
+
     // Remove other active projects
     removeActiveProjects();
 
@@ -180,22 +187,6 @@ function projectOn(key, project) {
 
     // Unhide options
     jQuery('#'+key+'-project-options').css('display', 'block');
-
-    // If last active was None, default to setup
-    if (project['last_active'] == undefined) {
-        project['last_active'] = '-setup'
-    }
-    var last_active = project['last_active'];
-
-    // Unsure if I want to keep this... but can init the full project upon selection
-    // Or do the option below instead
-    project_steps.forEach(step => {
-        jQuery('#'+key+step).click();
-    });
-    removeActiveProjectOption(key);
-    
-    // Init w/ last active
-    jQuery('#'+key+last_active).click();
 
     // Show delete project button
     jQuery('#delete-project').css('display', 'block');
@@ -213,6 +204,27 @@ function projectOn(key, project) {
     confirm_del.on('click', function() {
         deleteProject(project);
     });
+
+    // If last active was None, default to setup
+    if (project['last_active'] == undefined) {
+        project['last_active'] = '-setup'
+    }
+    var last_active = project['last_active'];
+    
+    // Grab the correct sets for this project
+    jQuery.getJSON('php/getSets.php', { "action": "get",
+                                        "dataset": project['dataset']}, function(data) {
+        sets = data;
+ 
+        // Start by init'ing all project steps       
+        project_steps.forEach(step => {
+            jQuery('#'+key+step).click();
+        });
+        removeActiveProjectOption(key);
+        
+        // Set to last active
+        jQuery('#'+key+last_active).click();
+    });   
 }
 
 function removeActiveProjects() {
@@ -230,10 +242,18 @@ function removeActiveProjects() {
 function loadProject(project) {
 
     // Init various project pieces if undefined
+    checkProject(project);
+
+    // Project registers
+    registerLoadProject(project);
+}
+
+function checkProject(project) {
+    
     if (project['jobs'] == undefined) {
         project['jobs'] = {};
     }
-    
+
     if (project['files'] == undefined) {
         project['files'] = {};
     }
@@ -258,19 +278,22 @@ function loadProject(project) {
     if (project['loading_spaces'] == undefined) {
         project['loading_spaces'] = {};
     }
+}
 
+function registerLoadProject(project) {
+    
     var key = project['key'];
 
     var html = '' +
-    '<div id="'+key+'-entry">' + 
-    '<li class="nav-item">' +
-    '<a id="'+key+'-project-button" class="nav-link" href="#">' + 
-    '<span><i class="fas fa-book navbutton"></i>&nbsp;</span>' +
-    '<span id="'+key+'-project-name">' + project['name'] +
-    '</a>' +
-    '</li>' +
-    projectOptionsHTML(key) +
-    '</div>';
+        '<div id="' + key + '-entry">' +
+        '<li class="nav-item">' +
+        '<a id="' + key + '-project-button" class="nav-link" href="#">' +
+        '<span><i class="fas fa-book navbutton"></i>&nbsp;</span>' +
+        '<span id="' + key + '-project-name">' + project['name'] +
+        '</a>' +
+        '</li>' +
+        projectOptionsHTML(key) +
+        '</div>';
 
     jQuery('#projects-list').append(html);
 
@@ -282,15 +305,27 @@ function loadProject(project) {
     registerProjectOptionsClick(project, '-ml-pipe', 'ML Pipeline', displayMLPipe);
     registerProjectOptionsClick(project, '-evaluate', 'Evaluate', displayEvaluate);
     registerProjectOptionsClick(project, '-results', 'Results', displayResults);
-    
+
     // Register on project button click actions
-    jQuery('#'+key+'-project-button').on('click', function() {
+    jQuery('#' + key + '-project-button').on('click', function () {
 
         if ($(this).hasClass('active')) {
             projectOff(key);
         }
+       
         else {
-            projectOn(key, project);
+            jQuery.getJSON('php/load_dataset.php',
+                {'dataset': project['dataset']},
+                function (data) {
+
+                // Unpack to global vars
+                variables = JSON.parse(data['variables']);
+                events = JSON.parse(data['events']);
+                variable_choices = arrayToChoices(variables);
+                
+                // Trigger project on
+                projectOn(key, project);
+            });
         }
     });
 }
@@ -328,6 +363,7 @@ function addNewProject() {
     var key = 'project-' + n.toString();
 
     var project = {
+        'dataset': jQuery('#data-source').val(),
         'key': key,
         'n': n,
         'name': 'My Project',
@@ -415,7 +451,6 @@ function noProjectDefault() {
     jQuery('#upload-user-dists').on('click', uploadPublicDists);
 }
 
-
 function startApp() {
 
     // It is important to get if the user has any existing projects
@@ -440,11 +475,18 @@ function startApp() {
             });
         };
 
-        // Set w/ default no- project entry screen
-        noProjectDefault();
-
         // On click add var, call func
-        jQuery('#add-new-project').on('click', function () {
+        jQuery('#add-new-project').on('click', function() {
+
+            jQuery('#data-source').select2({
+                data: arrayToChoices(datasets)
+            });
+
+            jQuery('#select-data-source').modal('show');
+        });
+
+        // On submit modal, create project
+        jQuery('#create-project').on('click', function() {
             addNewProject();
         });
 
@@ -466,11 +508,14 @@ function startApp() {
         // Register save projects button
         jQuery('#save-projects').on('click', save_all);
 
-
         // Save the updated projects on leaving the window
         $(window).bind('beforeunload', function () {
             save_all();
         });
+
+         // Set w/ default no- project entry screen
+         jQuery('#settings').click();
+         noProjectDefault();
     });
 }
 
@@ -487,11 +532,9 @@ function checkDBReady(db_interval) {
 }
 
 function isReady(data) {
-    
-    variables = JSON.parse(data['loaded']);
-    all_events = JSON.parse(data['all_events']);
-    variable_choices = arrayToChoices(variables);
 
+    datasets = JSON.parse(data['datasets']);
+    all_events = JSON.parse(data['all_events']);
     jQuery("#body-db-loading").css('display', 'none');
     startApp();
 }
@@ -518,7 +561,7 @@ jQuery(document).ready(function() {
             jQuery("#body-db-loading").css('display', 'block');
 
              // Start loop to check if db ready
-            db_interval = setInterval(function() {
+            var db_interval = setInterval(function() {
                 checkDBReady(db_interval);
             }, 5000);
         }

@@ -8,31 +8,53 @@ from BPt import BPt_ML, CV
 import numpy as np
 import scipy.stats as stats
 
-from utils import save_error
+from utils import save_error, proc_title_length
 from caching import (save_cache_subjects, get_subj_param_hash,
                      cache_just_subjects, load_cache_subjects,
                      check_loading_cache, save_to_loading_cache,
                      incr_input_cache, move_img_to_cache, check_loaded_cache,
-                     save_to_loaded_cache)
-import sqlite3
+                     save_to_loaded_cache, V_DR)
 
-db_dr = '/var/www/html/data/bpt/db'
-con = sqlite3.connect(db_dr)
+# A bit funny, but treat settings as a global var to be filled in
+# Really should re-factor this at some point, maybe have a loading class
 settings = {}
 
-# Replace this w/ load from DB
 
-def load_from_df(variables):
+def load_vars(variables):
 
     if not isinstance(variables, list):
         variables = [variables]
 
+    # Load the right vars_to_loc based on current dataset - stored in settings
+    dataset_info_loc =\
+        os.path.join(V_DR, 'Data_Info',
+                     settings['dataset'], 'vars_to_loc.json')
+
+    with open(dataset_info_loc, 'r') as f:
+        vars_to_loc = json.load(f)
+
+    # First splits the variables to load by their source file
+    by_file_locs = {}
+    for v in variables:
+        file_loc = vars_to_loc[v]
+
+        try:
+            by_file_locs[file_loc].append(v)
+        except KeyError:
+            by_file_locs[file_loc] = [v]
+
+    # Create a seperate df for each file
     dfs = []
-    for variable in variables:
-        df = pd.read_sql_query("SELECT * from [" + variable + ']', con)
-        df = df.set_index(['subject_id', 'eventname'])
+    for file_loc in by_file_locs:
+
+        inds = ['subject_id', 'eventname']
+        df = pd.read_csv(file_loc,
+                         usecols=inds + by_file_locs[file_loc],
+                         index_col=inds)
         dfs.append(df)
 
+    # If more than one df, calling concat should merge them propely
+    # as the relevant index have been set, also return with reset index
     if len(dfs) > 1:
         return pd.concat(dfs, axis=1).reset_index()
     else:
@@ -378,8 +400,9 @@ def _proc_na(params):
 
 
 def _proc_eventname(params):
-    
+
     return params['-eventname'], '.'+settings['event_mapping'][params['-eventname']]
+
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
 
@@ -519,7 +542,7 @@ def load_target(ML, params, output_loc, drops=True):
     col_name = params['-input']
 
     try:
-        target_df = load_from_df(col_name)
+        target_df = load_vars(col_name)
     except Exception as e:
         save_error('Error fetching target variable', output_loc, e)
 
@@ -579,7 +602,7 @@ def load_variable(ML, params, output_loc, drops=True):
     # Load the covar df
     col_name = params['-input']
     try:
-        covar_df = load_from_df(col_name)
+        covar_df = load_vars(col_name)
     except Exception as e:
         save_error('Error fetching data variable', output_loc, e)
 
@@ -629,7 +652,7 @@ def load_strat(ML, params, output_loc, drops=False):
     # Load df
     col_name = params['-input']
     try:
-        strat_df = load_from_df(col_name)
+        strat_df = load_vars(col_name)
     except Exception as e:
         save_error('Error fetching non-input variable', output_loc, e)
 
@@ -724,8 +747,8 @@ def load_set(ML, params, output_loc, drops=True):
     # Load from db/files
     try:
         start = time.time()
-        data_df = load_from_df(col_names)
-        ML._print('Loaded set from db in', time.time() - start)
+        data_df = load_vars(col_names)
+        ML._print('Loaded set from files in', time.time() - start)
     except Exception as e:
         save_error('Error fetching set data variables', output_loc, e)
 
@@ -735,6 +758,10 @@ def load_set(ML, params, output_loc, drops=True):
     # For now load data as covars, since want to handle types
     try:
         start = time.time()
+
+        log_file = ML.log_file
+        ML.log_file = None
+
         ML.Load_Covars(df=data_df,
                        col_name=col_names,
                        data_type=data_type,
@@ -746,7 +773,9 @@ def load_set(ML, params, output_loc, drops=True):
                        categorical_drop_percent=cdp,
                        float_bins=fb_s,
                        float_bin_strategy=fbs_s)
-        ML._print('Loaded set into mem in', time.time() - start)
+
+        ML.log_file = log_file
+        ML._print('Loaded set into BPt in', time.time() - start)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
@@ -1435,7 +1464,7 @@ def get_variable_table_html(d_dfs):
 
     # Create header
     for col in list(df):
-        t_output += '<th scope="col">' + str(col) + '</th>'
+        t_output += '<th scope="col">' + str(proc_title_length(col)) + '</th>'
     t_output += '</tr></thead><tbody>'
 
     # Create body
