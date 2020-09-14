@@ -760,7 +760,7 @@ def load_set(ML, params, output_loc, drops=True):
         start = time.time()
 
         log_file = ML.log_file
-        ML.log_dr = None
+        ML.log_file = None
 
         ML.Load_Covars(df=data_df,
                        col_name=col_names,
