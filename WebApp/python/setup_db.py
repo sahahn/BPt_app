@@ -21,7 +21,7 @@ def process_datasets(base_loc):
 
     # Process each dataset
     sources_loc = os.path.join(base_loc, 'sources')
-    datasets = os.listdir(sources_loc)
+    datasets = [f for f in os.listdir(sources_loc) if not f.startswith('.')]
     for dataset in datasets:
         process_dataset(base_loc, dataset)
 
