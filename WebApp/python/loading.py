@@ -748,7 +748,7 @@ def load_set(ML, params, output_loc, drops=True):
     try:
         start = time.time()
         data_df = load_vars(col_names)
-        ML._print('Loaded set from db in', time.time() - start)
+        ML._print('Loaded set from files in', time.time() - start)
     except Exception as e:
         save_error('Error fetching set data variables', output_loc, e)
 
@@ -758,6 +758,9 @@ def load_set(ML, params, output_loc, drops=True):
     # For now load data as covars, since want to handle types
     try:
         start = time.time()
+        log_dr = ML.log_dr
+        ML.log_dr = None
+
         ML.Load_Covars(df=data_df,
                        col_name=col_names,
                        data_type=data_type,
@@ -769,7 +772,9 @@ def load_set(ML, params, output_loc, drops=True):
                        categorical_drop_percent=cdp,
                        float_bins=fb_s,
                        float_bin_strategy=fbs_s)
-        ML._print('Loaded set into mem in', time.time() - start)
+                       
+        ML.log_dr = log_dr
+        ML._print('Loaded set into BPt in', time.time() - start)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 

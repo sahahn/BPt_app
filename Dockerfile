@@ -32,7 +32,6 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
 
 EXPOSE 80
 
-# Change chown to maybe just change rwx permissions ??? or for atleast sources folder
 ENTRYPOINT echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-&& chown -R www-data /var/www/html/data/ \
+&& chmod -R 777 /var/www/html/data/ \
 && apache2ctl -D FOREGROUND
