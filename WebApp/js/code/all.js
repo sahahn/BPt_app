@@ -179,9 +179,6 @@ function projectOn(key, project) {
     // Set dataset to settings
     settings['dataset'] = project['dataset'];
 
-    // Add all known sets for this project
-    getAllSets(project);
-
     // Remove other active projects
     removeActiveProjects();
 
@@ -196,16 +193,21 @@ function projectOn(key, project) {
         project['last_active'] = '-setup'
     }
     var last_active = project['last_active'];
-
-    // Unsure if I want to keep this... but can init the full project upon selection
-    // Or do the option below instead
-    project_steps.forEach(step => {
-        jQuery('#'+key+step).click();
-    });
-    removeActiveProjectOption(key);
     
-    // Init w/ last active
-    jQuery('#'+key+last_active).click();
+    // Grab the correct sets for this project
+    jQuery.getJSON('php/getSets.php', { "action": "get",
+                                        "dataset": project['dataset']}, function(data) {
+        sets = data;
+ 
+        // Start by init'ing all project steps       
+        project_steps.forEach(step => {
+            jQuery('#'+key+step).click();
+        });
+        removeActiveProjectOption(key);
+        
+        // Set to last active
+        jQuery('#'+key+last_active).click();
+    });
 
     // Show delete project button
     jQuery('#delete-project').css('display', 'block');
