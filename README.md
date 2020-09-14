@@ -22,24 +22,44 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
 
 4. An essential step to using to using the application is the ability to have the application access your datasets of interest. Importantly, adding datasets can be done either before installation or after - though the app will not function correctly if there are no datasets added, so it is reccomended to add atleast one now (before the rest of the installation).
    
-   1. 
+   1. Datasets are saved within BPt_app in the folder 'BPt_app/data/sources'
+   
+   2. Datasets must be compatible with BPt, this requires the user to format the dataset accordingly, before adding it to the sources directory. Specifically, datasets are comprised of a folder (where the name of the folder is name of the dataset), and within that folder 1 or more csv files with the datasets data. For example:
+
+    <pre><code>
+    BPt_app/data/sources/my_dataset/
+    BPt_app/data/sources/my_dataset/data1.csv
+    BPt_app/data/sources/my_dataset/data2.csv
+    BPt_app/data/sources/my_dataset/data3.csv
+    </code></pre>
+
+   3. Each file with data (data1.csv, data2.csv data3.csv above) must also be formatted in a specific way. Specifically- all data files must be comma seperated and contain only one header row with the name of each feature (or an index name / eventname - described in the next steps). For example (where note the \n character is ussually hidden in most text editors):
+
+    <pre><code>
+    subject_id,feat1,feat2,feat3\n
+    a,1.4,9,1.22\n
+    b,1.3,9,0.8\n
+    c,2,10,1.9\n
+    </code></pre>
+
+   4. Each file must have a column with a stored subject id. Valid names for this subject id column are currently: 
+    ['subject_id', 'participant_id', 'src_subject_id', 'subject', 'id', 'sbj', 'sbj_id', 'subjectkey', 'ID', 'UID', 'GUID']
+    As long as a column is included and saved under one of those names, then that column will be used iternally as the subject id. In the example above, 'subject_id' is used as the subject id column.
+
+   5. Next, each data file can optionally be stored with a valid 'event name' column. This column should be stored in the same way as the subject id column, and is used in cases where the underlying dataset is for example longitudinal or any case where a feature contains multiple values for the same subject. Valid column names for this are currently:
+   ['eventname', 'event', 'events', 'session_id', 'session', 'time_point', 'event_name', 'event name']
+   Within BPt_app, this column lets you filter data by a specific eventname value.
+
+   6. A few general notes about adding data to BPt:
+      - You may add multiple datasets, just with different folder names
+      - Data will be processed by BPt upon launch of the web application, this means that if you add a new dataset once the application has already been launched initially, that dataset will be processed in the background upon the next launch of the application. It will then not appear as an option until done processing and again re-launched. 
+      - If a feature / column overlaps across different data sources, e.g., data1.csv, data2.csv, then that feature will be merged across all data files, and saved in a new file. Merge behavior is if new values are found (as indexed by subject id and eventname overlap) they are simply added. If overlapped values are found, the newer value for that subject_id / eventname pair will be used. 
+      - You can change or delete data files or datasets at will, this will just prompt BPt to re-index that dataset and changes will be made accordingly. 
 
 5. Now, to install the application, navigate within the main BPt_app folder/repository and run the docker compose command:
    
     <pre><code>docker-compose up</code></pre>
 
-    This will build the docker image.
-
-
-
-The above represents general instructions for how adding a dataset can currently be done. That said, there are a few other key points to keep in mind!
-
-- All data source files must have a valid subject column. This column must be named one of ['subject_id', 'participant_id', 'src_subject_id', 'subject', 'id']. If it is not, then you should provide a mapping from whatever it is saved as to one of the valid names!
-  
-- Simmilarly, all data source files can have an optional eventname column. An eventname column is used in the case of longitudinal or multiple point studies where a specific subject has multiple values for a given measurement. If your data is not structured in this way, you can ignored this point. If it is, then you need to provide an 'eventname' column simmilarly to how you must provide a 'subject_id', where the eventname column must be named one of ['eventname', 'session_id']. If it is not, then you must either provide a "mapping" to one of those valid names, or the eventname will just be loaded in by default for every datapoint without a provided valid eventname column as None. 
-
-- The database will be built with whatever data is in this data/sources/custom folder everytime the web application is launched. That said, once a file has been uploaded, it will be skipped upon every subsequent launch. This means that you can always go back and add new files even after the original database has been built. On the otherhand, if you make changes to the values in an already uploaded file, they will not be updated. Right now the only way to delete data from the database is to delete the whole database (which after constructed can be found at (data/bpt/db). 
-
-- If a feature / column already exists within the database, it is updated as follows. If the new values contain any unique subject / eventname combinations, they will be added as new entries. If instead any overlapping subject / eventname data points are added, they will override the existing value. For example, if a data file was originally passed for feature 1, with subject x at eventname y and value z, but you upload a new datafile with the same feature 1, subject x and eventname y, but a different value, then the new value will override the previous one.
-
-- The web app will not let you in until the first database, with atleast some data has been built. That said, if you add new data afterwards, it will be uploaded in the background, and therefore not be avaliable right away. 
+    This will take care of building the docker image and application. There are a number of different tweaks here that you can make as desired, some of these are listed below:
+    - You may pass the flag "-d", so "docker-compose up -d", which will run the docker container in the background, otherwise the docker instance will be tied to your current terminal (and therefore shutdown if you close that terminal). See https://docs.docker.com/compose/reference/up/ for other simmilar options.
+    - Before running docker-compose up, you can optionally modify the docker-compose.yml file. One perhaps useful modification is to change the value of restart: no, to restart: always what this will do is restart BPt_app whenever it goes down, e.g., when you restart your computer. Otherwise, you must start the container manually everytime you wish to use BPt_app after a restart.

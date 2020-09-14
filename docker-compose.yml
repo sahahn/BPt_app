@@ -8,3 +8,4 @@ services:
       - "8008:80"
     volumes : 
       - ./data:/var/www/html/data
+    restart : "no"

@@ -39,7 +39,7 @@ def check_df(df):
     if 'eventname' not in df:
         needs_rewrite = True
 
-        event_ids = ['event', 'events', 'session_id',
+        event_ids = ['event', 'events', 'session_id', 'event name',
                      'session', 'time_point', 'event_name']
 
         for e_id in event_ids:
