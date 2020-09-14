@@ -188,6 +188,23 @@ function projectOn(key, project) {
     // Unhide options
     jQuery('#'+key+'-project-options').css('display', 'block');
 
+    // Show delete project button
+    jQuery('#delete-project').css('display', 'block');
+
+    // Clear and set project name on confirm delete screen
+    jQuery('#del-project-name').empty();
+    jQuery('#del-project-name').append(project['name']);
+
+    var confirm_del = jQuery('#confirm-delete-project')
+
+    // Clear if existing event handler
+    confirm_del.off('click');
+
+    // Register new - delete this project
+    confirm_del.on('click', function() {
+        deleteProject(project);
+    });
+
     // If last active was None, default to setup
     if (project['last_active'] == undefined) {
         project['last_active'] = '-setup'
@@ -207,24 +224,7 @@ function projectOn(key, project) {
         
         // Set to last active
         jQuery('#'+key+last_active).click();
-    });
-
-    // Show delete project button
-    jQuery('#delete-project').css('display', 'block');
-
-    // Clear and set project name on confirm delete screen
-    jQuery('#del-project-name').empty();
-    jQuery('#del-project-name').append(project['name']);
-
-    var confirm_del = jQuery('#confirm-delete-project')
-
-    // Clear if existing event handler
-    confirm_del.off('click');
-
-    // Register new - delete this project
-    confirm_del.on('click', function() {
-        deleteProject(project);
-    });
+    });   
 }
 
 function removeActiveProjects() {
