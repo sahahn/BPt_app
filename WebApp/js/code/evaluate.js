@@ -162,10 +162,16 @@ function addJobNameHTML(key) {
     var job_name_content = 'The name this job should be submitted under. Note, this is the name this ' + 
     'job will appear under within the Results table. This job name must also be unique.';
     var job_name_label = getPopLabel(key, 'Job Name ', job_name_content);
+
+    var n_jobs_content = 'The number of processors this job should be submitted with. Note: ' +
+    'If the underlying model does not benefit from multiple cores, then only 1 will be used. Also ' +
+    'in rare cases (e.g., with some search strategies), using more than n_jobs == 1 will trigger an error.';
+    var n_jobs_label = getPopLabel(key, 'Num. Jobs ', n_jobs_content);
     
     var html = '' +
     '<div class="row">' +
-    '<div class="form-group col-md-12">' +
+    
+    '<div class="form-group col-md-8">' +
         job_name_label +
         '<input type="text" class="form-control" id="'+key+'-job-name" placeholder="" value="">' +
 
@@ -176,8 +182,14 @@ function addJobNameHTML(key) {
         '<div id="'+key+'-job-name-val" class="invalid-feedback">' +
         'You must supply a job name!' +
         '</div>' +
-
     '</div>' +
+
+    '<div class="form-group col-md-4">' +
+        n_jobs_label +
+        '<input id="'+key+'-n-jobs" type="number" class="form-control" step="1" min="1" title="Number of proc. to use"></input>' +
+    '</div>' +
+
+
     '</div>';
 
     return html;
