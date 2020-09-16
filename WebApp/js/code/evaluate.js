@@ -494,7 +494,7 @@ function registerNJobs(key, project) {
         project['data'][key]['n-jobs'] = $(this).val();
     });
 
-    var def = 0;
+    var def = 1;
     if (project['data'][key]['n-jobs'] !== undefined) {
         def = project['data'][key]['n-jobs'];
     }
