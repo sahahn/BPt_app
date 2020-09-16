@@ -537,7 +537,10 @@ def base_run(params, job_dr, error_output_loc, job_name):
                                 time_per_fold=True,
                                 score_per_fold=True,
                                 fold_sizes=True,
+                                pipeline_verbose=True,
+                                best_params_score=True,
                                 best_params=True,
                                 save_to_logs=True)
+    ML.Set_Default_ML_Verbosity()
 
     return model_pipeline, problem_spec, ML
