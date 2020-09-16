@@ -188,8 +188,6 @@ function addJobNameHTML(key) {
         n_jobs_label +
         '<input id="'+key+'-n-jobs" type="number" class="form-control" step="1" min="1" title="Number of proc. to use"></input>' +
     '</div>' +
-
-
     '</div>';
 
     return html;
@@ -490,6 +488,20 @@ function registerJobName(key, project) {
     });
 }
 
+function registerNJobs(key, project) {
+
+    jQuery('#'+key+'-n-jobs').on('change', function() {
+        project['data'][key]['-n-jobs'] = $(this).val();
+    });
+
+    var def = 0;
+    if (project['data'][key]['-n-jobs'] !== undefined) {
+        def = project['data'][key]['-n-jobs'];
+    }
+
+    jQuery('#'+key+'-n-jobs').val(def).trigger('change');
+}
+
 //////////////////////////
 // Params helper funcs //
 ////////////////////////
@@ -696,6 +708,7 @@ function registerSubmitEval(key, project) {
 
     // Registers
     registerJobName(key, project);
+    registerNJobs(key, project);
     registerSplitsRow(key, project);
     registerPopovers();
 
@@ -711,6 +724,7 @@ function registerSubmitTest(key, project) {
 
     // Base registers
     registerJobName(key, project);
+    registerNJobs(key, project);
     registerPopovers();
 
     // Register submit job

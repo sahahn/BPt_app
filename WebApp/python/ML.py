@@ -476,13 +476,16 @@ def get_problem_spec(eval_params, output_loc):
 
     # Input checks here maybe
 
+    Problem_Spec()
+
     problem_spec =\
         Problem_Spec(problem_type=eval_params['problem_type'],
                      target=eval_params['-target'],
                      scorer=eval_params['-metrics'],
                      scope=eval_params['-scope-input'],
                      subjects=get_subjects(eval_params, output_loc),
-                     random_state=int(float(eval_params['random_state'])))
+                     random_state=int(float(eval_params['random_state'])),
+                     n_jobs=int(float(eval_params['n-jobs'])))
 
     return problem_spec
 
