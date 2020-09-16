@@ -5,6 +5,7 @@ from loading import load_params, save_results
 from load_test_split import base_test_load
 import matplotlib.pyplot as plt
 import numpy as np
+from utils import proc_title_length
 
 
 def df_to_table(display_df):
@@ -18,7 +19,7 @@ def df_to_table(display_df):
         '<thead><tr>'
 
     for col in display_df:
-        table += '<th scope="col">' + str(col) + '</th>'
+        table += '<th scope="col">' + proc_title_length(str(col)) + '</th>'
 
     table += '</tr></thead><tbody>'
 
