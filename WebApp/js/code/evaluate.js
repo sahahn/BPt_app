@@ -491,12 +491,12 @@ function registerJobName(key, project) {
 function registerNJobs(key, project) {
 
     jQuery('#'+key+'-n-jobs').on('change', function() {
-        project['data'][key]['-n-jobs'] = $(this).val();
+        project['data'][key]['n-jobs'] = $(this).val();
     });
 
     var def = 0;
-    if (project['data'][key]['-n-jobs'] !== undefined) {
-        def = project['data'][key]['-n-jobs'];
+    if (project['data'][key]['n-jobs'] !== undefined) {
+        def = project['data'][key]['n-jobs'];
     }
 
     jQuery('#'+key+'-n-jobs').val(def).trigger('change');
