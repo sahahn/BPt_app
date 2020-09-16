@@ -14,8 +14,9 @@ function getFirstRowHTML(key, project) {
     'loaded subjects also do not change, then the same random split will be generated every time.'
     var seed_label = getPopLabel(key, 'Random Seed ', seed_txt);
 
-    var html = ''
+    var html = '' + 
     '<div class="form-row m-5">' +
+
         '<div class="form-group col-md-6">' +
         name_label +
         '<input autocomplete="off" type="text" class="form-control" id="'+key+'-name"' +
