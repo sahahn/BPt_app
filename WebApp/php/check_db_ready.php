@@ -2,6 +2,7 @@
 include '/var/www/html/data/config.php';
 
 $lock_loc = $data_dr.'lock';
+$ready_loc = $data_dr.'ready';
 $error_loc = $data_dr.'process_datasets_errors.txt';
 $loaded_loc = $data_dr.'datasets.json';
 $all_events_loc = $data_dr.'all_events.json';
@@ -23,13 +24,13 @@ else {
     }
 
     // Ready
-    else if (file_exists($loaded_loc)) {
+    else if (file_exists($ready_loc)) {
         $return['status'] = 1;
         $return['datasets'] = file_get_contents($loaded_loc);
         $return['all_events'] = file_get_contents($all_events_loc);
     }
 
-    // Or not ready, as maybe init script not started yet
+    // Or not ready
     else {
         $return['status'] = 0;
     }
