@@ -8,7 +8,7 @@ This is an early beta release version, so please be mindful that their will like
 The main python library (that serves as a backend for this application) can be found at: https://github.com/sahahn/BPt.
 
 ## **Installation**
----------------
+---------------------
 
 As it currently stands, BPt_app is designed to be created and run in a docker container. Please follow the below instructions:
 
@@ -20,7 +20,7 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
 
    <pre><code>git clone https://github.com/sahahn/BPt_app.git</code></pre>
 
-4. An essential step to using to using the application is the ability to have the application access your datasets of interest. Importantly, adding datasets can be done either before installation or after - though the app will not function correctly if there are no datasets added, so it is reccomended to add atleast one now (before the rest of the installation).
+4. An essential step to using to using the application is the ability to have the application access your datasets of interest. Importantly, adding datasets can be done either before installation or after.
    
    1. Datasets are saved within BPt_app in the folder 'BPt_app/data/sources'
    
@@ -50,9 +50,9 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
    ['eventname', 'event', 'events', 'session_id', 'session', 'time_point', 'event_name', 'event name']
    Within BPt_app, this column lets you filter data by a specific eventname value.
 
-   6. A few general notes about adding data to BPt:
+   1. A few general notes about adding data to BPt:
       - You may add multiple datasets, just with different folder names
-      - Data will be processed by BPt upon launch of the web application, this means that if you add a new dataset once the application has already been launched initially, that dataset will be processed in the background upon the next launch of the application. It will then not appear as an option until done processing and again re-launched. 
+      - Data will be processed by BPt upon launch of the web application, this means that if you add a new dataset once the application has already been launched initially, that dataset will be processed upon the next launch of the application. Re-loading the web page can trigger the app to look for changes to the backend data.
       - If a feature / column overlaps across different data sources, e.g., data1.csv, data2.csv, then that feature will be merged across all data files, and saved in a new file. Merge behavior is if new values are found (as indexed by subject id and eventname overlap) they are simply added. If overlapped values are found, the newer value for that subject_id / eventname pair will be used. 
       - You can change or delete data files or datasets at will, this will just prompt BPt to re-index that dataset and changes will be made accordingly. 
 
@@ -67,3 +67,16 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
     - Likewise, you can use the command 'docker-compose stop' to stop the web app
 
 6. After the container is running, navigate to http://localhost:8008/BPt_app/WebApp/index.php this is the web address of the app, and should bring you to the home page!
+
+
+## **Once up and running**
+----------------------------
+The most useful commands to know once up and running are those used to start and stop the container (as mentioned above) with docker-compose, and also updating.
+There are two main ways to update. A faster temporary update (where the update will persist across stopping and starting the docker container, e.g., docker-compose start and stop, but will be deleted if docker-compose down is ever called). To call this faster temporary update, naviagte to the BPt_app folder and run the command:
+
+<pre><code>bash update.sh</code></pre>
+
+If instead you would like to do a full and lasting update, this involves re-building the whole container. It will also call git pull on your main directory, looking for changes in the docker files. To run this full update, run within BPt_app:
+
+<pre><code>bash full_update.sh</code></pre>
+
