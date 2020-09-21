@@ -401,7 +401,13 @@ def _proc_na(params):
 
 def _proc_eventname(params):
 
-    return params['-eventname'], '.'+settings['event_mapping'][params['-eventname']]
+    ext = settings['event_mapping'][params['-eventname']]
+
+    # If nonempty extension, prepend .
+    if len(ext) > 0:
+        ext = '.' + ext
+
+    return params['-eventname'], ext
 
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
