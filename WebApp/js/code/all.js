@@ -177,8 +177,8 @@ function projectOff(key) {
 function projectOn(key, project) {
 
     if (!datasets.includes(project['dataset'])) {
-        alert('Warning! The dataset this project was created with: ' + project['dataset'] + 
-              ' was not found. Check data to make sure it was not deleted or the name changed. ' +
+        alert('Warning! The dataset this project was created with: "' + project['dataset'] + 
+              '" was not found. Check data to make sure it was not deleted or the name changed. ' +
               'You may still view this saved project, but attempting to load new variables or run new ' +
               'experiments will likely fail!')
     }
@@ -564,11 +564,12 @@ function isReady(data) {
 // On document load
 jQuery(document).ready(function() {
 
+    // Run setup
+    jQuery.post('php/setup_db.php');
+    jQuery.post('php/setup_info.php');
+
     // Use the select2 bootstrap theme
     $.fn.select2.defaults.set("theme", "bootstrap4");
-
-    // Run setup
-    jQuery.post('php/setup.php');
 
     // Run once in this loop, so waits for finish
     jQuery.getJSON('php/check_db_ready.php', function (data) {
