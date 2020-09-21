@@ -176,6 +176,13 @@ function projectOff(key) {
 
 function projectOn(key, project) {
 
+    if (!datasets.includes(project['dataset'])) {
+        alert('Warning! The dataset this project was created with: ' + project['dataset'] + 
+              ' was not found. Check data to make sure it was not deleted or the name changed. ' +
+              'You may still view this saved project, but attempting to load new variables or run new ' +
+              'experiments will likely fail!')
+    }
+
     // Set dataset to settings
     settings['dataset'] = project['dataset'];
 
@@ -330,11 +337,6 @@ function registerLoadProject(project) {
                 }
 
                 variable_choices = arrayToChoices(variables);
-
-                if (!datasets.includes(project['dataset'])) {
-                    alert('Warning! The dataset this project was created with: ' + project['dataset'] + 
-                          ' was not found. Check data to make sure it was not deleted or the name changed.')
-                }
                 
                 // Trigger project on
                 projectOn(key, project);
