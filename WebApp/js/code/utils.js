@@ -163,6 +163,10 @@ function selectOrAdd(select_id, data) {
 function arrayToChoices(arr) {
     var choices = [];
 
+    if (arr.length == 0) {
+        return choices;
+    }
+
     arr.forEach(a => {
         choices.push({
             'id': a,

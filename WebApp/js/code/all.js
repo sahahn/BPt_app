@@ -322,6 +322,11 @@ function registerLoadProject(project) {
                 variables = JSON.parse(data['variables']);
                 events = JSON.parse(data['events']);
                 variable_choices = arrayToChoices(variables);
+
+                if (!datasets.includes(project['dataset'])) {
+                    alert('Warning! The dataset this project was created with: ' + project['dataset'] + 
+                          ' was not found. Check data to make sure it was not deleted or the name changed.')
+                }
                 
                 // Trigger project on
                 projectOn(key, project);
