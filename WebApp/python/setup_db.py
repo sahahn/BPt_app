@@ -66,6 +66,10 @@ def main():
         with open(lock_loc, 'w') as f:
             f.write('locked')
 
+    # If previous error file exists, remove it
+    if os.path.exists(error_loc):
+        os.remove(error_loc)
+
     # Call process datasets only if no
     try:
         process_datasets(base_loc)

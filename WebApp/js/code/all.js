@@ -524,9 +524,15 @@ function startApp() {
 function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
-        if (data !== 'not ready') {
+
+        console.log(data);
+
+        if (data['status'] == '1') {
             clearInterval(db_interval);
             isReady(data);
+        }
+        else if (data['status'] == '-1') {
+            console.log(data['error_msg']);
         }
     });
 }

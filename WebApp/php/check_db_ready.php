@@ -1,17 +1,39 @@
 <?php
 include '/var/www/html/data/config.php';
 
+$lock_loc = $data_dr.'lock';
+$error_loc = $data_dr.'process_datasets_errors.txt';
 $loaded_loc = $data_dr.'datasets.json';
 $all_events_loc = $data_dr.'all_events.json';
 
-if (file_exists($loaded_loc)) {
+$return = array();
 
-    $return = array();
-    $return['datasets'] = file_get_contents($loaded_loc);
-    $return['all_events'] = file_get_contents($all_events_loc);
-    echo json_encode($return);
+// If lock, return not ready, status = 0
+if (file_exists($lock_loc)) {
+    $return['status'] = 0;
 }
+
+// If no lock
 else {
-    echo json_encode('not ready');
+
+    // Either error
+    if (file_exists($error_loc)) {
+        $return['status'] = -1;
+        $return['error_msg'] = file_get_contents($error_loc);
+    }
+
+    // Ready
+    else if (file_exists($loaded_loc)) {
+        $return['status'] = 1;
+        $return['datasets'] = file_get_contents($loaded_loc);
+        $return['all_events'] = file_get_contents($all_events_loc);
+    }
+
+    // Or not ready, as maybe init script not started yet
+    else {
+        $return['status'] = 0;
+    }
 }
+
+echo json_encode($return);
 ?>
