@@ -320,7 +320,15 @@ function registerLoadProject(project) {
 
                 // Unpack to global vars
                 variables = JSON.parse(data['variables']);
+                if (variables == 'false'){
+                    variables = [];
+                }
+ 
                 events = JSON.parse(data['events']);
+                if (events == 'false') {
+                    events = [];
+                }
+
                 variable_choices = arrayToChoices(variables);
 
                 if (!datasets.includes(project['dataset'])) {
