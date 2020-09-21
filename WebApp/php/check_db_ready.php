@@ -19,7 +19,7 @@ else {
     // Either error
     if (file_exists($error_loc)) {
         $return['status'] = -1;
-        $return['error_msg'] = file_get_contents($error_loc);
+        $return['error_msg'] = utf8_encode(file_get_contents($error_loc));
     }
 
     // Ready
