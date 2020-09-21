@@ -532,7 +532,8 @@ function checkDBReady(db_interval) {
             isReady(data);
         }
         else if (status == '-1') {
-            console.log(data['error_msg']);
+            alert('Creating/Updating Data failed with error message: ' +
+            data['error_msg'] + ' Try to fix this error and then refresh the page to try again');
         }
     });
 }
@@ -565,7 +566,8 @@ jQuery(document).ready(function() {
         }
 
         else if (status == '-1') {
-            console.log(data['error_msg']);
+            alert('Creating/Updating Data failed with error message: ' +
+            data['error_msg'] + ' Try to fix this error and then refresh the page to try again');
         }
 
         // If not ready, set load and start check loop
