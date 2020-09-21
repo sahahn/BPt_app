@@ -320,6 +320,7 @@ function registerLoadProject(project) {
 
                 // Unpack to global vars
                 variables = JSON.parse(data['variables']);
+                console.log(variables)
                 if (variables == 'false'){
                     variables = [];
                 }
