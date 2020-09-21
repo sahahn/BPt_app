@@ -7,3 +7,4 @@ db/*
 data/sources/*
 !data/sources/.keep
 *.pyc
+.update.sh.swp

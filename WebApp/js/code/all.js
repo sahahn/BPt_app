@@ -524,9 +524,16 @@ function startApp() {
 function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
-        if (data !== 'not ready') {
+
+        var status = JSON.parse(data['status']);
+
+        if (status == '1') {
             clearInterval(db_interval);
             isReady(data);
+        }
+        else if (status == '-1') {
+            alert('Creating/Updating Data failed with error message: ' +
+            data['error_msg'] + ' Try to fix this error and then refresh the page to try again');
         }
     });
 }
@@ -551,9 +558,16 @@ jQuery(document).ready(function() {
     // Run once in this loop, so waits for finish
     jQuery.getJSON('php/check_db_ready.php', function (data) {
 
+        var status = JSON.parse(data['status']);
+
         // If ready, call isReady
-        if (data !== 'not ready') {
+        if (status == '1') {
             isReady(data);
+        }
+
+        else if (status == '-1') {
+            alert('Creating/Updating Data failed with error message: ' +
+            data['error_msg'] + ' Try to fix this error and then refresh the page to try again');
         }
 
         // If not ready, set load and start check loop
@@ -565,7 +579,6 @@ jQuery(document).ready(function() {
                 checkDBReady(db_interval);
             }, 5000);
         }
-
     });
 
 });

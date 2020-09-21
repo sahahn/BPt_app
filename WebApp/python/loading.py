@@ -401,7 +401,13 @@ def _proc_na(params):
 
 def _proc_eventname(params):
 
-    return params['-eventname'], '.'+settings['event_mapping'][params['-eventname']]
+    ext = settings['event_mapping'][params['-eventname']]
+
+    # If nonempty extension, prepend .
+    if len(ext) > 0:
+        ext = '.' + ext
+
+    return params['-eventname'], ext
 
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
@@ -1386,6 +1392,9 @@ def base_single_load(user_dr, v_type, n):
 
     # After init proc of params, check the loading cache
     # If results cached will set the results and exit the script
+    # Also add event mapping + dataset from settings
+    params['event_mapping'] = settings['event_mapping']
+    params['dataset'] = settings['dataset']
     param_hash = check_loading_cache(params, output_loc, v_type)
 
     # Perform procs / checks on input

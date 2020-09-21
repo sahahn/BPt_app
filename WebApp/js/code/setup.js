@@ -1,30 +1,56 @@
-function displaySetup(project) {
 
-    // Hide everything
-    hideAllProjSteps()
 
-    // If already loaded
-    if (jQuery('#body-setup').html().length > 100) {
-        jQuery('#body-setup').css('display', 'block');
-        return;
-    }
 
-    var project_key = project['key'];
 
-    var key = 'setup'
-
-    if (project['data'][key] == undefined) {
-        project['data'][key] = {};
-    }
+function getFirstRowHTML(key, project) {
 
     var name_txt = "The name of this project. Project names are non-unique, but most user's will likely want them to have a unique name."
     var name_label = getPopLabel(key, "Project Name ", name_txt);
+
     var seed_txt = 'Random seeds are almost always a good idea in a scientific context.' +
     ' Essentially what this parameter controls is the seed to a fixed random number generator. ' +
     'This will ensure that almost every process which used randomness in BPt will be replicable if ' +
     're-run. For example, if generating a new random Test Split, if the random seed does not change and the ' +
     'loaded subjects also do not change, then the same random split will be generated every time.'
     var seed_label = getPopLabel(key, 'Random Seed ', seed_txt);
+
+    var html = '' + 
+    '<div class="form-row m-5">' +
+
+        '<div class="form-group col-md-6">' +
+        name_label +
+        '<input autocomplete="off" type="text" class="form-control" id="'+key+'-name"' +
+        'placeholder="" value="'+project['name']+'">' +
+        '</div>' +
+
+        '<div class="form-group col-md-2">' +
+        seed_label +
+        '<br>' +
+        '<input class="form-control" type="number" id="'+key+'-random-seed" value=222 min="0">' + 
+        '</div>' +
+
+    '</div>';
+
+    return html;
+}
+
+function getDefaultEventNameHTML() {
+
+    var txt = "This allows you to define the default eventname used for loading variables.";
+    var label = getPopLabel("event_default", "Default Eventname ", txt);
+
+    var html = '' +
+    '<div class="form-row m-5">' +
+    '<div class="form-group col-md-6">' +
+    label +
+    '<select id="event_default" class="form-control" data-width="100%"></select>' +
+    '</div>' +
+    '</div>';
+
+    return html;
+}
+
+function getSetupTogglesRowHTML(key) {
 
     var cache_span = '<span data-toggle="popover"' +
     'title="Input Caching" data-placement="top"' +
@@ -47,28 +73,7 @@ function displaySetup(project) {
     'across different single user versions of BPt."' +
     '>See Public Dists <i class="fas fa-info-circle fa-sm"></i></span>';
 
-    var html = '' + 
-    '<div class="form-row m-5">' +
-        '<div class="form-group col-md-6">' +
-        name_label +
-        '<input autocomplete="off" type="text" class="form-control" id="'+key+'-name"' +
-        'placeholder="" value="'+project['name']+'">' +
-        '</div>' +
-
-        '<div class="form-group col-md-2">' +
-        seed_label +
-        '<br>' +
-        '<input class="form-control" type="number" id="'+key+'-random-seed" value=222 min="0">' + 
-        '</div>' +
-
-    '</div>' +
-    
-    '<div class="form-row m-5">' +
-    '<div class="form-group col-md-6">' +
-    '<select id="event_default" class="form-control" data-width="100%"></select>' +
-    '</div>' +
-    '</div>' +
-
+    var html = '' +
     '<div class="form-row m-5">' +
 
         '<div class="form-group col-md-3">' +
@@ -87,14 +92,12 @@ function displaySetup(project) {
 
     '</div>';
 
-    // Add + Display
-    jQuery('#body-setup').append(html);
-    jQuery('#body-setup').css('display', 'block');
+    return html;
+}
 
-    // Popovers
-    registerPopovers()
-
-    jQuery('#'+key+'-name').on('input', function() {
+function registerProjectName(key, project) {
+    
+    jQuery('#' + key + '-name').on('input', function () {
 
         // make sure no /'s or \s
         var input = $(this).val().replace(/[\/\\]/g, '');
@@ -103,7 +106,7 @@ function displaySetup(project) {
         }
 
         // Update side bar name
-        var proj_name = jQuery('#'+project_key+'-project-name')
+        var proj_name = jQuery('#' + project['key'] + '-project-name');
         proj_name.empty();
         proj_name.append($(this).val());
 
@@ -114,18 +117,44 @@ function displaySetup(project) {
         jQuery('#del-project-name').empty();
         jQuery('#del-project-name').append($(this).val());
     });
+}
 
-    // Update changes to random seed to project
-    jQuery('#'+key+'-random-seed').on('input', function() {
+function registerRandomSeed(key, project) {
+    jQuery('#' + key + '-random-seed').on('input', function () {
         project['data'][key]['-random-seed'] = $(this).val();
     });
     if (project['data'][key]['-random-seed'] !== undefined) {
-        jQuery('#'+key+'-random-seed').val(parseInt(project['data'][key]['-random-seed']));
+        jQuery('#' + key + '-random-seed').val(parseInt(project['data'][key]['-random-seed']));
     }
-    jQuery('#'+key+'-random-seed').trigger('input');
+    jQuery('#' + key + '-random-seed').trigger('input');
+}
+
+function registerEventDefault(key, project) {
+    
+    // Register choice of event default
+    jQuery('#event_default').select2({
+        data: arrayToChoices(events)
+    });
+
+    // On change event default, save to project + update val in settings
+    jQuery('#event_default').on('change', function () {
+        project['data'][key]['event_default'] = $(this).val();
+        settings['event_default'] = $(this).val();
+    });
+
+    // If undefined, set to first event
+    if (project['data'][key]['event_default'] == undefined) {
+        project['data'][key]['event_default'] = events[0];
+    }
+
+    // Set with current value   
+    jQuery('#event_default').val(project['data'][key]['event_default']).trigger('change');
+}
+
+function registerInputCacheState(key, project) {
 
     // Based on selection, either set v_cache to real cache or undefined
-    jQuery('#'+key+'-input-cache').on('change', function() {
+    jQuery('#' + key + '-input-cache').on('change', function () {
         project['data'][key]['-input-cache'] = $(this).prop('checked');
 
         if ($(this).prop('checked')) {
@@ -139,19 +168,22 @@ function displaySetup(project) {
     // Init w/ default or saved
     var input_val = true;
     if (project['data'][key]['-input-cache'] !== undefined) {
-        input_val = isBool(project['data'][key]['-input-cache'])
+        input_val = isBool(project['data'][key]['-input-cache']);
     }
-    jQuery('#'+key+'-input-cache').prop('checked', input_val).trigger('change');
+    jQuery('#' + key + '-input-cache').prop('checked', input_val).trigger('change');
+}
 
+function registerPublicDistState(key, project) {
+    
     // Toggle to see public param dists or not
-    jQuery('#'+key+'-public-dist').on('change', function() {
+    jQuery('#' + key + '-public-dist').on('change', function () {
         project['data'][key]['-public-dist'] = $(this).prop('checked');
 
         if ($(this).prop('checked')) {
             param_dists['public'] = public_param_dists;
         }
         else {
-            param_dists['public'] = {}
+            param_dists['public'] = {};
         }
     });
 
@@ -161,24 +193,48 @@ function displaySetup(project) {
         pd_val = isBool(project['data'][key]['-public-dist'])
     }
     jQuery('#'+key+'-public-dist').prop('checked', pd_val).trigger('change');
+}
 
 
-    // Register choice of event default
-    jQuery('#event_default').select2({
-        data: arrayToChoices(events)
-    });
+function displaySetup(project) {
 
-    // On change event default, save to project + update val in settings
-    jQuery('#event_default').on('change', function() {
-        project['data'][key]['event_default'] = $(this).val();
-        settings['event_default'] = $(this).val();
-    });
+    // Hide everything
+    hideAllProjSteps()
 
-    // If undefined, set to first event
-    if (project['data'][key]['event_default'] == undefined) {
-        project['data'][key]['event_default'] = events[0];
+    // If already loaded
+    if (jQuery('#body-setup').html().length > 100) {
+        jQuery('#body-setup').css('display', 'block');
+        return;
     }
 
-    // Set with current value   
-    jQuery('#event_default').val(project['data'][key]['event_default']).trigger('change');        
+    var key = 'setup'
+    if (project['data'][key] == undefined) {
+        project['data'][key] = {};
+    }
+    
+    // Get HTML
+    var html = '' + 
+    getFirstRowHTML(key, project) + 
+    getDefaultEventNameHTML(key) +
+    getSetupTogglesRowHTML(key);
+
+    // Add + Display
+    jQuery('#body-setup').append(html);
+    jQuery('#body-setup').css('display', 'block');
+
+    // Registers
+    registerPopovers()
+    registerProjectName(key, project);
+    registerRandomSeed(key, project);
+    registerInputCacheState(key, project);
+    registerPublicDistState(key, project);
+    registerEventDefault(key, project);        
 }
+
+
+
+
+
+
+
+

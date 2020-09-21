@@ -4,6 +4,7 @@ import pickle as pkl
 from utils import save_error
 from ML import run_setup, base_run
 
+
 def main(user_dr, job_name):
 
     # Init setup
@@ -19,7 +20,7 @@ def main(user_dr, job_name):
                           problem_spec=problem_spec,
                           train_subjects='train',
                           test_subjects='test')
-        results['scorer_strs'] = ML.Model_Pipeline.scorer_strs
+        results['scorer_strs'] = ML.evaluator.scorer_strs
         results['n_repeats'], results['n_splits'] = 1, 1
 
     except Exception as e:

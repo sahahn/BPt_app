@@ -5,9 +5,6 @@ from utils import save_error
 from ML import run_setup, base_run, get_splits_CV
 
 
-
-
-
 def main(user_dr, job_name):
 
     # Init setup
@@ -25,7 +22,6 @@ def main(user_dr, job_name):
     except Exception as e:
         save_error('Error parsing evaluate params', error_output_loc, e)
 
-    
     # Run Evaluate
     try:
         results = ML.Evaluate(model_pipeline,
@@ -34,9 +30,9 @@ def main(user_dr, job_name):
                               n_repeats=n_repeats,
                               CV=CV,
                               train_subjects='train')
-        results['scorer_strs'] = ML.Model_Pipeline.scorer_strs
+        results['scorer_strs'] = ML.evaluator.scorer_strs
         results['n_repeats'] = n_repeats
-        results['n_splits'] = ML.Model_Pipeline.n_splits_
+        results['n_splits'] = ML.evaluator.n_splits_
     except Exception as e:
         save_error('Error starting Evaluate', error_output_loc, e)
 

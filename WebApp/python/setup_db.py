@@ -57,6 +57,7 @@ def main():
 
     # Locs + checks
     lock_loc = os.path.join(base_loc, 'bpt/lock')
+    ready_loc = os.path.join(base_loc, 'bpt/ready')
     error_loc = os.path.join(base_loc, 'bpt/process_datasets_errors.txt')
 
     # Check for db-add lock
@@ -66,9 +67,17 @@ def main():
         with open(lock_loc, 'w') as f:
             f.write('locked')
 
+    # If previous error file exists, remove it
+    if os.path.exists(error_loc):
+        os.remove(error_loc)
+
     # Call process datasets only if no
     try:
         process_datasets(base_loc)
+
+        # If processed no errors add ready
+        with open(ready_loc, 'w') as f:
+            f.write('ready')
 
     # If error, save to text file
     except Exception as e:
