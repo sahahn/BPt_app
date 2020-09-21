@@ -582,7 +582,7 @@ jQuery(document).ready(function() {
              // Start loop to check if db ready
             var db_interval = setInterval(function() {
                 checkDBReady(db_interval);
-            }, 5000);
+            }, 750);
         }
     });
 
