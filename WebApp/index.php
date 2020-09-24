@@ -99,7 +99,7 @@
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
 
-  <!-- Modal for darta source -->
+  <!-- Modal for data source -->
   <div class="modal fade" id="select-data-source" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -201,9 +201,6 @@
   <script type="text/javascript" src="js/libraries/pdfmake.min.js"></script>
   <script type="text/javascript" src="js/libraries/vfs_fonts.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
-
-  
-  
 
 
 

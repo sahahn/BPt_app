@@ -534,8 +534,6 @@ function startApp() {
     });
 }
 
-
-
 function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
