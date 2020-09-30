@@ -112,10 +112,16 @@ def load_vars(variables, col_to_loc, pop=False):
             full_df = pd.read_csv(file)
             df = full_df[by_file[file] + ['subject_id', 'eventname']].copy()
             resave_df = full_df.drop(by_file[file], axis=1)
-            resave_df.to_csv(file, index=False)
-            print('Re-saving with popped cols removed, new shape:',
-                  resave_df.shape)
 
+            # If the df to re-save is now empty (execpt subject_id + eventname), delete instead
+            if resave_df.shape[1] == 2:
+                print('NOW EMPTY - DELETING:', file)
+                os.remove(file)
+
+            else:
+                print('RE-SAVE (POP REMOVED):', file,
+                      'SHAPE:', resave_df.shape)
+                resave_df.to_csv(file, index=False)
         else:
             df = pd.read_csv(
                 file, usecols=by_file[file] + ['subject_id', 'eventname'])
