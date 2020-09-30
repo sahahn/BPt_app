@@ -231,12 +231,15 @@ function registerByValueCardName(key) {
 
     jQuery('#'+key+'-var-input').on('change', function() {
 
-        if($(this).val().length > 0) {
-            jQuery('#'+key+'-file-input').val('').trigger('change');
-            jQuery('#'+key+'-header-text').append(':  <i>' + $(this).val() + ' = </i>');
-        }
-        else if (jQuery('#'+key+'-file-input').val().length == 0){
-            jQuery('#'+key+'-header-text').empty();
+        if ($(this).val() !== null) {
+
+            if($(this).val().length > 0) {
+                jQuery('#'+key+'-file-input').val('').trigger('change');
+                jQuery('#'+key+'-header-text').append(':  <i>' + $(this).val() + ' = </i>');
+            }
+            else if (jQuery('#'+key+'-file-input').val().length == 0){
+                jQuery('#'+key+'-header-text').empty();
+            }
         }
     });
 
