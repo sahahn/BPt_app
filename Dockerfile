@@ -24,7 +24,7 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && conda init bash && . ~/.bashrc && conda update -n base -c defaults conda -y \
     && conda create --name ML -y && conda activate ML && conda install pip \
     && git clone https://github.com/sahahn/BPt.git /var/www/html/BPt \
-    && git clone https://github.com/sahahn/BPt_app.git -b dev /var/www/html/BPt_app \
+    && git clone https://github.com/sahahn/BPt_app.git -b sage_dev /var/www/html/BPt_app \
     && pip install /var/www/html/BPt/ \
     && pip install -r /var/www/html/BPt/docs/requirements.txt \
     && sed -i '/post_max_size = 8M/cpost_max_size = 5000M' /etc/php/7.2/apache2/php.ini \
