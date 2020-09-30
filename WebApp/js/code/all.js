@@ -16,7 +16,7 @@ function save_all() {
     // Save projects
     jQuery.post('php/save_projects.php', {
         'projects': JSON.stringify(projects),
-        'settings': JSON.stringify(settings)
+        'settings': settings
     });
 
     // Save user param dists
@@ -474,7 +474,7 @@ function startApp() {
     jQuery.getJSON('php/get_projects.php', function (data) {
 
         if (Object.keys(data).includes('settings')) {
-            settings = JSON.parse(data['settings']);
+            settings = data['settings'];
         }
 
         if (Object.keys(data).includes('projects')) {
