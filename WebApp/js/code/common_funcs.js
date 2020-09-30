@@ -270,7 +270,7 @@ function refreshByValueChoices(include_key, project) {
             // Check if the original options are still valid
             // and change the value back to that if so
             var choices = project['strat_choices']
-            print('1' + project['strat_choices']);
+            console.log('1' + project['strat_choices']);
 
             if (choice_name in choices) {
                 jQuery('#'+key+'-var-input').val(choice_name).trigger('change');
