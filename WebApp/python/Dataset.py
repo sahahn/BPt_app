@@ -113,7 +113,8 @@ def load_vars(variables, col_to_loc, pop=False):
             df = full_df[by_file[file] + ['subject_id', 'eventname']].copy()
             resave_df = full_df.drop(by_file[file], axis=1)
 
-            # If the df to re-save is now empty (execpt subject_id + eventname), delete instead
+            # If the df to re-save is now empty (execpt subject_id + eventname)
+            # delete instead
             if resave_df.shape[1] == 2:
                 print('NOW EMPTY - DELETING:', file)
                 os.remove(file)
@@ -295,6 +296,14 @@ class Dataset():
 
         # Process eventname
         self._proc_eventname(file_loc)
+
+        # Re-save original file with just the non-overlapping vars
+        if len(existing_vars) > 0:
+            original_df = pd.read_csv(file_loc)
+            original_df.drop(list(existing_vars), axis=1, inplace=True)
+            print('RE-SAVE W/O OVERLAP:', file_loc,
+                  'SHAPE:', original_df.shape)
+            original_df.to_csv(file_loc, index=False)
 
     def _get_extra_df_locs(self):
         '''Get the location of the last extra df'''
