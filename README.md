@@ -72,7 +72,7 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
 ## **Once up and running**
 ----------------------------
 The most useful commands to know once up and running are those used to start and stop the container (as mentioned above) with docker-compose, and also updating.
-There are two main ways to update. A faster temporary update (where the update will persist across stopping and starting the docker container, e.g., docker-compose start and stop, but will be deleted if docker-compose down is ever called). To call this faster temporary update, naviagte to the BPt_app folder and run the command:
+There are two main ways to update. A faster temporary update (where the update will persist across stopping and starting the docker container, e.g., docker-compose start and stop, but will be deleted if docker-compose down is ever called). To call this faster temporary update, naviagte to the BPt_app folder and run the command (Note: the container must be running, e.g., docker-compose start called):
 
 <pre><code>bash update.sh</code></pre>
 

@@ -112,10 +112,17 @@ def load_vars(variables, col_to_loc, pop=False):
             full_df = pd.read_csv(file)
             df = full_df[by_file[file] + ['subject_id', 'eventname']].copy()
             resave_df = full_df.drop(by_file[file], axis=1)
-            resave_df.to_csv(file, index=False)
-            print('Re-saving with popped cols removed, new shape:',
-                  resave_df.shape)
 
+            # If the df to re-save is now empty (execpt subject_id + eventname)
+            # delete instead
+            if resave_df.shape[1] == 2:
+                print('NOW EMPTY - DELETING:', file)
+                os.remove(file)
+
+            else:
+                print('RE-SAVE (POP REMOVED):', file,
+                      'SHAPE:', resave_df.shape)
+                resave_df.to_csv(file, index=False)
         else:
             df = pd.read_csv(
                 file, usecols=by_file[file] + ['subject_id', 'eventname'])
@@ -290,6 +297,14 @@ class Dataset():
         # Process eventname
         self._proc_eventname(file_loc)
 
+        # Re-save original file with just the non-overlapping vars
+        if len(existing_vars) > 0:
+            original_df = pd.read_csv(file_loc)
+            original_df.drop(list(existing_vars), axis=1, inplace=True)
+            print('RE-SAVE W/O OVERLAP:', file_loc,
+                  'SHAPE:', original_df.shape)
+            original_df.to_csv(file_loc, index=False)
+
     def _get_extra_df_locs(self):
         '''Get the location of the last extra df'''
 
@@ -314,32 +329,39 @@ class Dataset():
 
         existing_df = load_vars(existing_vars, self.vars_to_loc, pop=True)
         merged_df = merge_dfs(existing_df, new_df)
-        print('Merged overlapping columns with existing, new shape',
-              merged_df.shape)
+        print('EXISTING_MERGED SHAPE:', merged_df.shape)
 
         # Get current extra df loc, and next loc
         extra_df_loc, next_df_loc = self._get_extra_df_locs()
 
-        extra_df_len = len(pd.read_csv(extra_df_loc, nrows=0).columns)
-        comb_len = extra_df_len + len(merged_df.columns)
+        if os.path.exists(extra_df_loc):
 
-        if os.path.exists(extra_df_loc) and comb_len < self.EXTRA_COL_LIM:
+            extra_df_len = len(pd.read_csv(extra_df_loc, nrows=0).columns)
+            comb_len = extra_df_len + len(merged_df.columns)
 
-            combined_df = merged_df.merge(pd.read_csv(extra_df_loc),
-                                          on=['subject_id', 'eventname'],
-                                          how='outer')
+            if comb_len < self.EXTRA_COL_LIM:
 
-            print(
-                'Adding merged overlapped columns to existing OVERLAP file',
-                combined_df.shape)
-            combined_df.to_csv(extra_df_loc, index=False)
-            self._add_vars(existing_vars, extra_df_loc)
+                existing_extra_df = pd.read_csv(extra_df_loc)
+                print('LOAD:', extra_df_loc, 'SHAPE:', existing_extra_df.shape)
 
-        else:
-            print('Adding merged overlapped columns to new OVERLAP file',
-                  merged_df.shape)
-            merged_df.to_csv(next_df_loc, index=False)
-            self._add_vars(existing_vars, next_df_loc)
+                combined_df = merged_df.merge(existing_extra_df,
+                                              on=['subject_id', 'eventname'],
+                                              how='outer')
+
+                print('SAVE TO EXISTING:', extra_df_loc,
+                      'SHAPE:', combined_df.shape)
+                combined_df.to_csv(extra_df_loc, index=False)
+
+                self._add_vars(existing_vars, extra_df_loc)
+
+                # End if reaches here
+                return
+
+        # If not adding to an existing, i.e., early ended, add to new overlap
+        print('SAVE NEW OVERLAP:', next_df_loc,
+              'SHAPE:', merged_df.shape)
+        merged_df.to_csv(next_df_loc, index=False)
+        self._add_vars(existing_vars, next_df_loc)
 
     def _add_vars(self, new_vars, file_loc):
 

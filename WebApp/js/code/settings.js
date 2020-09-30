@@ -36,10 +36,13 @@ function ifEvents() {
         settings['event_mapping'] = {'None': ''};
     }
 
+    var eventname_txt = "Placeholder";
+    var eventname_label = getPopLabel(undefined, "<b>Eventname</b> ", eventname_txt);
+
     var header_html = '<div class="row form-group">' +
         '<div class="col-sm-1"></div>' +
         '<div class="col-sm-5">' +
-        '<b>Eventname</b>' +
+        eventname_label + 
         '</div>' +
         '<div class="col-sm-5">' +
         '<b>Append Short Name</b>' +

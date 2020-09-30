@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 from Dataset import Dataset
 
 
@@ -49,6 +50,13 @@ def process_datasets(base_loc):
     datasets_loc = os.path.join(base_loc, 'bpt/datasets.json')
     with open(datasets_loc, 'w') as f:
         json.dump(sorted(non_empty_datasets), f)
+
+    # Go through and delete any saved data info if
+    # not in the compiled datasets
+    saved_datasets = os.listdir(data_info_loc)
+    for dataset in saved_datasets:
+        if dataset not in non_empty_datasets:
+            shutil.rmtree(os.path.join(data_info_loc, dataset))
 
 
 def main():

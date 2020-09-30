@@ -176,6 +176,13 @@ function projectOff(key) {
 
 function projectOn(key, project) {
 
+    if (!datasets.includes(project['dataset'])) {
+        alert('Warning! The dataset this project was created with: "' + project['dataset'] + 
+              '" was not found. Check data to make sure it was not deleted or the name changed. ' +
+              'You may still view this saved project, but attempting to load new variables or run new ' +
+              'experiments will likely fail!')
+    }
+
     // Set dataset to settings
     settings['dataset'] = project['dataset'];
 
@@ -320,7 +327,15 @@ function registerLoadProject(project) {
 
                 // Unpack to global vars
                 variables = JSON.parse(data['variables']);
+                if (variables == false){
+                    variables = [];
+                }
+ 
                 events = JSON.parse(data['events']);
+                if (events == false) {
+                    events = [];
+                }
+
                 variable_choices = arrayToChoices(variables);
                 
                 // Trigger project on
@@ -519,8 +534,6 @@ function startApp() {
     });
 }
 
-
-
 function checkDBReady(db_interval) {
 
     jQuery.getJSON('php/check_db_ready.php', function (data) {
@@ -549,11 +562,12 @@ function isReady(data) {
 // On document load
 jQuery(document).ready(function() {
 
+    // Run setup
+    jQuery.post('php/setup_db.php');
+    jQuery.post('php/setup_info.php');
+
     // Use the select2 bootstrap theme
     $.fn.select2.defaults.set("theme", "bootstrap4");
-
-    // Run setup
-    jQuery.post('php/setup.php');
 
     // Run once in this loop, so waits for finish
     jQuery.getJSON('php/check_db_ready.php', function (data) {
@@ -577,7 +591,7 @@ jQuery(document).ready(function() {
              // Start loop to check if db ready
             var db_interval = setInterval(function() {
                 checkDBReady(db_interval);
-            }, 5000);
+            }, 750);
         }
     });
 

@@ -120,12 +120,15 @@ function registerProjectName(key, project) {
 }
 
 function registerRandomSeed(key, project) {
+    
     jQuery('#' + key + '-random-seed').on('input', function () {
         project['data'][key]['-random-seed'] = $(this).val();
     });
+
     if (project['data'][key]['-random-seed'] !== undefined) {
         jQuery('#' + key + '-random-seed').val(parseInt(project['data'][key]['-random-seed']));
     }
+    
     jQuery('#' + key + '-random-seed').trigger('input');
 }
 
@@ -223,7 +226,7 @@ function displaySetup(project) {
     jQuery('#body-setup').css('display', 'block');
 
     // Registers
-    registerPopovers()
+    registerPopovers();
     registerProjectName(key, project);
     registerRandomSeed(key, project);
     registerInputCacheState(key, project);
