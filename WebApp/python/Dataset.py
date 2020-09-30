@@ -327,7 +327,11 @@ class Dataset():
 
             if comb_len < self.EXTRA_COL_LIM:
 
-                combined_df = merged_df.merge(pd.read_csv(extra_df_loc),
+                existing_extra_df = pd.read_csv(extra_df_loc)
+                print('existing_extra_df to merge:', existing_extra_df.shape,
+                      existing_extra_df.head(2))
+
+                combined_df = merged_df.merge(existing_extra_df,
                                               on=['subject_id', 'eventname'],
                                               how='outer')
 
