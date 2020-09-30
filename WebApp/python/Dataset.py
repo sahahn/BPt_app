@@ -320,28 +320,32 @@ class Dataset():
         # Get current extra df loc, and next loc
         extra_df_loc, next_df_loc = self._get_extra_df_locs()
 
-        print('extra_df_loc = ', extra_df_loc, 'next_df_loc = ', next_df_loc)
+        if os.path.exists(extra_df_loc):
 
-        extra_df_len = len(pd.read_csv(extra_df_loc, nrows=0).columns)
-        comb_len = extra_df_len + len(merged_df.columns)
+            extra_df_len = len(pd.read_csv(extra_df_loc, nrows=0).columns)
+            comb_len = extra_df_len + len(merged_df.columns)
 
-        if os.path.exists(extra_df_loc) and comb_len < self.EXTRA_COL_LIM:
+            if comb_len < self.EXTRA_COL_LIM:
 
-            combined_df = merged_df.merge(pd.read_csv(extra_df_loc),
-                                          on=['subject_id', 'eventname'],
-                                          how='outer')
+                combined_df = merged_df.merge(pd.read_csv(extra_df_loc),
+                                              on=['subject_id', 'eventname'],
+                                              how='outer')
 
-            print(
-                'Adding merged overlapped columns to existing OVERLAP file',
-                combined_df.shape)
-            combined_df.to_csv(extra_df_loc, index=False)
-            self._add_vars(existing_vars, extra_df_loc)
+                print(
+                    'Adding merged overlapped columns to',
+                    'existing OVERLAP file',
+                    combined_df.shape)
+                combined_df.to_csv(extra_df_loc, index=False)
+                self._add_vars(existing_vars, extra_df_loc)
 
-        else:
-            print('Adding merged overlapped columns to new OVERLAP file',
-                  merged_df.shape)
-            merged_df.to_csv(next_df_loc, index=False)
-            self._add_vars(existing_vars, next_df_loc)
+                # End if reaches here
+                return
+
+        # If not adding to an existing, i.e., early ended, add to new overlap
+        print('Adding merged overlapped columns to new OVERLAP file',
+              merged_df.shape)
+        merged_df.to_csv(next_df_loc, index=False)
+        self._add_vars(existing_vars, next_df_loc)
 
     def _add_vars(self, new_vars, file_loc):
 
