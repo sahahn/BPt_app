@@ -17,7 +17,6 @@ $cmd_p2 = "/opt/conda/envs/ML/bin/python ".$python_loc.$_POST['params']['script'
 $cmd = $cmd_p1.$cmd_p2;
 exec($cmd);
 
-
 // Once done, echo the contents of the output file
 echo(file_get_contents($temp_dr.'/ML_Output_'.$_POST['params']['n'].'.json'));
 ?>
