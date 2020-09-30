@@ -476,7 +476,7 @@ function startApp() {
         console.log(data)
 
         if (Object.keys(data).includes('settings')) {
-            settings = data['settings'];
+            settings = JSON.parse(data['settings']);
         }
 
         if (Object.keys(data).includes('projects')) {
