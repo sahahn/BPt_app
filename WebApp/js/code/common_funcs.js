@@ -231,31 +231,27 @@ function registerByValueCardName(key) {
 
     jQuery('#'+key+'-var-input').on('change', function() {
 
-        if ($(this).val() !== null) {
-
-            if($(this).val().length > 0) {
-                jQuery('#'+key+'-file-input').val('').trigger('change');
-                jQuery('#'+key+'-header-text').append(':  <i>' + $(this).val() + ' = </i>');
-            }
-            else if (jQuery('#'+key+'-file-input').val().length == 0){
-                jQuery('#'+key+'-header-text').empty();
-            }
+        if($(this).val().length > 0) {
+            jQuery('#'+key+'-file-input').val('').trigger('change');
+            jQuery('#'+key+'-header-text').append(':  <i>' + $(this).val() + ' = </i>');
         }
+        else if (jQuery('#'+key+'-file-input').val().length == 0){
+            jQuery('#'+key+'-header-text').empty();
+        }
+        
     });
 
     jQuery('#'+key+'-var-val').on('change', function() {
 
-        if ($(this).val() !== null) {
+        jQuery('#'+key+'-header-text').empty();
 
-            jQuery('#'+key+'-header-text').empty();
-
-            if($(this).val().length > 0) {
-                jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = ' + $(this).val() + '</i>');
-            }
-            else {
-                jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = </i>');
-            }
-        }        
+        if($(this).val().length > 0) {
+            jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = ' + $(this).val() + '</i>');
+        }
+        else {
+            jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = </i>');
+        }
+             
     });
 }
 
@@ -306,6 +302,9 @@ function refreshStratChoices(project) {
             valid.push(repr_name);
         }
     });
+
+    console.log('valid:' + valid);
+    console.log(project['strat_choices']);
 
     var existing = Object.keys(project['strat_choices'])
     existing.forEach(r_name => {
