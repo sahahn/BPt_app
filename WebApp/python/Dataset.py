@@ -349,8 +349,8 @@ class Dataset():
                 return
 
         # If not adding to an existing, i.e., early ended, add to new overlap
-        print('Adding merged overlapped columns to new OVERLAP file',
-              merged_df.shape)
+        print('SAVE NEW OVERLAP:', next_df_loc,
+              'SHAPE:', merged_df.shape)
         merged_df.to_csv(next_df_loc, index=False)
         self._add_vars(existing_vars, next_df_loc)
 
