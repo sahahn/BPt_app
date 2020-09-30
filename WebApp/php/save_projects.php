@@ -12,7 +12,7 @@ if(!is_dir($user_dr)){
     mkdir($user_dr, 0777, true);
 }
 
-echo($_POST['projects'][0]);
+echo(json_encode($_POST['projects'], JSON_FORCE_OBJECT));
 
 // Save the passed projects
 file_put_contents($user_dr.'/Projects.json', json_encode($_POST));
