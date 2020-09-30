@@ -473,8 +473,6 @@ function startApp() {
     // before existing ones are loaded.
     jQuery.getJSON('php/get_projects.php', function (data) {
 
-        console.log(data)
-
         if (Object.keys(data).includes('settings')) {
             settings = JSON.parse(data['settings']);
         }
