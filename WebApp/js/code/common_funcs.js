@@ -73,7 +73,6 @@ function registerCloseButton(space, key, n, cnt_field, cnt_id, project) {
 
         // Refresh all by-val choices if strat closes
         if (space == 'strat-space') {
-            console.log('close strat')
             refreshByValueChoices('filter-space', project);
         }
 
@@ -270,7 +269,6 @@ function refreshByValueChoices(include_key, project) {
             // Check if the original options are still valid
             // and change the value back to that if so
             var choices = project['strat_choices']
-            console.log('1' + project['strat_choices']);
 
             if (choice_name in choices) {
                 jQuery('#'+key+'-var-input').val(choice_name).trigger('change');
@@ -303,9 +301,6 @@ function refreshStratChoices(project) {
             valid.push(repr_name);
         }
     });
-
-    console.log('valid:' + valid);
-    console.log(project['strat_choices']);
 
     var existing = Object.keys(project['strat_choices'])
     existing.forEach(r_name => {
@@ -353,7 +348,6 @@ function registerValueOnChoice(key, project) {
         
         // Get choices
         var choices = project['strat_choices']
-        console.log('2' + project['strat_choices'])
 
         var val = jQuery("#"+key+"-var-val");
         val.empty();
