@@ -216,6 +216,8 @@ function setVariableResults(output, key, project) {
                     var repr_name = getReprName(var_name, eventname);
                     project['strat_choices'][repr_name] = Array.from(index_col).map(String);
 
+                    print('3' + project['strat_choices']);
+
                     // Add new option
                     refreshByValueChoices('filter-space', project);
                 }
