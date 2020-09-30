@@ -12,8 +12,6 @@ if(!is_dir($user_dr)){
     mkdir($user_dr, 0777, true);
 }
 
-echo(json_decode(file_get_contents('php://input'), true));
-
 // Save the passed projects
 file_put_contents($user_dr.'/Projects.json', json_encode($_POST));
 ?>

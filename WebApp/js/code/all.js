@@ -15,8 +15,8 @@ function save_all() {
     
     // Save projects
     jQuery.post('php/save_projects.php', {
-        'projects': projects,
-        'settings': settings
+        'projects': JSON.stringify(projects),
+        'settings': JSON.stringify(settings)
     });
 
     // Save user param dists
