@@ -244,13 +244,17 @@ function registerByValueCardName(key) {
     });
 
     jQuery('#'+key+'-var-val').on('change', function() {
-        jQuery('#'+key+'-header-text').empty();
 
-        if($(this).val().length > 0) {
-            jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = ' + $(this).val() + '</i>');
-        }
-        else {
-            jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = </i>');
+        if ($(this).val() !== null) {
+
+            jQuery('#'+key+'-header-text').empty();
+
+            if($(this).val().length > 0) {
+                jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = ' + $(this).val() + '</i>');
+            }
+            else {
+                jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = </i>');
+            }
         }        
     });
 }
