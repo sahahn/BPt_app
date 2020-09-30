@@ -214,9 +214,7 @@ function setVariableResults(output, key, project) {
                     var var_name = jQuery('#'+key+'-input').val();
                     var eventname = jQuery('#'+key+'-eventname').val();
                     var repr_name = getReprName(var_name, eventname);
-                    project['strat_choices'][repr_name] = Array.from(index_col).map(String);
-
-                    console.log('3' + project['strat_choices']);
+                    project['strat_choices'][repr_name] = JSON.parse(JSON.stringify(Array.from(index_col).map(String)));
 
                     // Add new option
                     refreshByValueChoices('filter-space', project);
