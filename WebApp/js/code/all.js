@@ -480,7 +480,7 @@ function startApp() {
         }
 
         if (Object.keys(data).includes('projects')) {
-            projects = data['projects'];
+            projects = JSON.parse(data['projects']);
 
             // Add all existing projects as options
             projects.forEach(project => {
