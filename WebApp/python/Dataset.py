@@ -314,8 +314,7 @@ class Dataset():
 
         existing_df = load_vars(existing_vars, self.vars_to_loc, pop=True)
         merged_df = merge_dfs(existing_df, new_df)
-        print('Merged overlapping columns with existing, new shape',
-              merged_df.shape)
+        print('EXISTING_MERGED SHAPE:', merged_df.shape)
 
         # Get current extra df loc, and next loc
         extra_df_loc, next_df_loc = self._get_extra_df_locs()
@@ -328,18 +327,16 @@ class Dataset():
             if comb_len < self.EXTRA_COL_LIM:
 
                 existing_extra_df = pd.read_csv(extra_df_loc)
-                print('existing_extra_df to merge:', existing_extra_df.shape,
-                      existing_extra_df.head(2))
+                print('LOAD:', extra_df_loc, 'SHAPE:', existing_extra_df.shape)
 
                 combined_df = merged_df.merge(existing_extra_df,
                                               on=['subject_id', 'eventname'],
                                               how='outer')
 
-                print(
-                    'Adding merged overlapped columns to',
-                    'existing OVERLAP file',
-                    combined_df.shape)
+                print('SAVE TO EXISTING:', extra_df_loc,
+                      'SHAPE:', combined_df.shape)
                 combined_df.to_csv(extra_df_loc, index=False)
+
                 self._add_vars(existing_vars, extra_df_loc)
 
                 # End if reaches here
