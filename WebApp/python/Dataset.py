@@ -320,6 +320,8 @@ class Dataset():
         # Get current extra df loc, and next loc
         extra_df_loc, next_df_loc = self._get_extra_df_locs()
 
+        print('extra_df_loc = ', extra_df_loc, 'next_df_loc = ', next_df_loc)
+
         extra_df_len = len(pd.read_csv(extra_df_loc, nrows=0).columns)
         comb_len = extra_df_len + len(merged_df.columns)
 
