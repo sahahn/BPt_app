@@ -87,9 +87,9 @@ function jump(h){
 
 function addScrollTo(key, to_id) {
     
-    jQuery('#'+key+'-collapse').on('shown.bs.collapse', function() {
-        jump(to_id);
-    });
+    //jQuery('#'+key+'-collapse').on('shown.bs.collapse', function() {
+    //    jump(to_id);
+    //});
 
     jQuery('#'+key+'-collapse').collapse("show");
 }
