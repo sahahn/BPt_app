@@ -261,7 +261,7 @@ function getReprName(name, eventname) {
     }
 
     // Otherwise, return name w/ ext
-    return name + ' - ' + ext;
+    return name + ' [' + ext + ']';
 }
 
 function getVarReprName(key, project) {
@@ -276,7 +276,7 @@ function getBaseName(repr_name) {
         reverse_mapping[settings['event_mapping'][k]] = k;
     });
 
-    var ext_check = repr_name.indexOf(' - ');
+    var ext_check = repr_name.indexOf(' [');
     if (ext_check !== -1) {
         repr_name = repr_name.slice(0, ext_check);
     }

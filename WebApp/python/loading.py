@@ -474,7 +474,7 @@ def _proc_eventname(params, df=None):
 
     # If nonempty extension, prepend .
     if len(ext) > 0:
-        ext = ' - ' + ext
+        ext = ' [' + ext + ']'
 
     return eventname, ext, df
 
