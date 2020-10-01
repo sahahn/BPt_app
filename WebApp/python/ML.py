@@ -526,6 +526,9 @@ def base_run(params, job_dr, error_output_loc, job_name):
     except Exception as e:
         save_error('Error parsing model pipeline', error_output_loc, e)
 
+    ML._print(model_pipeline)
+    ML._print(model_pipeline.feat_selectors)
+
     # Get the problem spec
     try:
         problem_spec = get_problem_spec(params['eval_params'],
