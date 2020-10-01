@@ -48,7 +48,7 @@ As it currently stands, BPt_app is designed to be created and run in a docker co
 
    5. Next, each data file can optionally be stored with a valid 'event name' column. This column should be stored in the same way as the subject id column, and is used in cases where the underlying dataset is for example longitudinal or any case where a feature contains multiple values for the same subject. Valid column names for this are currently:
    ['eventname', 'event', 'events', 'session_id', 'session', 'time_point', 'event_name', 'event name']
-   Within BPt_app, this column lets you filter data by a specific eventname value.
+   Within BPt_app, this column lets you filter data by a specific eventname value. Note eventnames cannot contain the reserved string ' - '.
 
    1. A few general notes about adding data to BPt:
       - You may add multiple datasets, just with different folder names

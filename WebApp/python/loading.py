@@ -423,7 +423,7 @@ def _proc_eventname(params, df=None):
         e2 = eventname[op_ind+len(op):]
 
         # Calculate the ext
-        ext = '.' + settings['event_mapping'][e1] +\
+        ext = ' - ' + settings['event_mapping'][e1] +\
             op.replace(' ', '') + settings['event_mapping'][e2]
 
         # In case that df is None, just return eventname and extension
@@ -451,7 +451,7 @@ def _proc_eventname(params, df=None):
             df_overlap = a1 + a2
         elif op == ' %chg ':
             dif = (df_e1.loc[overlap] - df_e2.loc[overlap])
-            df_overlap = ( dif / df_e2.loc[overlap]) * 100
+            df_overlap = (dif / df_e2.loc[overlap]) * 100
         elif op == ' %dif ':
             abs_dif = np.abs(df_e1.loc[overlap] - df_e2.loc[overlap])
             mean = (df_e1.loc[overlap] + df_e2.loc[overlap]) / 2
@@ -474,7 +474,7 @@ def _proc_eventname(params, df=None):
 
     # If nonempty extension, prepend .
     if len(ext) > 0:
-        ext = '.' + ext
+        ext = ' - ' + ext
 
     return eventname, ext, df
 

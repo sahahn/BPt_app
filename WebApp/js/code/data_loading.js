@@ -4,6 +4,8 @@ var sets = [];
 var v_cache;
 var v_real_cache;
 var slider_keys = ["percent", "std", "cat", "percent-cat", "std-cat"];
+var valid_ops = [' - ', ' |-| ', ' + ', ' |+| ',
+                 ' %chg ', ' %dif ', ' avg ', ' |avg| ']
 
 ////////////////////
 // Set functions //
@@ -414,7 +416,7 @@ function updateSetCardName(key) {
     
     if (set_name.length > 0) {
         var eventname = jQuery('#'+key+'-eventname').val()
-        var repr_name = getReprName(set_name, eventname, true);
+        var repr_name = getReprName(set_name, eventname);
         jQuery('#' + key + '-header-text').append(':  <i>' + repr_name + '</i>');
     }
 }
