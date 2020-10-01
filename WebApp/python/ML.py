@@ -457,29 +457,45 @@ def get_pipeline(eval_params, error_output_loc, strat_u_name):
     pipe_name = eval_params['-pipeline']
     p_params = get_sub_params(pipe_name, pipe_params)
 
-    # Extract each pice
-    imputers = get_pipeline_obj(
-        'imputers', Imputer, p_params, sub_key='iterative')
+    # Extract each pice seperately
+    try:
+        imputers = get_pipeline_obj(
+            'imputers', Imputer, p_params, sub_key='iterative')
+    except Exception as e:
+        imputers = None
+        save_error('Error with passed Imputers', error_output_loc, e)
 
-    scalers = get_pipeline_obj('scalers', Scaler, p_params)
+    try:
+        scalers = get_pipeline_obj('scalers', Scaler, p_params)
+    except Exception as e:
+        scalers = None
+        save_error('Error with passed Scalers', error_output_loc, e)
 
-    transformers = get_pipeline_obj('transformers', Transformer, p_params)
+    try:
+        transformers = get_pipeline_obj('transformers', Transformer, p_params)
+    except Exception as e:
+        transformers = None
+        save_error('Error with passed Transformers', error_output_loc, e)
 
-    feat_selectors = get_pipeline_obj(
-        'featureSelectors', Feat_Selector, p_params, sub_key='rfe')
+    try:
+        feat_selectors = get_pipeline_obj(
+            'featureSelectors', Feat_Selector, p_params, sub_key='rfe')
+    except Exception as e:
+        feat_selectors = None
+        save_error('Error with passed Feature Selectors', error_output_loc, e)
 
     try:
         model = get_model('-model-space-model', p_params)
     except Exception as e:
         model = None
-        save_error('Error parsing model params', error_output_loc, e)
+        save_error('Error with passed Model', error_output_loc, e)
 
     try:
         param_search = get_param_search(p_params, error_output_loc,
                                         strat_u_name)
     except Exception as e:
         param_search = None
-        save_error('Error parsing param search params', error_output_loc, e)
+        save_error('Error with passed Parameter Search', error_output_loc, e)
 
     return Model_Pipeline(imputers=imputers,
                           scalers=scalers,
@@ -541,13 +557,12 @@ def base_run(params, job_dr, error_output_loc, job_name):
         model_pipeline = get_pipeline(params['eval_params'],
                                       error_output_loc, ML.strat_u_name)
     except Exception as e:
+        model_pipeline = None
         save_error('Error parsing model pipeline', error_output_loc, e)
-
-    ML._print(model_pipeline)
-    ML._print(model_pipeline.feat_selectors)
 
     # Get the problem spec
     try:
+        problem_spec = None
         problem_spec = get_problem_spec(params['eval_params'],
                                         error_output_loc)
     except Exception as e:
