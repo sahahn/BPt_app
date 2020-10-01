@@ -152,7 +152,7 @@ function getDisplayFlexPieceName(p) {
     // Replace with space then S
     var ind = name.indexOf('S');
     if (ind !== -1) {
-        name = name.slice(0, ind) + ' ' + name.slice(ind+1);
+        name = name.slice(0, ind) + ' ' + name.slice(ind);
     }
 
     return name;
