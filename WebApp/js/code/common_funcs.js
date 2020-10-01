@@ -940,6 +940,8 @@ function registerSplitsRow(key, project) {
 // Helpers ///
 /////////////
 
+
+
 function getAllInputChoices(project) {
 
     // Init as empty arrays
@@ -964,7 +966,8 @@ function getAllInputChoices(project) {
             if (validateSet(k, project['data'][k])) {
                 sep['set_choices'].push({
                     'id': k,
-                    'text': project['data'][k]['-input'],
+                    'text': getReprName(project['data'][k]['-input'],
+                                        project['data'][k]['-eventname']),
                 });
 
                 // Also get all set variables
