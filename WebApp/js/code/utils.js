@@ -247,19 +247,12 @@ function getReprName(name, eventname) {
              (eventname.endsWith(')')) && 
              (op_ind !== -1)) {
 
-        console.log('here')
-        
         var op = valid_ops[op_ind];
-
-        console.log(op);
         var op_ind = eventname.indexOf(op);
-        console.log(op_ind)
         var e1 = eventname.slice(0, op_ind);
-        console.log(e1)
         var e2 = eventname.slice(op_ind+op.length);
-        console.log(e2)
-        ext = event_mapping[e1] + op.replace(/ /g, '') + event_mapping[e2];
-        console.log(ext)
+        ext = event_mapping[e1] + op.replace(/[(]/, '') + event_mapping[e2].replace(/[)]/, '');
+
     }
 
     // Return just base name if no ext
