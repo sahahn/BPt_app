@@ -972,7 +972,7 @@ function getAllInputChoices(project) {
                 set_vars.forEach(v => {
                     
                     sep['set_var_choices'].push({
-                        'id': 'set-var-'+set_vars.indexOf(v).toString(),
+                        'id': k+'-'+set_vars.indexOf(v).toString(),
                         'text': getReprName(v, project['data'][k]['-eventname'])
                     });
 
