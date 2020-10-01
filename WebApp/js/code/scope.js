@@ -33,6 +33,48 @@ function getScopeHTML(key) {
 // Scope functions //
 ////////////////////
 
+function processScope(scope, project) {
+    
+    // If by type
+    if (['all', 'float', 'cat'].includes(scope)) {
+        return [scope];
+    }
+
+    // If a set id
+    else if (Object.keys(project['data']).includes(scope)) {
+
+        var return_vars = [];
+        var set_vars = getSetVarsFromId(scope);
+        set_vars.forEach(v => {
+            return_vars.push(getReprName(v, project['data'][scope]['-eventname']));
+        });
+
+        // Return as an array of each set variable
+        return return_vars;
+    }
+
+    // Last case is if a set variable
+    else {
+
+        var split_scope = scope.split('-')
+        var set_id = split_scope.splice(0, split_scope.length-1).join('-');
+        var set_vars = getSetVarsFromId(set_id);
+        var ind = split_scope[split_scope.length-1];
+
+        return [getReprName(set_vars[ind], project['data'][set_id]['-eventname'])];
+    }
+}
+
+function processScopes(scopes, project) {
+    
+    var all_scopes = [];
+
+    scopes.forEach(scope => {
+        all_scopes = all_scopes.concat(processScope(scope, project));
+    });
+
+    return all_scopes
+}
 
 
 function getScopeChoices(project) {
