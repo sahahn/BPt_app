@@ -229,6 +229,8 @@ function setVariableResults(output, key, project) {
 
 function setSetResults(output, key, project) {
 
+    output['html_table'] = output['html_table'].replace(/edit-set-button/g, key + '-edit-set-button');
+
     // Set table
     jQuery('#'+key+'-table').append(output['html_table']);
     jQuery("#default-table-id").prop('id', key + '-real-table');
@@ -253,10 +255,10 @@ function setSetResults(output, key, project) {
     jQuery('#'+key+'-real-table').on('draw.dt', function() {
 
         // Remove any previous
-        jQuery('.edit-set-button').off('click');
+        jQuery('.' +  key + '-edit-set-button').off('click');
 
         // Add edit sub-space
-        jQuery('.edit-set-button').on('click', function() {
+        jQuery('.' +  key + '-edit-set-button').on('click', function() {
 
             var data = $(this).data();
 
