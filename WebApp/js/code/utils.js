@@ -249,9 +249,9 @@ function getReprName(name, eventname) {
 
         var op = valid_ops[op_ind];
         var op_ind = eventname.indexOf(op);
-        var e1 = eventname.slice(0, op_ind);
-        var e2 = eventname.slice(op_ind+op.length);
-        ext = event_mapping[e1] + op.replace(/[(]/, '') + event_mapping[e2].replace(/[)]/, '');
+        var e1 = eventname.slice(0, op_ind).replace(/[(]/, '');
+        var e2 = eventname.slice(op_ind+op.length).replace(/[)]/, '');
+        ext = event_mapping[e1] + op.replace(/ /g, '') + event_mapping[e2];
 
     }
 
