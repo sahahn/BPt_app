@@ -457,12 +457,24 @@ def get_pipeline(eval_params, error_output_loc, strat_u_name):
     # Extract each pice
     imputers = get_pipeline_obj(
         'imputers', Imputer, p_params, sub_key='iterative')
+
     scalers = get_pipeline_obj('scalers', Scaler, p_params)
+
     transformers = get_pipeline_obj('transformers', Transformer, p_params)
+
     feat_selectors = get_pipeline_obj(
         'feature_selectors', Feat_Selector, p_params, sub_key='rfe')
-    model = get_model('-model-space-model', p_params)
-    param_search = get_param_search(p_params, error_output_loc, strat_u_name)
+
+    try:
+        model = get_model('-model-space-model', p_params)
+    except Exception as e:
+        save_error('Error parsing model params', error_output_loc, e)
+
+    try:
+        param_search = get_param_search(p_params, error_output_loc,
+                                        strat_u_name)
+    except Exception as e:
+        save_error('Error parsing param search params', error_output_loc, e)
 
     return Model_Pipeline(imputers=imputers,
                           scalers=scalers,
