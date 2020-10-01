@@ -148,17 +148,11 @@ function getDisplayFlexPieceName(p) {
     // Add rest, but w/o last plural s
     name = name + p.slice(1, p.length-1);
 
-    // If any _'s, replace w/ space and capitilize next letter
-    var ind = name.indexOf('_');
-    if (ind !== -1) {
-        name = name.slice(0, ind) + ' ' + name[ind+1].toUpperCase() + name.slice(ind+2);
-    }
-
     // Check for if any upper case S
     // Replace with space then S
     var ind = name.indexOf('S');
     if (ind !== -1) {
-        name = name.slice(0, ind) + ' ' + name[ind+1] + name.slice(ind+2);
+        name = name.slice(0, ind) + ' ' + name.slice(ind+1);
     }
 
     return name;
