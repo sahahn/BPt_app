@@ -246,8 +246,12 @@ function getReprName(name, eventname) {
     else if ((eventname.startsWith('(')) && 
              (eventname.endsWith(')')) && 
              (op_ind !== -1)) {
+
+        console.log('here')
         
         var op = valid_ops[op_ind];
+
+        console.log(op);
         var op_ind = eventname.indexOf(op);
         var e1 = eventname.slice(0, op_ind);
         var e2 = eventname.slice(op_ind+op.length);
