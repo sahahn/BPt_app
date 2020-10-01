@@ -304,8 +304,8 @@ def save_default_params(loc):
                     new_val['type'] = 'code'
                     new_val['on'] = 'true'
                     new_val['code_type'] = "-"
-                    def_param_dists[dist_key][key+'_dist'] = new_val
-                    # def_param_dists[dist_key][key+'_type'] = "-"
+                    def_param_dists[dist_key][key+'__dist'] = new_val
+                    # def_param_dists[dist_key][key+'__type'] = "-"
 
                 else:
                     new_val = {}
@@ -315,11 +315,11 @@ def save_default_params(loc):
 
                     # Set saved type or - if choice
                     if len(result) == 3:
-                        new_val[result[1] + '_type'] = result[2]
+                        new_val[result[1] + '__type'] = result[2]
                     else:
-                        new_val[result[1] + '_type'] = '-'
+                        new_val[result[1] + '__type'] = '-'
 
-                    def_param_dists[dist_key][key+'_dist'] = new_val
+                    def_param_dists[dist_key][key+'__dist'] = new_val
 
                 # Change old key to use default
                 def_param_dists[dist_key][key] = 'USE-DEFAULT'
@@ -332,7 +332,7 @@ def save_default_params(loc):
                 except NameError:
                     val_type = "-"
 
-                def_param_dists[dist_key][key+'_type'] = val_type
+                def_param_dists[dist_key][key+'__type'] = val_type
 
     with open(loc, 'w') as f:
         json.dump(def_param_dists, f)
@@ -388,13 +388,13 @@ def check(val):
 
                     if option[1] == 'log':
                         l_cnt += 1
-                        result['Log-'+str(l_cnt) + '_type'] = option[2]
+                        result['Log-'+str(l_cnt) + '__type'] = option[2]
                         result['-choices'].append('Log-'+str(l_cnt))
                         result['log-'+str(l_cnt)] = option[0]
 
                     elif option[1] == 'normal':
                         n_cnt += 1
-                        result['Normal-'+str(n_cnt) + '_type'] = option[2]
+                        result['Normal-'+str(n_cnt) + '__type'] = option[2]
                         result['-choices'].append('Normal-'+str(n_cnt))
                         result['normal-'+str(n_cnt)] = option[0]
 

@@ -24,7 +24,7 @@ def get_param_keys(params_in):
     for p_name in list(params_in):
         original = p_name
 
-        for key in ['_type', '_dist']:
+        for key in ['__type', '__dist']:
             cnt = p_name.count(key)
 
             if cnt == 1 and original.endswith(key):
@@ -123,7 +123,7 @@ def get_base_choice_dist(dist_params):
 
         # If not subdist or no type will just fail
         try:
-            p_type = dist_params[choice + '_type']
+            p_type = dist_params[choice + '__type']
         except KeyError:
             p_type = None
 
@@ -179,7 +179,7 @@ def proc_dist(dist):
 
     # Check for type
     try:
-        p_type = dist[selected_dist + '_type']
+        p_type = dist[selected_dist + '__type']
     except KeyError:
         p_type = '-'
         print('no type for', selected_dist, 'setting to "-"')
@@ -203,7 +203,7 @@ def proc_dist(dist):
 def get_base_val(p_name, params_in):
 
     try:
-        p_type = params_in[p_name + '_type']
+        p_type = params_in[p_name + '__type']
     except KeyError:
         p_type = '-'
         print('no type for', p_name, 'setting to "-"')
@@ -221,10 +221,10 @@ def proc_hyper_params(params_in):
         val = get_base_val(p_name, params_in)
 
         # Check if dist exists
-        if p_name + '_dist' in params_in:
+        if p_name + '__dist' in params_in:
 
             # Make sure dist is set to on
-            dist = params_in[p_name + '_dist']
+            dist = params_in[p_name + '__dist']
             if dist['on'] == 'true':
                 val = proc_dist(dist)
 

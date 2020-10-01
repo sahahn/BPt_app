@@ -203,7 +203,7 @@ function registerParamType(key, n, name, params, p_types) {
         jQuery('#'+type_k).css('display', 'block');
     }
 
-    var param_type_name = name + '_type';
+    var param_type_name = name + '__type';
 
     // Unregister any previous
     jQuery('#'+type_k).off('click');
@@ -274,13 +274,13 @@ function registerShowParamDist(key, n, name, params, dist_params) {
             var existing_choice = jQuery('input[name=' + key + '-dist-' + n + '-choice]:checked').val();
 
             if (existing_choice == 'normal') {
-                registerParamType(key, n, existing_choice, params[name+'_dist'], ['float', 'int']);
+                registerParamType(key, n, existing_choice, params[name+'__dist'], ['float', 'int']);
             }
             else if (existing_choice == 'log') {
-                registerParamType(key, n, existing_choice, params[name+'_dist'], ['float']);
+                registerParamType(key, n, existing_choice, params[name+'__dist'], ['float']);
             }
             else {
-                registerParamType(key, n, existing_choice, params[name+'_dist'], ['-']);
+                registerParamType(key, n, existing_choice, params[name+'__dist'], ['-']);
             }
 
             // Show params
@@ -311,8 +311,8 @@ function getSelectParamOptions(p_options) {
 
 function registerParamDistChoices(key, n, name, params, dist_params, dis) {
 
-    if (params[name+'_dist'] == undefined) {
-        params[name+'_dist'] = {};
+    if (params[name+'__dist'] == undefined) {
+        params[name+'__dist'] = {};
     }
     
     var dist_options_k = key + '-dist-' + n + '-choice';
@@ -334,13 +334,13 @@ function registerParamDistChoices(key, n, name, params, dist_params, dis) {
 
         // Register correct choice
         if (choice == 'normal') {
-            registerParamType(key, n, choice, params[name+'_dist'], ['float', 'int']);
+            registerParamType(key, n, choice, params[name+'__dist'], ['float', 'int']);
         }
         else if (choice == 'log') {
-            registerParamType(key, n, choice, params[name+'_dist'], ['float']);
+            registerParamType(key, n, choice, params[name+'__dist'], ['float']);
         }
         else {
-            registerParamType(key, n, choice, params[name+'_dist'], ['-']);
+            registerParamType(key, n, choice, params[name+'__dist'], ['-']);
         }
             
 
@@ -624,7 +624,7 @@ function registerScalerParamDist(key, n, dist, dist_params, subdist=false, dis=f
 function registerParamDist(key, n, name, params, cat_choices, dis) {
 
     // If param dist info not init'ed
-    var param_dist_name = name + '_dist';
+    var param_dist_name = name + '__dist';
     if (params[param_dist_name] == undefined) {
         params[param_dist_name] = {};
     }
