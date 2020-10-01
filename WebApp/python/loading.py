@@ -423,8 +423,8 @@ def _proc_eventname(params, df=None):
         e2 = eventname[op_ind+len(op):]
 
         # Calculate the ext
-        ext = ' - ' + settings['event_mapping'][e1] +\
-            op.replace(' ', '') + settings['event_mapping'][e2]
+        ext = ' [' + settings['event_mapping'][e1] +\
+            op.replace(' ', '') + settings['event_mapping'][e2] + ']'
 
         # In case that df is None, just return eventname and extension
         if df is None:
