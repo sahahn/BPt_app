@@ -860,6 +860,8 @@ def load_set(ML, params, output_loc, drops=True):
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
 
+    ML._print('Loaded Shape:', ML.covars.shape)
+
     # Proc binary threshes if any
     for col_name, b_t in zip(col_names, binary_thresh):
         ML = _proc_binary_thresh(ML, col_name+ext, 'set', b_t,
