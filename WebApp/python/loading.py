@@ -71,6 +71,7 @@ def load_params(user_dr, output_loc, n):
             params = json.load(f)['params']
 
     except Exception as e:
+        params = None
         save_error('Error loading saved json params', output_loc, e)
 
     return params
@@ -399,15 +400,83 @@ def _proc_na(params):
     return drop_na
 
 
-def _proc_eventname(params):
+def _proc_eventname(params, df=None):
 
-    ext = settings['event_mapping'][params['-eventname']]
+    eventname = params['-eventname']
+
+    valid_ops = [' - ', ' |-| ', ' + ', ' |+| ',
+                 ' %chg ', ' %dif ', ' avg ', ' |avg| ']
+    op_check = [v in eventname for v in valid_ops]
+
+    if (eventname.startswith('(') and
+       eventname.endswith(')') and
+       any(op_check)):
+
+        # Remove brackets
+        eventname = eventname.replace('(', '', 1)
+        eventname = eventname.replace(')', '', -1)
+
+        # Isolate the operator and each eventname seperately
+        op = valid_ops[op_check.index(True)]
+        op_ind = eventname.index(op)
+        e1 = eventname[:op_ind]
+        e2 = eventname[op_ind+len(op):]
+
+        # Calculate the ext
+        ext = '.' + settings['event_mapping'][e1] +\
+            op.replace(' ', '') + settings['event_mapping'][e2]
+
+        # In case that df is None, just return eventname and extension
+        if df is None:
+            return eventname, ext
+
+        # Seperate into two dfs
+        df = df.set_index('subject_id')
+        df_e1 = df[df['eventname'] == e1].drop('eventname', axis=1)
+        df_e2 = df[df['eventname'] == e2].drop('eventname', axis=1)
+
+        # Compute overlapping subjects
+        overlap = np.intersect1d(df_e1.index, df_e2.index)
+
+        # Process according to the operator
+        if op == ' - ':
+            df_overlap = df_e1.loc[overlap] - df_e2.loc[overlap]
+        elif op == ' |-| ':
+            df_overlap = np.abs(df_e1.loc[overlap] - df_e2.loc[overlap])
+        elif op == ' + ':
+            df_overlap = df_e1.loc[overlap] + df_e2.loc[overlap]
+        elif op == ' |+| ':
+            a1 = np.abs(df_e1.loc[overlap])
+            a2 = np.abs(df_e2.loc[overlap])
+            df_overlap = a1 + a2
+        elif op == ' %chg ':
+            dif = (df_e1.loc[overlap] - df_e2.loc[overlap])
+            df_overlap = ( dif / df_e2.loc[overlap]) * 100
+        elif op == ' %dif ':
+            abs_dif = np.abs(df_e1.loc[overlap] - df_e2.loc[overlap])
+            mean = (df_e1.loc[overlap] + df_e2.loc[overlap]) / 2
+            df_overlap = (abs_dif / mean) * 100
+        elif op == ' avg ':
+            df_overlap = (df_e1.loc[overlap] + df_e2.loc[overlap]) / 2
+        elif op == ' |avg| ':
+            a1 = np.abs(df_e1.loc[overlap])
+            a2 = np.abs(df_e2.loc[overlap])
+            df_overlap = (a1 + a2) / 2
+        else:
+            df_overlap = None
+
+        # Add back in eventname
+        df_overlap['eventname'] = eventname
+        return eventname, ext, df_overlap
+
+    # Otherwise, perform base single eventname proc
+    ext = settings['event_mapping'][eventname]
 
     # If nonempty extension, prepend .
     if len(ext) > 0:
         ext = '.' + ext
 
-    return params['-eventname'], ext
+    return eventname, ext, df
 
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
@@ -421,6 +490,8 @@ def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
         func = ML.Binarize_Covar
     elif load_type == 'set':
         func = ML.Binarize_Covar
+    else:
+        func = None
 
     try:
         threshold = float(binary_thresh['threshold'])
@@ -550,9 +621,10 @@ def load_target(ML, params, output_loc, drops=True):
     try:
         target_df = load_vars(col_name)
     except Exception as e:
+        target_df = None
         save_error('Error fetching target variable', output_loc, e)
 
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, target_df = _proc_eventname(params, target_df)
 
     try:
         ML.Load_Targets(df=target_df,
@@ -610,9 +682,10 @@ def load_variable(ML, params, output_loc, drops=True):
     try:
         covar_df = load_vars(col_name)
     except Exception as e:
+        covar_df = None
         save_error('Error fetching data variable', output_loc, e)
 
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, covar_df = _proc_eventname(params, covar_df)
 
     try:
         ML.Load_Covars(df=covar_df,
@@ -660,6 +733,7 @@ def load_strat(ML, params, output_loc, drops=False):
     try:
         strat_df = load_vars(col_name)
     except Exception as e:
+        strat_df = None
         save_error('Error fetching non-input variable', output_loc, e)
 
     if data_type == 'binary':
@@ -682,7 +756,7 @@ def load_strat(ML, params, output_loc, drops=False):
     else:
         float_to_binary = False
 
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, strat_df = _proc_eventname(params, strat_df)
 
     try:
         ML.Load_Strat(df=strat_df,
@@ -756,10 +830,11 @@ def load_set(ML, params, output_loc, drops=True):
         data_df = load_vars(col_names)
         ML._print('Loaded set from files in', time.time() - start)
     except Exception as e:
+        data_df = None
         save_error('Error fetching set data variables', output_loc, e)
 
     # Proc eventname
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, data_df = _proc_eventname(params, data_df)
 
     # For now load data as covars, since want to handle types
     try:
@@ -810,7 +885,7 @@ def load_set(ML, params, output_loc, drops=True):
 
 def plot_dist(params, ML, load_type, log_dr, output_loc):
 
-    _, ext = _proc_eventname(params)
+    _, ext = _proc_eventname(params, df=None)
     key = params['-input'] + ext
     ML._print('Plot ', key)
 
