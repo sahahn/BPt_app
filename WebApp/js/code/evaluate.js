@@ -542,6 +542,9 @@ function getBaseEvalParams(key, project) {
     // Start with copy
     var params = getBaseParams(key, project);
 
+    // Replace scope with processed
+    params['-scope-input'] = processScopes(params['-scope-input'], project);
+
     // Replace target with explicit var name
     params['-target'] = getVarReprName(params['-target'], project);
 
@@ -577,6 +580,11 @@ function getBaseEvalParams(key, project) {
     getAllKeys(project).forEach(k => {
         if (k.startsWith(params['-pipeline'])) {
             pipeline_params[k] = getBaseParams(k, project);
+
+            // Replace scope with processed, if scope
+            if (Object.keys(pipeline_params[k]).includes('-scope-input')) {
+                pipeline_params[k]['-scope-input'] = processScopes(pipeline_params[k]['-scope-input'], project);
+            }
 
             // If contains a hyper param dist add it
             if (Object.keys(pipeline_params[k]).includes('param_dist')) {
