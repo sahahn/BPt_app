@@ -1393,6 +1393,8 @@ function addMLPipe(project, key=undefined) {
 
             var space_name = getSpaceName(key, piece);
 
+            console.log(space_name, piece, k);
+
             if ((k.includes(space_name)) && (!k.includes('model-space')) && (!k.includes('_'))) {
                 add_mapping[piece](project, space_name, k);
             }
