@@ -44,7 +44,7 @@ function processScope(scope, project) {
     else if (Object.keys(project['data']).includes(scope)) {
 
         var return_vars = [];
-        var set_vars = getSetVarsFromId(scope);
+        var set_vars = getSetVarsFromId(project['data'][scope]['-data-sets']);
         set_vars.forEach(v => {
             return_vars.push(getReprName(v, project['data'][scope]['-eventname']));
         });
@@ -58,11 +58,8 @@ function processScope(scope, project) {
 
         var split_scope = scope.split('-')
         var set_id = split_scope.splice(0, split_scope.length-1).join('-');
-        var set_vars = getSetVarsFromId(set_id);
+        var set_vars = getSetVarsFromId(project['data'][set_id]['-data-sets']);
         var ind = parseInt(split_scope[split_scope.length-1]);
-
-        console.log(set_vars[ind])
-        console.log([getReprName(set_vars[ind], project['data'][set_id]['-eventname'])]);
 
         return [getReprName(set_vars[ind], project['data'][set_id]['-eventname'])];
     }
