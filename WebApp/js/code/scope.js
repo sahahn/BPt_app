@@ -33,6 +33,8 @@ function getScopeHTML(key) {
 // Scope functions //
 ////////////////////
 
+
+
 function getScopeChoices(project) {
 
     var choices = Array();
