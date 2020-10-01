@@ -6,16 +6,17 @@ from load_test_split import base_test_load
 from loading import get_subjects, get_CV_from_params
 
 from BPt import (Problem_Spec, Model_Pipeline,
-                     Imputer, Scaler,
-                     Transformer, Feat_Selector,
-                     Model, Ensemble,
-                     Param_Search, Select)
+                 Imputer, Scaler,
+                 Transformer, Feat_Selector,
+                 Model, Ensemble,
+                 Param_Search, Select)
 
 import nevergrad as ng
 import numpy as np
 from sklearn.feature_selection import (f_regression, f_classif,
                                        mutual_info_classif,
                                        mutual_info_regression, chi2)
+
 
 def get_param_keys(params_in):
 
@@ -412,6 +413,7 @@ def get_ensemble(model_name, p_params):
                     is_des=is_des,
                     single_estimator=single_estimator)
 
+
 def get_splits_CV(ps, error_output_loc, strat_u_name):
 
     if ps['split-type'] == 'kfold':
@@ -427,9 +429,10 @@ def get_splits_CV(ps, error_output_loc, strat_u_name):
     CV = get_CV_from_params(ps['val_params'], error_output_loc, strat_u_name)
     return splits, n_repeats, CV
 
+
 def get_param_search(p_params, error_output_loc, strat_u_name):
 
-    ps = p_params['-parameter_search-space-parameter_search']
+    ps = p_params['-parameterSearch-space-parameterSearch']
 
     # Return none if no search
     if ps['-search-type'] == 'None' or ps['-search-type'] is None:
@@ -463,17 +466,19 @@ def get_pipeline(eval_params, error_output_loc, strat_u_name):
     transformers = get_pipeline_obj('transformers', Transformer, p_params)
 
     feat_selectors = get_pipeline_obj(
-        'feature_selectors', Feat_Selector, p_params, sub_key='rfe')
+        'featureSelectors', Feat_Selector, p_params, sub_key='rfe')
 
     try:
         model = get_model('-model-space-model', p_params)
     except Exception as e:
+        model = None
         save_error('Error parsing model params', error_output_loc, e)
 
     try:
         param_search = get_param_search(p_params, error_output_loc,
                                         strat_u_name)
     except Exception as e:
+        param_search = None
         save_error('Error parsing param search params', error_output_loc, e)
 
     return Model_Pipeline(imputers=imputers,

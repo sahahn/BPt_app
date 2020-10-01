@@ -20,9 +20,10 @@ from BPt.pipeline.Scorers import get_scorers_by_type
 
 import nevergrad as ng
 from BPt.helpers.Default_Params import P
-import shutil
+
 
 # Save ML Options Code
+
 
 def save_ML_options(loc):
 
@@ -31,10 +32,21 @@ def save_ML_options(loc):
     options['imputers'] = get_not_by_type(IMPUTERS)
     options['scalers'] = get_not_by_type(SCALERS)
     options['transformers'] = get_not_by_type(TRANSFORMERS)
-    options['feature_selectors'] = get_by_type(AVALIABLE_SELECTORS, SELECTORS)
+    options['featureSelectors'] = get_by_type(AVALIABLE_SELECTORS, SELECTORS)
     options['ensembles'] = get_by_type(AVALIABLE_ENSEMBLES, ENSEMBLES)
-    options['parameter_search'] = [None] +\
-        sorted(ng.optimizers.registry.keys())
+    options['parameterSearch'] = sorted(ng.optimizers.registry.keys())
+
+    # Remove some optimizers
+    to_remove = ['RandomSearch', 'BO']
+    for key in to_remove:
+        try:
+            options['parameterSearch'].remove(key)
+        except ValueError:
+            pass
+
+    # Add as the first options None and RandomSearch
+    options['parameterSearch'] =\
+        [None, 'RandomSearch'] + options['parameterSearch']
 
     # Scorers
     options['metrics'] = {}
@@ -43,9 +55,12 @@ def save_ML_options(loc):
 
         by_type = get_scorers_by_type(problem_type)
         for scorer in by_type:
-            options['metrics'][problem_type][scorer[0]] = {}
-            options['metrics'][problem_type][scorer[0]]['docs_name'] =\
-                get_scorer_name(scorer[1])
+
+            # Skip those ending with samples
+            if not scorer[0].endswith('_samples'):
+                options['metrics'][problem_type][scorer[0]] = {}
+                options['metrics'][problem_type][scorer[0]]['docs_name'] =\
+                    get_scorer_name(scorer[1])
 
     with open(loc, 'w') as f:
         json.dump(options, f)

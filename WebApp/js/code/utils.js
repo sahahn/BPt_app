@@ -296,7 +296,7 @@ function getTargetType(key, project) {
     var target_type =  project['data'][key]['-type'];
 
     // Default float
-    if (target_type == undefined) {
+    if ((target_type == undefined) || (target_type == null)) {
         target_type = 'float';
     }
 

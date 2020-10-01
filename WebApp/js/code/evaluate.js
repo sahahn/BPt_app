@@ -585,7 +585,7 @@ function getBaseEvalParams(key, project) {
             }
 
             // If the param search & search type not none, get nested val params
-            if (k.includes('-parameter_search-space-parameter_search')) {
+            if (k.includes('-parameterSearch-space-parameterSearch')) {
                 if (pipeline_params[k]['-search-type'] !== 'None') {
                     var p_v_strat_key = pipeline_params[k]['val-strategy-key'];
                     pipeline_params[k]['val_params'] = getValParams(p_v_strat_key, project);
