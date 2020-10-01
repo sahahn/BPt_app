@@ -37,6 +37,17 @@ function getEventNameOptionsHTML() {
         }
     });
 
+    events.forEach(event1 => {
+        events.forEach(event2 => {
+            if (event1 !== event2) {
+                valid_ops.forEach(op => {
+                    var name = '(' + event1 + op + event2 + ')';
+                    html += '<option value="' + name + '">'+name+'</option>';
+                });
+            }
+        });
+    });
+
     return html;
 }
 
