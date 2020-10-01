@@ -61,7 +61,8 @@ function processScope(scope, project) {
         var set_vars = getSetVarsFromId(set_id);
         var ind = parseInt(split_scope[split_scope.length-1]);
 
-        console.log(ind)
+        console.log(set_vars[ind])
+        console.log([getReprName(set_vars[ind], project['data'][set_id]['-eventname'])]);
 
         return [getReprName(set_vars[ind], project['data'][set_id]['-eventname'])];
     }
