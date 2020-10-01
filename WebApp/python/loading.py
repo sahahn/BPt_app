@@ -428,7 +428,7 @@ def _proc_eventname(params, df=None):
 
         # In case that df is None, just return eventname and extension
         if df is None:
-            return eventname, ext
+            return eventname, ext, None
 
         # Seperate into two dfs
         df = df.set_index('subject_id')
@@ -885,7 +885,7 @@ def load_set(ML, params, output_loc, drops=True):
 
 def plot_dist(params, ML, load_type, log_dr, output_loc):
 
-    _, ext = _proc_eventname(params, df=None)
+    _, ext, _ = _proc_eventname(params, df=None)
     key = params['-input'] + ext
     ML._print('Plot ', key)
 
