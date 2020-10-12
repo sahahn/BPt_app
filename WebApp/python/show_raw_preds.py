@@ -2,7 +2,8 @@ import argparse
 import json
 import os
 import pickle as pkl
-from utils import save_error, save_results
+from utils import save_error
+from loading import save_results
 
 
 def get_raw_preds_table_html(df):
