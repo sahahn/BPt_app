@@ -814,7 +814,7 @@ function loadResults(job_name, key, project) {
 
         var logs_html = '<button class="btn btn-outline-dark" id="'+key+'-show-raw-preds" ' +
                         'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions</button>' +
-        jQuery('#'+key+'-raw-preds').append('logs_html');
+        jQuery('#'+key+'-raw-preds').append(logs_html);
 
         jQuery('#'+key+'-show-raw-preds').on('click', function() {
             loadRawPreds(job_name, key, project);
