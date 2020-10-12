@@ -79,7 +79,7 @@
     </div>
   </nav>
 
-  <nav class="navbar fixed-top navbar-light" style="margin-left: 15em; padding: .5em; height:3.9em; background-color: #f1f1f1;">
+  <nav class="navbar fixed-top navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em; background-color: #f1f1f1;">
     ww
   </nav>
 
