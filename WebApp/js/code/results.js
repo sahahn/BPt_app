@@ -563,11 +563,11 @@ function registerJobsShow(project) {
                 '<button class="btn btn-outline-dark" id="'+key+'-toggle-logs" data-toggle="button" aria-pressed="false" autocomplete="off">Toggle Logs</button>' +
                 '</div>' +
                 '<div class="job-logs" id="'+key+'-logs" data-jobName="'+job_name+'" ' +
-                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 10px; padding: 10px; display: none"></div>' +
+                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 3em; padding: 3em; display: none"></div>' +
                 '</div>' +
 
 
-                '<div class="col col-md-12 text-center" id="'+key+'-raw-preds" style="padding-top: 20px;"></div>' +
+                '<div class="col col-md-12 text-center" id="'+key+'-raw-preds" style="padding-top: 10em;"></div>' +
 
                 '</div>';
 
@@ -817,7 +817,7 @@ function loadResults(job_name, key, project) {
 
         var logs_html = '<button class="btn btn-outline-dark" id="'+key+'-show-raw-preds" ' +
                         'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions' +
-                        '<img id="'+key+'-raw-preds-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 1em;"></img>' +
+                        '<img id="'+key+'-raw-preds-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 1.5em;"></img>' +
                         '</button>';
         jQuery('#'+key+'-raw-preds').append(logs_html);
 
