@@ -123,7 +123,7 @@
   </div>
 
   <!-- Store whole main form in here -->
-  <div class="container-fluid" style="margin-top: 3em; margin-left: 15em; margin-right: 0em;">
+  <div class="container-fluid" style="margin-top: 3em; margin-left: 15em;">
     <div class="row px-5">
 
       <!-- Modal -->
