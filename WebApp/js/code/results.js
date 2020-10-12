@@ -727,7 +727,7 @@ function loadRawPreds(job_name, key, project) {
         var raw_html = procBaseTableResults(raw_table_key, 
                                             output['raw_preds'],
                                             raw_label);
-        jQuery('#'+key+'-raw-preds').append(raw_html);
+        jQuery('#'+key+'-raw-preds').empty().append(raw_html);
 
         var raw_table = $('#'+raw_table_key).DataTable({
             data: output['pred_rows'],
@@ -809,6 +809,18 @@ function loadResults(job_name, key, project) {
 
         // Add buttons to special spot centered under table
         table.buttons().container().appendTo($('#'+sum_table_key+'-buttons'));
+
+        // Add a button to load raw preds if desired
+
+        var logs_html = '<button class="btn btn-outline-dark" id="'+key+'-show-raw-preds" ' +
+                        'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions</button>' +
+        jQuery('#'+key+'-raw-preds').append('logs_html');
+
+        jQuery('#'+key+'-show-raw-preds').on('click', function() {
+            loadRawPreds(job_name, key, project);
+        });
+
+
 
         // Register new popovers
         registerPopovers();
