@@ -251,12 +251,10 @@ function setSetResults(output, key, project) {
             { "orderable": false, "targets": -1}],
 
         "preDrawCallback": function (settings) {
-            pageScrollPos = $('body').scrollTop();
-            console.log(pageScrollPos);
+            pageScrollPos = document.documentElement.scrollTop;
         },
-
         "drawCallback": function (settings) {
-            $('body').scrollTop(pageScrollPos);
+            scrollTo(0, pageScrollPos);
         },
     });
 
