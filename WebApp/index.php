@@ -79,6 +79,7 @@
     </div>
   </nav>
 
+  <!-- Modal spots for params + submit -->
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
 
@@ -105,38 +106,35 @@
     </div>
   </div>
 
-  <!-- Store whole main form in here -->
-  <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
+  <!-- Modal for delete project -->
+  <div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
 
-    <div class="row px-5">
+            <button class="btn" style="background-color:transparent;" data-dismiss="modal">
+              <h5><i class="fas fa-book navbutton"></i> <span id='del-project-name'></span></h5>
 
-      
+            </button>
 
-      <!-- Modal -->
-      <div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
+          </h5>
+        </div>
 
-                <button class="btn" style="background-color:transparent;" data-dismiss="modal">
-                  <h5><i class="fas fa-book navbutton"></i> <span id='del-project-name'></span></h5>
+        <div class="modal-body text-center">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="confirm-delete-project" type="button" class="btn btn-danger">Delete Project <i
+              class="fas fa-trash-alt"></i></button>
 
-                </button>
-
-              </h5>
-            </div>
-
-            <div class="modal-body text-center">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button id="confirm-delete-project" type="button" class="btn btn-danger">Delete Project <i
-                  class="fas fa-trash-alt"></i></button>
-
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Store whole main form in here -->
+  <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
+    <div class="row px-5">
 
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
