@@ -10,6 +10,10 @@ def main(user_dr, n):
     temp_dr = os.path.join(user_dr, 'temp')
     output_loc = os.path.join(temp_dr, 'ML_Output_' + str(n) + '.json')
 
+    # If existing output, remove
+    if os.path.exists(output_loc):
+        os.remove(output_loc)
+
     # Load in params
     params = load_params(user_dr, output_loc, n)
 
@@ -19,6 +23,7 @@ def main(user_dr, n):
     try:
         ML = load_all_data(loading_params, output_loc, user_dr, n)
     except Exception as e:
+        ML = None
         save_error('Error loading data', output_loc, e)
 
     log_dr = os.path.join(temp_dr, 'ML_Logs_' + str(n))
@@ -28,19 +33,25 @@ def main(user_dr, n):
         cv_params = get_CV_from_params(params['val_params'], output_loc,
                                        ML.strat_u_name)
     except Exception as e:
+        cv_params = None
         save_error('Error creating CV params', output_loc, e)
 
     # Obtain the CV splits from the BPt object
     try:
-        ML._get_CV(cv_params, show=True, show_original=True)
+        cv, df = ML._get_CV(cv_params, show=True,
+                            show_original=True, return_df=True)
     except Exception as e:
         save_error('Error generating CV splits info', output_loc, e)
 
     # Create output results
-    output = {}
-    output['html_output'], output['html_table'] =\
-        get_val_output_from_logs(log_dr)
-    output['status'] = 1
+    try:
+        output = {}
+        output['html_output'], output['html_table'] =\
+            get_val_output_from_logs(log_dr, df)
+        output['status'] = 1
+    except Exception as e:
+        output = None
+        save_error('Error extracting CV info table', output_loc, e)
 
     # Save results
     save_results(output_loc, output)

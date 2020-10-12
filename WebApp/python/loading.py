@@ -923,8 +923,11 @@ def plot_dist(params, ML, load_type, log_dr, output_loc):
 
 def chunk_line(line):
     base = [h.strip() for h in line.split(' ') if len(h.strip()) > 0]
-    if '[' in base[1] and ']' in base[1]:
-        base = [base[0] + ' ' + base[1]] + base[2:]
+
+    # Add a check to compensate for the space in the appended eventname
+    if len(base) > 1:
+        if '[' in base[1] and ']' in base[1]:
+            base = [base[0] + ' ' + base[1]] + base[2:]
 
     return base
 
@@ -1526,7 +1529,7 @@ def variable_load(user_dr, v_type, n):
     output = {}
     output['img_loc'] = img_loc
     output['html_output'] = output_from_single_logs(log_dr, output_loc)
-    output['html_table'] = get_variable_table_html(d_dfs)
+    output['html_table'] = df_to_table(d_dfs[0])
 
     # Save + cache, etc..
     base_finish_load(output_loc, output, params, param_hash, v_type)
@@ -1540,9 +1543,7 @@ def rnd(val):
     return str(val)
 
 
-def get_variable_table_html(d_dfs):
-
-    df = d_dfs[0]
+def df_to_table(df):
 
     # Get rid of index if there
     df = df.reset_index()
@@ -1711,7 +1712,7 @@ def get_CV_from_params(val_params, output_loc, strat_u_name):
     return cv_params
 
 
-def get_val_output_from_logs(log_dr):
+def get_val_output_from_logs(log_dr, df):
 
     with open(os.path.join(log_dr, 'logs.txt'), 'r') as f:
         lines = f.readlines()
@@ -1722,44 +1723,11 @@ def get_val_output_from_logs(log_dr):
 
     output = _extract_from_logs(lines, if_keys, [], [])
 
-    table_start = None
-    for i, line in enumerate(lines):
-        if 'CV defined with stratifying behavior over' in line:
-            table_start = i
-
     # If not stratifying, return no table
-    if table_start is None:
+    if df is None:
         return output, ''
 
-    # If here, then there is a strat table
-    t_output = '<table id="default-table-id" class="table table-striped">'
-    t_output += '<thead><tr>'
-
-    # Make header
-    header = lines[table_start+1]
-    header = chunk_line(header)
-    for h in header:
-        t_output += '<th scope="col">' + h + '</th>'
-    t_output += '</tr></thead>'
-
-    # Fill in body
-    t_output += '<tbody>'
-    for line in lines[table_start+2:]:
-        line = chunk_line(line)
-
-        if len(line) > 0:
-            t_output += '<tr>'
-
-            # Skip index
-            for e in line[1:]:
-                t_output += '<td>' + e + '</td>'
-            t_output += '</tr>'
-        else:
-            break
-
-    t_output += '</tbody></table>'
-
-    return output, t_output
+    return output, df_to_table(df)
 
 
 def apply_test_split(test_params, ML, output_loc):
