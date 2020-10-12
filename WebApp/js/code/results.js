@@ -567,7 +567,7 @@ function registerJobsShow(project) {
                 '</div>' +
 
 
-                '<div class="col col-md-12" id="'+key+'-raw-preds" style="padding-top: 20px;"></div>' +
+                '<div class="col col-md-12 text-center" id="'+key+'-raw-preds" style="padding-top: 20px;"></div>' +
 
                 '</div>';
 
@@ -707,6 +707,9 @@ function procBaseTableResults(table_key, table_results_html, label) {
 
 function loadRawPreds(job_name, key, project) {
 
+    // Show loading
+    jQuery('#'+key+'-raw-preds-loading').css('display', 'inline-block');
+
     var params = {};
     params['n'] = job_name;
     params['script'] = 'show_raw_preds.py';
@@ -813,7 +816,9 @@ function loadResults(job_name, key, project) {
         // Add a button to load raw preds if desired
 
         var logs_html = '<button class="btn btn-outline-dark" id="'+key+'-show-raw-preds" ' +
-                        'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions</button>';
+                        'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions' +
+                        '<img id="'+key+'-raw-preds-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 20px;"></img>' +
+                        '</button>';
         jQuery('#'+key+'-raw-preds').append(logs_html);
 
         jQuery('#'+key+'-show-raw-preds').on('click', function() {
