@@ -206,7 +206,13 @@ function setVariableResults(output, key, project) {
                     "searching": false,
                     "paging": false,
                     "info": false,
-                    "ordering": orderable
+                    "ordering": orderable,
+                    "preDrawCallback": function (settings) {
+                        pageScrollPos = document.documentElement.scrollTop;
+                    },
+                    "drawCallback": function (settings) {
+                        scrollTo(0, pageScrollPos);
+                    }
                 });
 
                 // Add index vals only if strat

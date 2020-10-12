@@ -504,7 +504,13 @@ function registerTable(project) {
         "order": [[ 5, "desc"]],
         "columnDefs": [
             {"orderable": false, "targets": [-1, -2]},
-        ]
+        ],
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        },
     });
 
     // Register refresh status on each re-draw
