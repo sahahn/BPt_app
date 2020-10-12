@@ -27,7 +27,7 @@ function getResultsTableHTML(project) {
         table_html +=
         '<tr>' +
         '<th scope="row" class="align-bottom">' + job_name + '</th>' +
-        '<td class="align-bottom" data-sort="'+project['jobs'][job_name]['status']+'">' +
+        '<td class="align-bottom" data-sort="'+parseFloat(project['jobs'][job_name]['status'])+'">' +
         '<div class="results-status" data-jobName="'+job_name+'"></div></td>' +
         '<td class="align-bottom">';
 
@@ -367,9 +367,8 @@ function refreshStatus(entry, project) {
             data['bar'].animate(parseFloat(job['status']), {duration: 1000});
         }
 
-        // Update the sort status
+        // Update the sort status - needed to convert to float
         entry.parent().data('sort', parseFloat(job['status']));
-        console.log(entry.parent().data());
 
         // Set last status
         data['laststatus'] = job['status'];
