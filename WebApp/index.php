@@ -40,11 +40,7 @@
 
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 
-    <div style="width: 15em;">
-    <a class="navbar-brand text-center" href="#">BPt</a>
-    </div>
-
-    <div class="container-fluid" style="margin-left: 0em; padding-left:0em; padding-right: 0em;">
+    <div class="container-fluid" style="margin-left: 0em; padding-left:15em; padding-right: 0em;">
     <a class="col-md-2" href="#"></a>
 
     <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
@@ -63,6 +59,8 @@
   <!-- Nav-bar -->
   <nav class="d-none d-md-block bg-light sidebar" style='width: 15em;'>
     <div class="sidebar-static">
+
+      <a class="navbar-brand text-center" href="#">BPt</a>
       
       <ul class="nav flex-column">
       <!-- This is for when integrated with DEAP
