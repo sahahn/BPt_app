@@ -126,8 +126,6 @@
   <div class="container-fluid" style="margin-top: 3em; margin-left: 15em; margin-right: 0em;">
     <div class="row px-5">
 
-      <div class="col-md-1" style='width: 15em;'></div>
-
       <!-- Modal -->
       <div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-label"
         aria-hidden="true">
