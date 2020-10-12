@@ -83,10 +83,11 @@
     <a id="top-text" style="padding-left:0px;"></a>
 
     <div class="d-flex flex-row-reverse">
+    <button id="save-projects" type="button" class="btn btn-sm btn-success float-right" style="margin-left: 1em;">Save Projects 
+      <i class="fas fa-save"></i></button>
     <button id="delete-project" type="button" class="btn btn-sm btn-danger float-right" data-toggle="modal"
       data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button>
-    <button id="save-projects" type="button" class="btn btn-sm btn-success float-right">Save Projects 
-      <i class="fas fa-save"></i></button>
+    
     </div>
   </nav>
 
