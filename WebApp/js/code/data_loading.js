@@ -252,8 +252,9 @@ function setSetResults(output, key, project) {
 
         "preDrawCallback": function (settings) {
             pageScrollPos = $('body').scrollTop();
+            console.log(pageScrollPos);
         },
-        
+
         "drawCallback": function (settings) {
             $('body').scrollTop(pageScrollPos);
         },
