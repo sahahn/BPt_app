@@ -563,11 +563,11 @@ function registerJobsShow(project) {
                 '<button class="btn btn-outline-dark" id="'+key+'-toggle-logs" data-toggle="button" aria-pressed="false" autocomplete="off">Toggle Logs</button>' +
                 '</div>' +
                 '<div class="job-logs" id="'+key+'-logs" data-jobName="'+job_name+'" ' +
-                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 3em; padding: 3em; display: none"></div>' +
+                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 1em; padding: 1em; display: none"></div>' +
                 '</div>' +
 
 
-                '<div class="col col-md-12 text-center" id="'+key+'-raw-preds" style="padding-top: 10em;"></div>' +
+                '<div class="col col-md-12 text-center" id="'+key+'-raw-preds" style="padding-top: 5em;"></div>' +
 
                 '</div>';
 
