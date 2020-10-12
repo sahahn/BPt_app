@@ -54,7 +54,7 @@
   </nav>
 
   <!-- Nav-bar -->
-  <nav class="col-md-1 d-none d-md-block bg-light sidebar", style='width: 5em;'>
+  <nav class="col-md-1 d-none d-md-block bg-light sidebar", style='width: 15em;'>
     <div class="sidebar-static">
       
       <ul class="nav flex-column">
