@@ -50,7 +50,8 @@ def get_table_html(results):
         for i, scorer in enumerate(results['scorer_strs']):
             table_html += '<tr>'
             table_html += '<th>' + scorer + '</th>'
-            table_html += '<td>' + check_round(results['scores'][0][i]) + '</td>'
+            r = '<td>' + check_round(results['scores'][i]) + '</td>'
+            table_html += r
 
     # If evaluate
     else:
