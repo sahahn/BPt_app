@@ -817,7 +817,7 @@ function loadResults(job_name, key, project) {
 
         var logs_html = '<button class="btn btn-outline-dark" id="'+key+'-show-raw-preds" ' +
                         'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions' +
-                        '<img id="'+key+'-raw-preds-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 2em;"></img>' +
+                        '<img id="'+key+'-raw-preds-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 1em;"></img>' +
                         '</button>';
         jQuery('#'+key+'-raw-preds').append(logs_html);
 
