@@ -26,15 +26,9 @@ function inputDropNaHTML(key) {
 
 function getEventNameOptionsHTML() {
 
-    var html = '';
+    var all_events = [];
     events.forEach(event => {
-
-        if (event == settings['event_default']) {
-            html += '<option selected value="' + event + '">'+event+'</option>';   
-        }
-        else {
-            html += '<option value="' + event + '">'+event+'</option>';
-        }
+        all_events.push(event);
     });
 
     events.forEach(event1 => {
@@ -42,10 +36,21 @@ function getEventNameOptionsHTML() {
             if (event1 !== event2) {
                 valid_ops.forEach(op => {
                     var name = '(' + event1 + op + event2 + ')';
-                    html += '<option value="' + name + '">'+name+'</option>';
+                    all_events.push(name);
                 });
             }
         });
+    });
+
+    var html = '';
+    all_events.forEach(event => {
+
+        if (event == settings['event_default']) {
+            html += '<option selected value="' + event + '">'+event+'</option>';   
+        }
+        else {
+            html += '<option value="' + event + '">'+event+'</option>';
+        }
     });
 
     return html;
