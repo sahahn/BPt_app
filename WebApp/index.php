@@ -53,49 +53,6 @@
         <i class="fas fa-save"></i></button></a> 
   </nav>
 
-  <!-- Nav-bar -->
-  <nav class="col-md-1 d-none d-md-block bg-light sidebar">
-    <div class="sidebar-static">
-      
-      <ul class="nav flex-column">
-      <!-- This is for when integrated with DEAP
-        <li class="nav-item" style="padding-top: 50px;">
-          <a class="nav-link" href="/index.php">
-            <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
-          </a>
-        </li>
-        -->
-
-        <li class="nav-item" style="padding-top: 50px;">
-          <a id="home-but" class="nav-link" href="#">
-            <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a id="settings" class="nav-link" href="#">
-            <span><i class="fas fa-cogs navbutton fa-fw"></i></span> Settings
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a id="sets" class="nav-link" href="#">
-            <span><i class="fas fa-bars navbutton fa-fw"></i></span> Sets
-          </a>
-        </li>
-        
-      </ul>
-
-      <h6 class="nav-link sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
-        <span>Projects </span> <a id="add-new-project" href="#"><i class="fas fa-plus navbutton float-right"></i></a>
-      </h6>
-
-      <ul class="nav flex-column mb-2" id="projects-list">
-      </ul>
-
-    </div>
-  </nav>
-
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
 
@@ -124,9 +81,50 @@
 
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 15px;">
-    <div class="row px-5">
+    <div class="row">
 
-      <div class="col-md-1"></div>
+      <!-- Nav-bar -->
+      <nav class="col-md-1 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-static">
+          
+          <ul class="nav flex-column">
+          <!-- This is for when integrated with DEAP
+            <li class="nav-item" style="padding-top: 50px;">
+              <a class="nav-link" href="/index.php">
+                <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
+              </a>
+            </li>
+            -->
+
+            <li class="nav-item" style="padding-top: 50px;">
+              <a id="home-but" class="nav-link" href="#">
+                <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a id="settings" class="nav-link" href="#">
+                <span><i class="fas fa-cogs navbutton fa-fw"></i></span> Settings
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a id="sets" class="nav-link" href="#">
+                <span><i class="fas fa-bars navbutton fa-fw"></i></span> Sets
+              </a>
+            </li>
+            
+          </ul>
+
+          <h6 class="nav-link sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+            <span>Projects </span> <a id="add-new-project" href="#"><i class="fas fa-plus navbutton float-right"></i></a>
+          </h6>
+
+          <ul class="nav flex-column mb-2" id="projects-list">
+          </ul>
+
+        </div>
+      </nav>
 
       <!-- Modal -->
       <div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-label"
