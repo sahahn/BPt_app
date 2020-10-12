@@ -106,12 +106,12 @@ function removeActiveProjectOption(key) {
 function updateTopText(text, key, ext) {
 
     var top_text = '' +
-    '<button type="button" id="prev" class="btn btn-sm btn-dark" ' +
+    '<button type="button" id="prev" class="btn btn-sm" ' +
     'style="background-color:transparent;">' +
     '<i class="fas fa-arrow-left fa-xs"></i>' +
     '</button>&nbsp' +
     text +
-    '&nbsp<button type="button" id="next" class="btn btn-sm btn-dark" ' +
+    '&nbsp<button type="button" id="next" class="btn btn-sm" ' +
     'style="background-color:transparent;">' +
     '<i class="fas fa-arrow-right fa-xs"></i>' +
     '</button>';
