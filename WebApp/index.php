@@ -42,7 +42,7 @@
     <a class="navbar-brand text-center" href="#" style="width: 15em; display: block;">BPt</a>
     <a class="col-md-2" href="#"></a>
 
-    <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
+    <a id="top-text" class="form-control-dark text-white text-center" style="padding-left:0px;"></a>
 
   
     <a><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
