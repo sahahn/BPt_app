@@ -6,7 +6,7 @@
 function getResultsTableHTML(project) {
 
     var table_html = '' +
-    '<table id="results-table" class="table table-striped" style="width:100%">' +
+    '<table id="results-table" class="table table-striped" style="width:100% margin-top:2em">' +
     '<thead><tr>' + 
     '<th scope="col">Job Name</th>' +
     '<th scope="col">Status</th>' +
@@ -372,6 +372,7 @@ function refreshStatus(entry, project) {
 
         // Set last status
         data['laststatus'] = job['status'];
+        console.log(data);
     }
 
 }
