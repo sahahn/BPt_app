@@ -80,7 +80,9 @@
   </nav>
 
   <nav class="navbar fixed-top bg-light navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em; border-bottom: 1px solid rgba(0,0,0,.1);">
+    <a class="col-md-1" href="#"></a>
     <a id="top-text" class="text-center col-md-6" style="padding-left:0px;"></a>
+    <a class="col-md-1" href="#"></a>
     <a class="col-md-auto"><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
       data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
     <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
