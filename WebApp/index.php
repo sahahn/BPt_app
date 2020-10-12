@@ -139,7 +139,9 @@
       fg
     </nav>
 
-    <div class="row px-5">
+    <div class="row px-5" style="margin-left:0px; margin-right:0px;">
+
+
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
         <div id="body-db-loading" style="display: none">
