@@ -134,11 +134,11 @@
 
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
-
-    <nav class="navbar navbar-light bg-light px-5">
-      ghj
-
+    <div class="container">
+    <nav class="navbar sticky-top navbar-light bg-light px-5">
+     .navbar-textfg
     </nav>
+    </div>
 
     <div class="row px-5" style="margin-left:0px; margin-right:0px;">
 
