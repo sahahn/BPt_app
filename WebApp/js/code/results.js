@@ -317,8 +317,6 @@ function refreshStatus(entry, project) {
 
     var data = entry.data();
 
-    console.log(entry.parent().data())
-
     // Init progress bar only if not yet init'ed
     if (data['bar'] == undefined) {
         data['bar'] = initProgressBar(entry[0]);
@@ -370,7 +368,8 @@ function refreshStatus(entry, project) {
         }
 
         // Update the sort status
-        entry.parent().data('sort', job['status']);
+        entry.parent().data('sort', parseFloat(job['status']));
+        console.log(entry.parent().data());
 
         // Set last status
         data['laststatus'] = job['status'];
