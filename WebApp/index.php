@@ -46,6 +46,7 @@
 
         <li class="nav-item text-center">
           <h3>BPt</h3>
+          <hr>
         </li>
 
       <!-- This is for when integrated with DEAP
@@ -56,7 +57,7 @@
         </li>
         -->
 
-        <li class="nav-item" style="padding-top: 5em;">
+        <li class="nav-item" style="padding-top: 2em;">
           <a id="home-but" class="nav-link" href="#">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
           </a>
