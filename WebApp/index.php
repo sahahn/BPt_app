@@ -80,7 +80,7 @@
   </nav>
 
   <nav class="navbar fixed-top bg-light navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em; border-bottom: 1px solid rgba(0,0,0,.1);">
-    ww
+    <a id="top-text" class="form-control text-center col-md-6" style="padding-left:0px;"></a>
   </nav>
 
   <!-- Modal spots for params + submit -->
