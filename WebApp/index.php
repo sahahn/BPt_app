@@ -86,7 +86,7 @@
       <div class="col-md-1">
 
         <!-- Nav-bar -->
-        <nav class="d-none d-md-block bg-light sidebar">
+        <nav class="col-md-1 d-none d-md-block bg-light sidebar">
           <div class="sidebar-static">
             
             <ul class="nav flex-column">
@@ -127,7 +127,7 @@
 
           </div>
         </nav>
-
+        
       </div>
 
       <!-- Modal -->
