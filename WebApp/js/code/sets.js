@@ -102,6 +102,12 @@ function registerSetTable(set_id, variables) {
         searching: true,
         lengthChange: true,
         lengthMenu: [[5, 10, 25, 50, -1, 0], [5, 10, 25, 50, "All", 0]],
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        }
     });
 
 

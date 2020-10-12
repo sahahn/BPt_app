@@ -752,6 +752,12 @@ function loadRawPreds(job_name, key, project) {
             autoWidth: true,
             lengthChange: true,
             "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            "preDrawCallback": function (settings) {
+                pageScrollPos = document.documentElement.scrollTop;
+            },
+            "drawCallback": function (settings) {
+                scrollTo(0, pageScrollPos);
+            }
         });
 
         // Add buttons under table
@@ -814,6 +820,12 @@ function loadResults(job_name, key, project) {
             paging: false,
             info: false,
             autoWidth: true,
+            "preDrawCallback": function (settings) {
+                pageScrollPos = document.documentElement.scrollTop;
+            },
+            "drawCallback": function (settings) {
+                scrollTo(0, pageScrollPos);
+            }
         });
 
         // Add buttons to special spot centered under table

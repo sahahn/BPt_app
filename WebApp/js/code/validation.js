@@ -136,7 +136,13 @@ function setValidationResults(output, key, project) {
             "searching": false,
             "paging": false,
             "info": false,
-            "ordering": true
+            "ordering": true,
+            "preDrawCallback": function (settings) {
+                pageScrollPos = document.documentElement.scrollTop;
+            },
+            "drawCallback": function (settings) {
+                scrollTo(0, pageScrollPos);
+            }
         });
 
         // Add some extra padding since no img dist

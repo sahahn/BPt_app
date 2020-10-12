@@ -261,7 +261,7 @@ function setSetResults(output, key, project) {
         },
         "drawCallback": function (settings) {
             scrollTo(0, pageScrollPos);
-        },
+        }
     });
 
     // Set register every time table drawn
