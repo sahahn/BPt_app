@@ -38,8 +38,6 @@
 
 <body spellcheck="false">
 
-  <div class="main-wrapper">
-
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <a class="navbar-brand col-md-1 text-center" href="#">BPt</a>
     <a class="col-md-2" href="#"></a>
@@ -56,7 +54,7 @@
   </nav>
 
   <!-- Nav-bar -->
-  <nav class="d-none d-md-block bg-light sidebar" style='width: 15em;'>
+  <nav class="d-none d-md-block bg-light sidebar" style='width: 15em;', display='block'>
     <div class="sidebar-static">
       
       <ul class="nav flex-column">
@@ -186,8 +184,6 @@
 
   <!-- Some fixed padding at bottom -->
   <div style="padding-top: 1000px"></div>
-
-  </div>
 
   <!-- Base libraries js -->
   <script type="text/javascript" src="js/libraries/jquery-3.2.1.min.js"></script>
