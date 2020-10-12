@@ -922,7 +922,11 @@ def plot_dist(params, ML, load_type, log_dr, output_loc):
 
 
 def chunk_line(line):
-    return [h.strip() for h in line.split(' ') if len(h.strip()) > 0]
+    base = [h.strip() for h in line.split(' ') if len(h.strip()) > 0]
+    if '[' in base[1] and ']' in base[1]:
+        base = [base[0] + ' ' + base[1]] + base[2:]
+
+    return base
 
 
 def get_set_output(log_dr, ML, params, output_loc):
@@ -1698,6 +1702,7 @@ def get_CV_from_params(val_params, output_loc, strat_u_name):
     try:
         train_only_subjects = get_tr_only(val_params, output_loc)
     except Exception as e:
+        train_only_subjects = None
         save_error('Error proc. train only subjs', output_loc, e)
 
     cv_params = CV(groups=groups, stratify=stratify,
