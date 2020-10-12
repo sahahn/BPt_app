@@ -40,11 +40,9 @@
 
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <a class="navbar-brand text-center" href="#" style="width: 15em; display: block;">BPt</a>
-    <a class="col-md-2" href="#"></a>
 
     <a id="top-text" class="form-control-dark text-white text-center" style="padding-left:0px;"></a>
 
-  
     <a><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
       data-target="#delete-confirm" style="display:none; width: 5em;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
 
