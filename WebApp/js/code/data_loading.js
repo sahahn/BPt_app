@@ -248,7 +248,15 @@ function setSetResults(output, key, project) {
         "paging": true,
         "info": true,
         "columnDefs": [
-            { "orderable": false, "targets": -1}]
+            { "orderable": false, "targets": -1}],
+
+        "preDrawCallback": function (settings) {
+            pageScrollPos = $('body').scrollTop();
+        },
+        
+        "drawCallback": function (settings) {
+            $('body').scrollTop(pageScrollPos);
+        },
     });
 
     // Set register every time table drawn
