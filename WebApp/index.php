@@ -45,6 +45,11 @@
       <a class="nav-item navbar-brand" href="#">BPt</a>
       
       <ul class="nav flex-column">
+
+        <li class="nav-item">
+          <h3>BPt</h3>
+        </li>
+
       <!-- This is for when integrated with DEAP
         <li class="nav-item" style="padding-top: 50px;">
           <a class="nav-link" href="/index.php">
@@ -53,7 +58,7 @@
         </li>
         -->
 
-        <li class="nav-item" style="padding-top: 50px;">
+        <li class="nav-item" style="padding-top: 5em;">
           <a id="home-but" class="nav-link" href="#">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
           </a>
@@ -113,10 +118,9 @@
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
 
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-
-      <div class="container-fluid" style="margin-left: 0em; padding-left:15em; padding-right: 0em;">
+      
       <a class="col-md-2" href="#"></a>
-  
+      
       <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
         
       <a class="col-md-1" href="#"></a>
@@ -126,8 +130,6 @@
   
       <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
           <i class="fas fa-save"></i></button></a>
-      </div>
-  
     </nav>
     
     
