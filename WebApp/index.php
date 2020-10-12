@@ -79,6 +79,10 @@
     </div>
   </nav>
 
+  <nav class="navbar fixed-top navbar-light bg-light" style="margin-left: 15em; height:2em;">
+    ww
+  </nav>
+
   <!-- Modal spots for params + submit -->
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
@@ -134,14 +138,6 @@
 
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em; margin-right: 0em; padding-left: 0px">
-
-
-    <nav class="navbar fixed-top navbar-light bg-light" style="margin-left: 15em;">
-      ww
-    </nav>
-
-  
-
     <div class="row px-5" style="margin-left:0px; margin-right:0px;">
 
 
