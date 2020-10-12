@@ -862,5 +862,5 @@ function displayResults(project) {
     // Start loop to check for active jobs
     active_jobs_interval = setInterval(function() {
         updateJobs(project);
-    }, 1000);
+    }, 3000);
 }
