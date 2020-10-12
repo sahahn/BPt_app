@@ -317,7 +317,7 @@ function refreshStatus(entry, project) {
 
     var data = entry.data();
 
-    console.log(entry)
+    console.log(entry.parent().data())
 
     // Init progress bar only if not yet init'ed
     if (data['bar'] == undefined) {
