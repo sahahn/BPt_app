@@ -133,7 +133,7 @@
   </div>
 
   <!-- Store whole main form in here -->
-  <div class="container-fluid" style="margin-top: 1em; margin-left: 15em; margin-right: 0em;">
+  <div class="container-fluid" style="margin-top: 1em; margin-left: 15em; margin-right: 0em; padding-left: 0px">
 
     
     <nav class="navbar sticky-top navbar-light bg-light px-5">
