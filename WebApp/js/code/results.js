@@ -705,6 +705,58 @@ function procBaseTableResults(table_key, table_results_html, label) {
     return html;
 }
 
+function loadRawPreds(job_name, key, project) {
+
+    var params = {};
+    params['n'] = job_name;
+    params['script'] = 'show_raw_preds.py';
+    params['project_id'] =  project['id'];
+
+    jQuery.post('php/run_quick_py.php', {
+        'params': params
+    }, function (output) {
+
+        var raw_table_key = key +'-raw-table'
+        var raw_descr = 'These are the raw computed predictions from this Evaluate or Test run. This table includes ' +
+        'the baseline target in addition to the predicted values (which will vary based on problem type, e.g., binary will include ' +
+        'thresholded predictions and raw probability predictions). Likewise, if an Evaluate job, the predicted scores will be in a column with ' +
+        'the name of that Repeat, e.g., column 1 will represent the predicted scores from the first repeat, and column 2 from the second. The column ' +
+        '1_fold, will then listen which fold for the first repeat each prediction was made in. If a prediction was not made for a subject within a repeat, ' +
+        'then it will contain an NaN. Note that you may also download a csv or excel spreadsheet with these raw predictions.';
+        var raw_label = getPopLabel(key, "Raw Predictions ", raw_descr);
+        var raw_html = procBaseTableResults(raw_table_key, 
+                                            output['raw_preds'],
+                                            raw_label);
+        jQuery('#'+key+'-raw-preds').append(raw_html);
+
+        var raw_table = $('#'+raw_table_key).DataTable({
+            data: output['pred_rows'],
+            scrollX: true,
+            dom: 'lBfrtip',
+            searching: true,
+            buttons: [
+                'csvHtml5',
+                {extend: 'excelHtml5', title: ''},
+            ],
+            paging: true,
+            info: true,
+            autoWidth: true,
+            lengthChange: true,
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        });
+
+        // Add buttons under table
+        raw_table.buttons().container().appendTo($('#'+raw_table_key+'-buttons'));
+
+        // Register new popovers
+        registerPopovers();
+
+    }, "json").fail(function (xhr, textStatus, errorThrown) {
+        alert('error ' + textStatus + xhr + errorThrown);
+    });
+
+}
+
 function loadResults(job_name, key, project) {
 
     // If already loading, stop
@@ -757,37 +809,6 @@ function loadResults(job_name, key, project) {
 
         // Add buttons to special spot centered under table
         table.buttons().container().appendTo($('#'+sum_table_key+'-buttons'));
-
-        var raw_table_key = key +'-raw-table'
-        var raw_descr = 'These are the raw computed predictions from this Evaluate or Test run. This table includes ' +
-        'the baseline target in addition to the predicted values (which will vary based on problem type, e.g., binary will include ' +
-        'thresholded predictions and raw probability predictions). Likewise, if an Evaluate job, the predicted scores will be in a column with ' +
-        'the name of that Repeat, e.g., column 1 will represent the predicted scores from the first repeat, and column 2 from the second. The column ' +
-        '1_fold, will then listen which fold for the first repeat each prediction was made in. If a prediction was not made for a subject within a repeat, ' +
-        'then it will contain an NaN. Note that you may also download a csv or excel spreadsheet with these raw predictions.';
-        var raw_label = getPopLabel(key, "Raw Predictions ", raw_descr);
-        var raw_html = procBaseTableResults(raw_table_key, 
-                                            output['raw_preds'],
-                                            raw_label);
-        jQuery('#'+key+'-raw-preds').append(raw_html);
-
-        var raw_table = $('#'+raw_table_key).DataTable({
-            data: output['pred_rows'],
-            scrollX: true,
-            dom: 'lBfrtip',
-            searching: true,
-            buttons: [
-                'csvHtml5',
-                {extend: 'excelHtml5', title: ''},
-            ],
-            paging: true,
-            info: true,
-            autoWidth: true,
-            lengthChange: true,
-            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-        });
-
-        raw_table.buttons().container().appendTo($('#'+raw_table_key+'-buttons'));
 
         // Register new popovers
         registerPopovers();

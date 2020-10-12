@@ -19,17 +19,28 @@ def main(user_dr, job_name):
         results = ML.Test(model_pipeline=model_pipeline,
                           problem_spec=problem_spec,
                           train_subjects='train',
-                          test_subjects='test')
+                          test_subjects='test',
+                          return_raw_preds=True)
         results['scorer_strs'] = ML.evaluator.scorer_strs
         results['n_repeats'], results['n_splits'] = 1, 1
 
     except Exception as e:
+        results = None
         save_error('Error starting Test', error_output_loc, e)
+
+    # Save raw_preds seperate
+    raw_preds = results.pop('raw_preds')
 
     # Save results
     results_loc = os.path.join(job_dr, 'results.pkl')
     with open(results_loc, 'wb') as f:
         pkl.dump(results, f)
+
+    # Save raw preds
+    preds_loc = os.path.join(job_dr, 'raw_preds.pkl')
+    with open(preds_loc, 'wb') as f:
+        pkl.dump(raw_preds, f)
+
 
 if __name__ == "__main__":
 
