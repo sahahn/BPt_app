@@ -134,12 +134,12 @@
 
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      fg
+    </nav>
+
     <div class="row px-5">
-
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        fg
-      </nav>
-
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">
         <div id="body-db-loading" style="display: none">
