@@ -79,7 +79,7 @@
     </div>
   </nav>
 
-  <nav class="navbar fixed-top navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em; background-color: #f1f1f1;">
+  <nav class="navbar fixed-top bg-light navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em;">
     ww
   </nav>
 
@@ -137,7 +137,7 @@
   </div>
 
   <!-- Store whole main form in here -->
-  <div class="container-fluid" style="margin-top: 4em; margin-left: 15em; margin-right: 0em; padding-left: 0px">
+  <div class="container-fluid" style="margin-top: 3.65em; margin-left: 15em; margin-right: 0em; padding-left: 0px">
     <div class="row px-5" style="margin-left:0px; margin-right:0px;">
 
 
