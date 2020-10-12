@@ -57,7 +57,7 @@
         </li>
         -->
 
-        <li class="nav-item" style="padding-top: 2em;">
+        <li class="nav-item">
           <a id="home-but" class="nav-link" href="#">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
           </a>
