@@ -39,7 +39,10 @@
 <body spellcheck="false">
 
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand text-center" href="#" style="width: 15em;">BPt</a>
+
+    <div style="width: 15em;">
+    <a class="navbar-brand text-center" href="#">BPt</a>
+    </div>
 
     <div class="container-fluid" style="margin-left: 0em; padding-left:0em; padding-right: 0em;">
     <a class="col-md-2" href="#"></a>
