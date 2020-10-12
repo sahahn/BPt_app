@@ -46,10 +46,10 @@
       
     <a class="col-md-1" href="#"></a>
   
-    <a class="col-md-auto"><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-      data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
+    <a><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+      data-target="#delete-confirm" style="display:none; width: 3em;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
 
-    <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
+    <a><button id="save-projects" type="button" class="btn btn-sm btn-success" style="width: 3em;">Save Projects 
         <i class="fas fa-save"></i></button></a> 
   </nav>
 
