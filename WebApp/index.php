@@ -41,12 +41,10 @@
   <!-- Nav-bar -->
   <nav class="d-none d-md-block bg-light sidebar" style='width: 15em;'>
     <div class="sidebar-static">
-
-      <a class="nav-item navbar-brand" href="#">BPt</a>
       
       <ul class="nav flex-column">
 
-        <li class="nav-item">
+        <li class="nav-item text-center">
           <h3>BPt</h3>
         </li>
 
