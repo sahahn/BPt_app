@@ -42,7 +42,7 @@
   <nav class="d-none d-md-block bg-light sidebar" style='width: 15em;'>
     <div class="sidebar-static">
 
-      <a class="nav-item text-center" href="#">BPt</a>
+      <a class="nav-item navbar-brand" href="#">BPt</a>
       
       <ul class="nav flex-column">
       <!-- This is for when integrated with DEAP
@@ -111,6 +111,26 @@
 
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
+
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+
+      <div class="container-fluid" style="margin-left: 0em; padding-left:15em; padding-right: 0em;">
+      <a class="col-md-2" href="#"></a>
+  
+      <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
+        
+      <a class="col-md-1" href="#"></a>
+    
+      <a class="col-md-auto"><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+        data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
+  
+      <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
+          <i class="fas fa-save"></i></button></a>
+      </div>
+  
+    </nav>
+    
+    
     <div class="row px-5">
 
       <!-- Modal -->
