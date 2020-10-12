@@ -39,7 +39,7 @@
 <body spellcheck="false">
 
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand text-center" href="#" style='width: 15em;'>BPt</a>
+    <a class="navbar-brand text-center" href="#" style="width: 15em; display: block;">BPt</a>
     <a class="col-md-2" href="#"></a>
 
     <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
@@ -123,7 +123,7 @@
   </div>
 
   <!-- Store whole main form in here -->
-  <div class="container-fluid" style="margin-top: 3em; margin-left: 15em;">
+  <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
     <div class="row px-5">
 
       <!-- Modal -->
