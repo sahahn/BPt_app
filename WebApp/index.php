@@ -49,14 +49,6 @@
           <hr>
         </li>
 
-      <!-- This is for when integrated with DEAP
-        <li class="nav-item" style="padding-top: 50px;">
-          <a class="nav-link" href="/index.php">
-            <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
-          </a>
-        </li>
-        -->
-
         <li class="nav-item">
           <a id="home-but" class="nav-link" href="#">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
@@ -115,21 +107,19 @@
 
   <!-- Store whole main form in here -->
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em;">
-
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      
-      <a class="col-md-2" href="#"></a>
-      
-      <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
+    <div class="row px-5">
+      <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
         
-      <a class="col-md-1" href="#"></a>
-    
-      <a class="col-md-auto"><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-        data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
-  
-      <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
-          <i class="fas fa-save"></i></button></a>
-    </nav>
+        <a class="col-md-1" href="#"></a>
+        <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
+        <a class="col-md-1" href="#"></a>
+      
+        <a class="col-md-auto"><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+          data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
+        <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
+            <i class="fas fa-save"></i></button></a>
+      </nav>
+    </div>
     
     
     <div class="row px-5">
