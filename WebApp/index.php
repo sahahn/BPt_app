@@ -81,9 +81,7 @@
 
   <nav class="navbar fixed-top bg-light navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em; border-bottom: 1px solid rgba(0,0,0,.1);">
 
-    <div class="text-center"> 
-    <a id="top-text" style="padding-left:0px;"></a>
-    </div>
+    <a id="top-text" style="padding-left:25%; padding-right:25%;"></a>
 
     <div class="d-flex flex-row-reverse">
     <button id="save-projects" type="button" class="btn btn-sm btn-success float-right" style="margin-left: 1em;">Save Projects 
