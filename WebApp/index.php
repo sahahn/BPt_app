@@ -136,9 +136,8 @@
   <div class="container-fluid" style="margin-top: 1em; margin-left: 15em; margin-right: 0em; padding-left: 0px">
 
 
-    <nav class="navbar fixed-top navbar-light bg-light px-5">
+    <nav class="navbar fixed-top navbar-light bg-light" style="margin-left: 15em;">
       ww
-       
     </nav>
 
   
