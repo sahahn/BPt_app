@@ -135,7 +135,7 @@ function getTestHTML(key) {
                 "in order for the values to appear.";
 
     var file_input_label = getPopLabel(key, "Test subjects from File ", i_label);
-    var from_strat_label = getPopLabel(key, "Test subjects by Non-Input Value ", fs_label);
+    var from_strat_label = getPopLabel(key, "Test subjects by Value ", fs_label);
 
     var html = '' +
     getTestTypeRowHTML() +

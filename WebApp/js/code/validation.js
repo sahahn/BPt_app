@@ -83,7 +83,7 @@ function addValidationHTML(key) {
                    "Variables, they will not take into account any inclusions or exclusions";
 
     var file_input_label = getPopLabel(key, "Train-only Subjects from File ", i_label);
-    var from_strat_label = getPopLabel(key, "Train-only Subjects by Non-Input Value ", fs_label);
+    var from_strat_label = getPopLabel(key, "Train-only Subjects by Value ", fs_label);
 
     var html = '' +
     '<div class="form-row d-flex justify-content-between">' +

@@ -88,7 +88,7 @@ function getEvalSubjectsHTML(key) {
     ' Non-Input variables. Note: Load/Show must have been called on the Non-Input variable during Data Loading in order for it to appear as option here. ' +
     subj_overlap_txt;
     
-    var from_strat_label = getPopLabel(key, 'Subset-Subjects by Non-Input Value ', from_strat_content);
+    var from_strat_label = getPopLabel(key, 'Subset-Subjects by Value ', from_strat_content);
 
     var html = addSubjectsInputRowHTML(key, file_input_label, from_strat_label,
                                       'eval', row_class=' mb-5 ml-5 mr-5 mt-3');
