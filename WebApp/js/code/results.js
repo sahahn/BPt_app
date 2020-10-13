@@ -6,7 +6,7 @@
 function getResultsTableHTML(project) {
 
     var table_html = '' +
-    '<table id="results-table" class="table table-striped" style="width:100% margin-top:2em">' +
+    '<table id="results-table" class="table table-striped" style="width:100%">' +
     '<thead><tr>' + 
     '<th scope="col">Job Name</th>' +
     '<th scope="col">Status</th>' +
@@ -879,7 +879,7 @@ function displayResults(project) {
     }
     
     var html = '' +
-    '<div id="results-table-space"></div>' +
+    '<div id="results-table-space" style="margin-top:2em"></div>' +
     '<hr><br>' + 
     '<div id="results-show-space"></div>';
 
