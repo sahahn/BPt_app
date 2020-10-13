@@ -1541,12 +1541,4 @@ function displayMLPipe(project) {
 
 }
 
-// On document load
-jQuery(document).ready(function() {
-
-    // Load the ML options
-    getMLOptions();
-
-});
-
 

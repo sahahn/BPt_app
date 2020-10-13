@@ -1210,10 +1210,3 @@ function getParamsFromChoice(key, options, choice, obj_name, prev_val) {
         return [param_dists['user'][obj_name][choice], false];
     }
 }
-
-jQuery(document).ready(function() {
-    
-    // Load the User's param dists
-    getParamDists();
-
-});
