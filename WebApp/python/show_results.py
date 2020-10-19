@@ -50,7 +50,8 @@ def get_table_html(results):
         for i, scorer in enumerate(results['scorer_strs']):
             table_html += '<tr>'
             table_html += '<th>' + scorer + '</th>'
-            table_html += '<td>' + check_round(results['scores'][0][i]) + '</td>'
+            r = '<td>' + check_round(results['scores'][i]) + '</td>'
+            table_html += r
 
     # If evaluate
     else:
@@ -67,38 +68,8 @@ def get_table_html(results):
     return table_html
 
 
-def get_raw_preds_table_html(results):
-
-    df = results['raw_preds']
-
-    table_html = '<table id="TEMP-ID" class="table table-striped" '
-    table_html += 'style="width: 100%">'
-    table_html += '<thead><tr>'
-
-    cols = ['src_subject_id'] + list(df)
-    for col in cols:
-        table_html += '<th scope="col">' + str(col) + '</th>'
-
-    table_html += '</tr></thead><tbody>'
-
-    # for subj, row in df.iterrows():
-    #     table_html += '<tr>'
-    #     table_html += '<th>' + str(subj) + '</th>'
-    #     for val in row.values:
-    #         table_html += '<td>' + str(val) + '</td>'
-    #     table_html += '</tr>'
-
-    f_rows = []
-    for subj, row in df.iterrows():
-        f_rows.append([str(subj)] + [str(v) for v in row.values])
-
-    table_html += '</tbody></table>'
-    return table_html, f_rows
-
-
 def main(user_dr, job_name):
 
-    # Should switch over all quick py runs to using temp
     temp_dr = os.path.join(user_dr, 'temp')
     params_loc = os.path.join(temp_dr, 'ML_Params_' + str(job_name) + '.json')
     output_loc = os.path.join(temp_dr, 'ML_Output_' + str(job_name) + '.json')
@@ -122,6 +93,7 @@ def main(user_dr, job_name):
             retry_cnt += 1
 
     if retry_cnt != 20:
+        results = None
         save_error('Error reading saved results', output_loc)
 
     try:
@@ -129,14 +101,7 @@ def main(user_dr, job_name):
     except Exception as e:
         save_error('Error generating summary table', output_loc, e)
 
-    try:
-        raw_preds, pred_rows = get_raw_preds_table_html(results)
-    except Exception as e:
-        save_error('Error generating raw preds table', output_loc, e)
-
-    output = {'table_html': table_html,
-              'raw_preds': raw_preds,
-              'pred_rows': pred_rows}
+    output = {'table_html': table_html}
 
     save_results(output_loc, output)
 

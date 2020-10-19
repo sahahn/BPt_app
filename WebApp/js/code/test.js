@@ -135,7 +135,7 @@ function getTestHTML(key) {
                 "in order for the values to appear.";
 
     var file_input_label = getPopLabel(key, "Test subjects from File ", i_label);
-    var from_strat_label = getPopLabel(key, "Test subjects by Non-Input Value ", fs_label);
+    var from_strat_label = getPopLabel(key, "Test subjects by Value ", fs_label);
 
     var html = '' +
     getTestTypeRowHTML() +
@@ -204,6 +204,12 @@ function setShowTestResults(output, key, project) {
         "searching": false,
         "paging": false,
         "info": false,
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        }
     });
 
     setDistImage(key, output['img_loc']);
@@ -258,7 +264,13 @@ function setTestResults(output, key, project) {
         "info": true,
         "columnDefs": [
             { "orderable": false, "targets": -1}
-        ]
+        ],
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        }
     });
 
     // Add some extra padding since no img dist

@@ -73,7 +73,6 @@ function registerCloseButton(space, key, n, cnt_field, cnt_id, project) {
 
         // Refresh all by-val choices if strat closes
         if (space == 'strat-space') {
-            console.log('close strat')
             refreshByValueChoices('filter-space', project);
         }
 
@@ -238,9 +237,11 @@ function registerByValueCardName(key) {
         else if (jQuery('#'+key+'-file-input').val().length == 0){
             jQuery('#'+key+'-header-text').empty();
         }
+        
     });
 
     jQuery('#'+key+'-var-val').on('change', function() {
+
         jQuery('#'+key+'-header-text').empty();
 
         if($(this).val().length > 0) {
@@ -248,7 +249,8 @@ function registerByValueCardName(key) {
         }
         else {
             jQuery('#'+key+'-header-text').append(':  <i>' + jQuery('#'+key+'-var-input').val() + ' = </i>');
-        }        
+        }
+             
     });
 }
 
@@ -938,6 +940,8 @@ function registerSplitsRow(key, project) {
 // Helpers ///
 /////////////
 
+
+
 function getAllInputChoices(project) {
 
     // Init as empty arrays
@@ -962,7 +966,8 @@ function getAllInputChoices(project) {
             if (validateSet(k, project['data'][k])) {
                 sep['set_choices'].push({
                     'id': k,
-                    'text': project['data'][k]['-input'],
+                    'text': getReprName(project['data'][k]['-input'],
+                                        project['data'][k]['-eventname']),
                 });
 
                 // Also get all set variables
@@ -970,7 +975,7 @@ function getAllInputChoices(project) {
                 set_vars.forEach(v => {
                     
                     sep['set_var_choices'].push({
-                        'id': 'set-var-'+set_vars.indexOf(v).toString(),
+                        'id': k+'-'+set_vars.indexOf(v).toString(),
                         'text': getReprName(v, project['data'][k]['-eventname'])
                     });
 

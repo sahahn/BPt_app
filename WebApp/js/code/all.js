@@ -15,7 +15,7 @@ function save_all() {
     
     // Save projects
     jQuery.post('php/save_projects.php', {
-        'projects': projects,
+        'projects': JSON.stringify(projects),
         'settings': settings
     });
 
@@ -106,12 +106,12 @@ function removeActiveProjectOption(key) {
 function updateTopText(text, key, ext) {
 
     var top_text = '' +
-    '<button type="button" id="prev" class="btn btn-sm btn-dark" ' +
+    '<button type="button" id="prev" class="btn btn-sm" ' +
     'style="background-color:transparent;">' +
     '<i class="fas fa-arrow-left fa-xs"></i>' +
     '</button>&nbsp' +
     text +
-    '&nbsp<button type="button" id="next" class="btn btn-sm btn-dark" ' +
+    '&nbsp<button type="button" id="next" class="btn btn-sm" ' +
     'style="background-color:transparent;">' +
     '<i class="fas fa-arrow-right fa-xs"></i>' +
     '</button>';
@@ -478,7 +478,7 @@ function startApp() {
         }
 
         if (Object.keys(data).includes('projects')) {
-            projects = data['projects'];
+            projects = JSON.parse(data['projects']);
 
             // Add all existing projects as options
             projects.forEach(project => {
@@ -562,9 +562,18 @@ function isReady(data) {
 // On document load
 jQuery(document).ready(function() {
 
-    // Run setup
+    // Run setup db / data
     jQuery.post('php/setup_db.php');
-    jQuery.post('php/setup_info.php');
+
+    //Run setup info, then can load ML_options and params, which might depend on this call
+    jQuery.post('php/setup_info.php', function() {
+        
+        // Load the ML options
+        getMLOptions();
+
+         // Load the User's param dists
+        getParamDists();
+    });
 
     // Use the select2 bootstrap theme
     $.fn.select2.defaults.set("theme", "bootstrap4");

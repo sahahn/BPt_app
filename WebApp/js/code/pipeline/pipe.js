@@ -1,7 +1,7 @@
 // Global vars
 var ML_options;
-var flex_pipe_pieces = ['imputers', 'scalers', 'transformers', 'feature_selectors'];
-var static_pipe_pieces = ['model', 'parameter_search', 'feature_importances'];
+var flex_pipe_pieces = ['imputers', 'scalers', 'transformers', 'featureSelectors'];
+var static_pipe_pieces = ['model', 'parameterSearch', 'featureImportances'];
 
 ////////////
 // Utils //
@@ -148,10 +148,11 @@ function getDisplayFlexPieceName(p) {
     // Add rest, but w/o last plural s
     name = name + p.slice(1, p.length-1);
 
-    // If any _'s, replace w/ space and capitilize next letter
-    var ind = name.indexOf('_');
+    // Check for if any upper case S
+    // Replace with space then S
+    var ind = name.indexOf('S');
     if (ind !== -1) {
-        name = name.slice(0, ind) + ' ' + name[ind+1].toUpperCase() + name.slice(ind+2);
+        name = name.slice(0, ind) + ' ' + name.slice(ind);
     }
 
     return name;
@@ -499,7 +500,7 @@ function getSearchTypeChoices() {
     choices.push({"id": '', "text": ''});
     choices.push({"id": 'None', "text": 'None'});
 
-    ML_options['parameter_search'].forEach(search_type => {
+    ML_options['parameterSearch'].forEach(search_type => {
         if ((search_type !== undefined) && (search_type !== null)) {
             choices.push({
                 "id": search_type,
@@ -934,7 +935,7 @@ function initNewFeatureSelector(key, project) {
     // Main init
     initNewFlexPiece(key=key, project=project,
                      typeDep=true,
-                     piece_name='feature_selectors',
+                     piece_name='featureSelectors',
                      onSelect=onSelectFeatureSelector,
                      default_scope=['all']);
 
@@ -1057,7 +1058,7 @@ function addEnsembleModel(project, space, key=undefined) {
 function addFeatureSelector(project, space, key=undefined) {
 
     return addFlexPiece(project=project, space=space,
-                        piece_name='feature_selectors',
+                        piece_name='featureSelectors',
                         getPieceHTML=getBaseFeatSelectorHTML,
                         initNew=initNewFeatureSelector,
                         key=key)
@@ -1113,7 +1114,7 @@ function addModel(project, space, prepend='') {
 
 function addParameterSearch(project, space) {
 
-    var key = space + '-parameter_search';
+    var key = space + '-parameterSearch';
 
     if (project['data'][key] == undefined) {
         project['data'][key] = {}
@@ -1229,7 +1230,7 @@ function addParameterSearch(project, space) {
 
 function addFeatureImportance(project, space) {
 
-    var key = space + '-feature_importances';
+    var key = space + '-featureImportances';
     
     return key;
 }
@@ -1360,13 +1361,13 @@ function addMLPipe(project, key=undefined) {
 
     // Add the static pipeline pieces
     addModel(project, getSpaceName(key, 'model'));
-    addParameterSearch(project, getSpaceName(key, 'parameter_search'));
+    addParameterSearch(project, getSpaceName(key, 'parameterSearch'));
 
     var add_mapping = {
         'imputers': addImputer, 
         'scalers': addScaler,
         'transformers': addTransformer,
-        'feature_selectors': addFeatureSelector
+        'featureSelectors': addFeatureSelector
     }
 
     // Go through all the flex/optional pipelines pieces, and make sure loading_spaces
@@ -1435,15 +1436,15 @@ function reRegisterTypeDep(project) {
             });
         }
 
-        else if (indicator == 'feature_selectors') {
-            registerTypeObjInput(key, 'feature_selectors',
+        else if (indicator == 'featureSelectors') {
+            registerTypeObjInput(key, 'featureSelectors',
                 onSelectFeatureSelector, project);
         }
         else if (indicator == 'ensemble') {
             registerTypeObjInput(key, 'model', onSelectObj, project);
         }
         // If parameter search refresh changable val strats + loaded strat vals
-        else if (indicator == 'parameter_search') {
+        else if (indicator == 'parameterSearch') {
             registerBaseValidationSelect(project, key);
             registerMetric(key, project);
             registerVals(project, key, '-group');
@@ -1539,13 +1540,5 @@ function displayMLPipe(project) {
     });    
 
 }
-
-// On document load
-jQuery(document).ready(function() {
-
-    // Load the ML options
-    getMLOptions();
-
-});
 
 

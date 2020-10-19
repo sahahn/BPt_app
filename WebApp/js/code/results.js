@@ -27,7 +27,7 @@ function getResultsTableHTML(project) {
         table_html +=
         '<tr>' +
         '<th scope="row" class="align-bottom">' + job_name + '</th>' +
-        '<td class="align-bottom" data-sort="'+project['jobs'][job_name]['status']+'">' +
+        '<td class="align-bottom" data-sort="'+parseFloat(project['jobs'][job_name]['status'])+'">' +
         '<div class="results-status" data-jobName="'+job_name+'"></div></td>' +
         '<td class="align-bottom">';
 
@@ -367,8 +367,8 @@ function refreshStatus(entry, project) {
             data['bar'].animate(parseFloat(job['status']), {duration: 1000});
         }
 
-        // Update the sort status
-        entry.parent().data('sort', job['status']);
+        // Update the sort status - needed to convert to float
+        entry.parent().data('sort', parseFloat(job['status']));
 
         // Set last status
         data['laststatus'] = job['status'];
@@ -504,7 +504,13 @@ function registerTable(project) {
         "order": [[ 5, "desc"]],
         "columnDefs": [
             {"orderable": false, "targets": [-1, -2]},
-        ]
+        ],
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        },
     });
 
     // Register refresh status on each re-draw
@@ -563,11 +569,11 @@ function registerJobsShow(project) {
                 '<button class="btn btn-outline-dark" id="'+key+'-toggle-logs" data-toggle="button" aria-pressed="false" autocomplete="off">Toggle Logs</button>' +
                 '</div>' +
                 '<div class="job-logs" id="'+key+'-logs" data-jobName="'+job_name+'" ' +
-                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 10px; padding: 10px; display: none"></div>' +
+                'style="height: 500px; background-color: rgba(0,0,0,.03); overflow-y: scroll; margin: 1em; padding: 1em; display: none"></div>' +
                 '</div>' +
 
 
-                '<div class="col col-md-12" id="'+key+'-raw-preds" style="padding-top: 20px;"></div>' +
+                '<div class="col col-md-12 text-center" id="'+key+'-raw-preds" style="padding-top: 5em;"></div>' +
 
                 '</div>';
 
@@ -705,6 +711,67 @@ function procBaseTableResults(table_key, table_results_html, label) {
     return html;
 }
 
+function loadRawPreds(job_name, key, project) {
+
+    // Show loading
+    jQuery('#'+key+'-raw-preds-loading').css('display', 'inline-block');
+
+    var params = {};
+    params['n'] = job_name;
+    params['script'] = 'show_raw_preds.py';
+    params['project_id'] =  project['id'];
+
+    jQuery.post('php/run_quick_py.php', {
+        'params': params
+    }, function (output) {
+
+        var raw_table_key = key +'-raw-table'
+        var raw_descr = 'These are the raw computed predictions from this Evaluate or Test run. This table includes ' +
+        'the baseline target in addition to the predicted values (which will vary based on problem type, e.g., binary will include ' +
+        'thresholded predictions and raw probability predictions). Likewise, if an Evaluate job, the predicted scores will be in a column with ' +
+        'the name of that Repeat, e.g., column 1 will represent the predicted scores from the first repeat, and column 2 from the second. The column ' +
+        '1_fold, will then listen which fold for the first repeat each prediction was made in. If a prediction was not made for a subject within a repeat, ' +
+        'then it will contain an NaN. Note that you may also download a csv or excel spreadsheet with these raw predictions.';
+        var raw_label = getPopLabel(key, "Raw Predictions ", raw_descr);
+        var raw_html = procBaseTableResults(raw_table_key, 
+                                            output['raw_preds'],
+                                            raw_label);
+        jQuery('#'+key+'-raw-preds').empty().append(raw_html);
+
+        var raw_table = $('#'+raw_table_key).DataTable({
+            data: output['pred_rows'],
+            scrollX: true,
+            dom: 'lBfrtip',
+            searching: true,
+            buttons: [
+                'csvHtml5',
+                {extend: 'excelHtml5', title: ''},
+            ],
+            paging: true,
+            info: true,
+            autoWidth: true,
+            lengthChange: true,
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            "preDrawCallback": function (settings) {
+                pageScrollPos = document.documentElement.scrollTop;
+            },
+            "drawCallback": function (settings) {
+                scrollTo(0, pageScrollPos);
+            }
+        });
+
+        // Add buttons under table
+        raw_table.buttons().container().appendTo($('#'+raw_table_key+'-buttons'));
+
+        // Register new popovers
+        registerPopovers();
+
+    }, "json").fail(function (xhr, textStatus, errorThrown) {
+        alert('error ' + textStatus + xhr + errorThrown);
+    });
+
+}
+
 function loadResults(job_name, key, project) {
 
     // If already loading, stop
@@ -753,41 +820,28 @@ function loadResults(job_name, key, project) {
             paging: false,
             info: false,
             autoWidth: true,
+            "preDrawCallback": function (settings) {
+                pageScrollPos = document.documentElement.scrollTop;
+            },
+            "drawCallback": function (settings) {
+                scrollTo(0, pageScrollPos);
+            }
         });
 
         // Add buttons to special spot centered under table
         table.buttons().container().appendTo($('#'+sum_table_key+'-buttons'));
 
-        var raw_table_key = key +'-raw-table'
-        var raw_descr = 'These are the raw computed predictions from this Evaluate or Test run. This table includes ' +
-        'the baseline target in addition to the predicted values (which will vary based on problem type, e.g., binary will include ' +
-        'thresholded predictions and raw probability predictions). Likewise, if an Evaluate job, the predicted scores will be in a column with ' +
-        'the name of that Repeat, e.g., column 1 will represent the predicted scores from the first repeat, and column 2 from the second. The column ' +
-        '1_fold, will then listen which fold for the first repeat each prediction was made in. If a prediction was not made for a subject within a repeat, ' +
-        'then it will contain an NaN. Note that you may also download a csv or excel spreadsheet with these raw predictions.';
-        var raw_label = getPopLabel(key, "Raw Predictions ", raw_descr);
-        var raw_html = procBaseTableResults(raw_table_key, 
-                                            output['raw_preds'],
-                                            raw_label);
-        jQuery('#'+key+'-raw-preds').append(raw_html);
+        // Add a button to load raw preds if desired
 
-        var raw_table = $('#'+raw_table_key).DataTable({
-            data: output['pred_rows'],
-            scrollX: true,
-            dom: 'lBfrtip',
-            searching: true,
-            buttons: [
-                'csvHtml5',
-                {extend: 'excelHtml5', title: ''},
-            ],
-            paging: true,
-            info: true,
-            autoWidth: true,
-            lengthChange: true,
-            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        var logs_html = '<button class="btn btn-outline-dark" id="'+key+'-show-raw-preds" ' +
+                        'data-toggle="button" aria-pressed="false" autocomplete="off">Show By Subject Predictions' +
+                        '<img id="'+key+'-raw-preds-loading" src="images/loading.gif" aria-hidden="true" style="display: none; width: 1.5em;"></img>' +
+                        '</button>';
+        jQuery('#'+key+'-raw-preds').append(logs_html);
+
+        jQuery('#'+key+'-show-raw-preds').on('click', function() {
+            loadRawPreds(job_name, key, project);
         });
-
-        raw_table.buttons().container().appendTo($('#'+raw_table_key+'-buttons'));
 
         // Register new popovers
         registerPopovers();
@@ -825,7 +879,7 @@ function displayResults(project) {
     }
     
     var html = '' +
-    '<div id="results-table-space"></div>' +
+    '<div id="results-table-space" style="margin-top:2em"></div>' +
     '<hr><br>' + 
     '<div id="results-show-space"></div>';
 
@@ -841,5 +895,5 @@ function displayResults(project) {
     // Start loop to check for active jobs
     active_jobs_interval = setInterval(function() {
         updateJobs(project);
-    }, 1000);
+    }, 3000);
 }

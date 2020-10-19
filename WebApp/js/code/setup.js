@@ -43,7 +43,9 @@ function getDefaultEventNameHTML() {
     '<div class="form-row m-5">' +
     '<div class="form-group col-md-6">' +
     label +
-    '<select id="event_default" class="form-control" data-width="100%"></select>' +
+    '<select id="event_default" class="form-control" data-width="100%">' +
+    getEventNameOptionsHTML() +
+    '</select>' +
     '</div>' +
     '</div>';
 
@@ -135,9 +137,7 @@ function registerRandomSeed(key, project) {
 function registerEventDefault(key, project) {
     
     // Register choice of event default
-    jQuery('#event_default').select2({
-        data: arrayToChoices(events)
-    });
+    jQuery('#event_default').select2({});
 
     // On change event default, save to project + update val in settings
     jQuery('#event_default').on('change', function () {

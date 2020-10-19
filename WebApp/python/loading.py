@@ -71,6 +71,7 @@ def load_params(user_dr, output_loc, n):
             params = json.load(f)['params']
 
     except Exception as e:
+        params = None
         save_error('Error loading saved json params', output_loc, e)
 
     return params
@@ -399,15 +400,83 @@ def _proc_na(params):
     return drop_na
 
 
-def _proc_eventname(params):
+def _proc_eventname(params, df=None):
 
-    ext = settings['event_mapping'][params['-eventname']]
+    eventname = params['-eventname']
+
+    valid_ops = [' - ', ' |-| ', ' + ', ' |+| ',
+                 ' %chg ', ' %dif ', ' avg ', ' |avg| ']
+    op_check = [v in eventname for v in valid_ops]
+
+    if (eventname.startswith('(') and
+       eventname.endswith(')') and
+       any(op_check)):
+
+        # Remove brackets
+        eventname = eventname.replace('(', '', 1)
+        eventname = eventname.replace(')', '', -1)
+
+        # Isolate the operator and each eventname seperately
+        op = valid_ops[op_check.index(True)]
+        op_ind = eventname.index(op)
+        e1 = eventname[:op_ind]
+        e2 = eventname[op_ind+len(op):]
+
+        # Calculate the ext
+        ext = ' [' + settings['event_mapping'][e1] +\
+            op.replace(' ', '') + settings['event_mapping'][e2] + ']'
+
+        # In case that df is None, just return eventname and extension
+        if df is None:
+            return eventname, ext, None
+
+        # Seperate into two dfs
+        df = df.set_index('subject_id')
+        df_e1 = df[df['eventname'] == e1].drop('eventname', axis=1)
+        df_e2 = df[df['eventname'] == e2].drop('eventname', axis=1)
+
+        # Compute overlapping subjects
+        overlap = np.intersect1d(df_e1.index, df_e2.index)
+
+        # Process according to the operator
+        if op == ' - ':
+            df_overlap = df_e1.loc[overlap] - df_e2.loc[overlap]
+        elif op == ' |-| ':
+            df_overlap = np.abs(df_e1.loc[overlap] - df_e2.loc[overlap])
+        elif op == ' + ':
+            df_overlap = df_e1.loc[overlap] + df_e2.loc[overlap]
+        elif op == ' |+| ':
+            a1 = np.abs(df_e1.loc[overlap])
+            a2 = np.abs(df_e2.loc[overlap])
+            df_overlap = a1 + a2
+        elif op == ' %chg ':
+            dif = (df_e1.loc[overlap] - df_e2.loc[overlap])
+            df_overlap = (dif / df_e2.loc[overlap]) * 100
+        elif op == ' %dif ':
+            abs_dif = np.abs(df_e1.loc[overlap] - df_e2.loc[overlap])
+            mean = (df_e1.loc[overlap] + df_e2.loc[overlap]) / 2
+            df_overlap = (abs_dif / mean) * 100
+        elif op == ' avg ':
+            df_overlap = (df_e1.loc[overlap] + df_e2.loc[overlap]) / 2
+        elif op == ' |avg| ':
+            a1 = np.abs(df_e1.loc[overlap])
+            a2 = np.abs(df_e2.loc[overlap])
+            df_overlap = (a1 + a2) / 2
+        else:
+            df_overlap = None
+
+        # Add back in eventname
+        df_overlap['eventname'] = eventname
+        return eventname, ext, df_overlap
+
+    # Otherwise, perform base single eventname proc
+    ext = settings['event_mapping'][eventname]
 
     # If nonempty extension, prepend .
     if len(ext) > 0:
-        ext = '.' + ext
+        ext = ' [' + ext + ']'
 
-    return params['-eventname'], ext
+    return eventname, ext, df
 
 
 def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
@@ -421,6 +490,8 @@ def _proc_binary_thresh(ML, col_name, load_type, binary_thresh, output_loc):
         func = ML.Binarize_Covar
     elif load_type == 'set':
         func = ML.Binarize_Covar
+    else:
+        func = None
 
     try:
         threshold = float(binary_thresh['threshold'])
@@ -550,9 +621,10 @@ def load_target(ML, params, output_loc, drops=True):
     try:
         target_df = load_vars(col_name)
     except Exception as e:
+        target_df = None
         save_error('Error fetching target variable', output_loc, e)
 
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, target_df = _proc_eventname(params, target_df)
 
     try:
         ML.Load_Targets(df=target_df,
@@ -610,9 +682,10 @@ def load_variable(ML, params, output_loc, drops=True):
     try:
         covar_df = load_vars(col_name)
     except Exception as e:
+        covar_df = None
         save_error('Error fetching data variable', output_loc, e)
 
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, covar_df = _proc_eventname(params, covar_df)
 
     try:
         ML.Load_Covars(df=covar_df,
@@ -660,6 +733,7 @@ def load_strat(ML, params, output_loc, drops=False):
     try:
         strat_df = load_vars(col_name)
     except Exception as e:
+        strat_df = None
         save_error('Error fetching non-input variable', output_loc, e)
 
     if data_type == 'binary':
@@ -682,7 +756,7 @@ def load_strat(ML, params, output_loc, drops=False):
     else:
         float_to_binary = False
 
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, strat_df = _proc_eventname(params, strat_df)
 
     try:
         ML.Load_Strat(df=strat_df,
@@ -756,10 +830,11 @@ def load_set(ML, params, output_loc, drops=True):
         data_df = load_vars(col_names)
         ML._print('Loaded set from files in', time.time() - start)
     except Exception as e:
+        data_df = None
         save_error('Error fetching set data variables', output_loc, e)
 
     # Proc eventname
-    eventname, ext = _proc_eventname(params)
+    eventname, ext, data_df = _proc_eventname(params, data_df)
 
     # For now load data as covars, since want to handle types
     try:
@@ -784,6 +859,8 @@ def load_set(ML, params, output_loc, drops=True):
         ML._print('Loaded set into BPt in', time.time() - start)
     except Exception as e:
         save_error('Error loading data variable', output_loc, e)
+
+    ML._print('Loaded Shape:', ML.covars.shape)
 
     # Proc binary threshes if any
     for col_name, b_t in zip(col_names, binary_thresh):
@@ -810,7 +887,7 @@ def load_set(ML, params, output_loc, drops=True):
 
 def plot_dist(params, ML, load_type, log_dr, output_loc):
 
-    _, ext = _proc_eventname(params)
+    _, ext, _ = _proc_eventname(params, df=None)
     key = params['-input'] + ext
     ML._print('Plot ', key)
 
@@ -845,7 +922,14 @@ def plot_dist(params, ML, load_type, log_dr, output_loc):
 
 
 def chunk_line(line):
-    return [h.strip() for h in line.split(' ') if len(h.strip()) > 0]
+    base = [h.strip() for h in line.split(' ') if len(h.strip()) > 0]
+
+    # Add a check to compensate for the space in the appended eventname
+    if len(base) > 1:
+        if '[' in base[1] and ']' in base[1]:
+            base = [base[0] + ' ' + base[1]] + base[2:]
+
+    return base
 
 
 def get_set_output(log_dr, ML, params, output_loc):
@@ -1445,7 +1529,7 @@ def variable_load(user_dr, v_type, n):
     output = {}
     output['img_loc'] = img_loc
     output['html_output'] = output_from_single_logs(log_dr, output_loc)
-    output['html_table'] = get_variable_table_html(d_dfs)
+    output['html_table'] = df_to_table(d_dfs[0])
 
     # Save + cache, etc..
     base_finish_load(output_loc, output, params, param_hash, v_type)
@@ -1459,9 +1543,7 @@ def rnd(val):
     return str(val)
 
 
-def get_variable_table_html(d_dfs):
-
-    df = d_dfs[0]
+def df_to_table(df):
 
     # Get rid of index if there
     df = df.reset_index()
@@ -1621,6 +1703,7 @@ def get_CV_from_params(val_params, output_loc, strat_u_name):
     try:
         train_only_subjects = get_tr_only(val_params, output_loc)
     except Exception as e:
+        train_only_subjects = None
         save_error('Error proc. train only subjs', output_loc, e)
 
     cv_params = CV(groups=groups, stratify=stratify,
@@ -1629,7 +1712,7 @@ def get_CV_from_params(val_params, output_loc, strat_u_name):
     return cv_params
 
 
-def get_val_output_from_logs(log_dr):
+def get_val_output_from_logs(log_dr, df):
 
     with open(os.path.join(log_dr, 'logs.txt'), 'r') as f:
         lines = f.readlines()
@@ -1640,44 +1723,11 @@ def get_val_output_from_logs(log_dr):
 
     output = _extract_from_logs(lines, if_keys, [], [])
 
-    table_start = None
-    for i, line in enumerate(lines):
-        if 'CV defined with stratifying behavior over' in line:
-            table_start = i
-
     # If not stratifying, return no table
-    if table_start is None:
+    if df is None:
         return output, ''
 
-    # If here, then there is a strat table
-    t_output = '<table id="default-table-id" class="table table-striped">'
-    t_output += '<thead><tr>'
-
-    # Make header
-    header = lines[table_start+1]
-    header = chunk_line(header)
-    for h in header:
-        t_output += '<th scope="col">' + h + '</th>'
-    t_output += '</tr></thead>'
-
-    # Fill in body
-    t_output += '<tbody>'
-    for line in lines[table_start+2:]:
-        line = chunk_line(line)
-
-        if len(line) > 0:
-            t_output += '<tr>'
-
-            # Skip index
-            for e in line[1:]:
-                t_output += '<td>' + e + '</td>'
-            t_output += '</tr>'
-        else:
-            break
-
-    t_output += '</tbody></table>'
-
-    return output, t_output
+    return output, df_to_table(df)
 
 
 def apply_test_split(test_params, ML, output_loc):

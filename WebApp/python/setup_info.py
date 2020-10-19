@@ -20,9 +20,10 @@ from BPt.pipeline.Scorers import get_scorers_by_type
 
 import nevergrad as ng
 from BPt.helpers.Default_Params import P
-import shutil
+
 
 # Save ML Options Code
+
 
 def save_ML_options(loc):
 
@@ -31,10 +32,21 @@ def save_ML_options(loc):
     options['imputers'] = get_not_by_type(IMPUTERS)
     options['scalers'] = get_not_by_type(SCALERS)
     options['transformers'] = get_not_by_type(TRANSFORMERS)
-    options['feature_selectors'] = get_by_type(AVALIABLE_SELECTORS, SELECTORS)
+    options['featureSelectors'] = get_by_type(AVALIABLE_SELECTORS, SELECTORS)
     options['ensembles'] = get_by_type(AVALIABLE_ENSEMBLES, ENSEMBLES)
-    options['parameter_search'] = [None] +\
-        sorted(ng.optimizers.registry.keys())
+    options['parameterSearch'] = sorted(ng.optimizers.registry.keys())
+
+    # Remove some optimizers
+    to_remove = ['RandomSearch', 'BO']
+    for key in to_remove:
+        try:
+            options['parameterSearch'].remove(key)
+        except ValueError:
+            pass
+
+    # Add as the first options None and RandomSearch
+    options['parameterSearch'] =\
+        [None, 'RandomSearch'] + options['parameterSearch']
 
     # Scorers
     options['metrics'] = {}
@@ -43,9 +55,12 @@ def save_ML_options(loc):
 
         by_type = get_scorers_by_type(problem_type)
         for scorer in by_type:
-            options['metrics'][problem_type][scorer[0]] = {}
-            options['metrics'][problem_type][scorer[0]]['docs_name'] =\
-                get_scorer_name(scorer[1])
+
+            # Skip those ending with samples
+            if not scorer[0].endswith('_samples'):
+                options['metrics'][problem_type][scorer[0]] = {}
+                options['metrics'][problem_type][scorer[0]]['docs_name'] =\
+                    get_scorer_name(scorer[1])
 
     with open(loc, 'w') as f:
         json.dump(options, f)
@@ -304,8 +319,8 @@ def save_default_params(loc):
                     new_val['type'] = 'code'
                     new_val['on'] = 'true'
                     new_val['code_type'] = "-"
-                    def_param_dists[dist_key][key+'_dist'] = new_val
-                    # def_param_dists[dist_key][key+'_type'] = "-"
+                    def_param_dists[dist_key][key+'__dist'] = new_val
+                    # def_param_dists[dist_key][key+'__type'] = "-"
 
                 else:
                     new_val = {}
@@ -315,11 +330,11 @@ def save_default_params(loc):
 
                     # Set saved type or - if choice
                     if len(result) == 3:
-                        new_val[result[1] + '_type'] = result[2]
+                        new_val[result[1] + '__type'] = result[2]
                     else:
-                        new_val[result[1] + '_type'] = '-'
+                        new_val[result[1] + '__type'] = '-'
 
-                    def_param_dists[dist_key][key+'_dist'] = new_val
+                    def_param_dists[dist_key][key+'__dist'] = new_val
 
                 # Change old key to use default
                 def_param_dists[dist_key][key] = 'USE-DEFAULT'
@@ -332,7 +347,7 @@ def save_default_params(loc):
                 except NameError:
                     val_type = "-"
 
-                def_param_dists[dist_key][key+'_type'] = val_type
+                def_param_dists[dist_key][key+'__type'] = val_type
 
     with open(loc, 'w') as f:
         json.dump(def_param_dists, f)
@@ -388,13 +403,13 @@ def check(val):
 
                     if option[1] == 'log':
                         l_cnt += 1
-                        result['Log-'+str(l_cnt) + '_type'] = option[2]
+                        result['Log-'+str(l_cnt) + '__type'] = option[2]
                         result['-choices'].append('Log-'+str(l_cnt))
                         result['log-'+str(l_cnt)] = option[0]
 
                     elif option[1] == 'normal':
                         n_cnt += 1
-                        result['Normal-'+str(n_cnt) + '_type'] = option[2]
+                        result['Normal-'+str(n_cnt) + '__type'] = option[2]
                         result['-choices'].append('Normal-'+str(n_cnt))
                         result['normal-'+str(n_cnt)] = option[0]
 

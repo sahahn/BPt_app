@@ -38,35 +38,18 @@
 
 <body spellcheck="false">
 
-  <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand col-md-1 text-center" href="#">BPt</a>
-    <a class="col-md-2" href="#"></a>
-
-    <a id="top-text" class="form-control-dark text-white text-center col-md-6" style="padding-left:0px;"></a>
-      
-    <a class="col-md-1" href="#"></a>
-  
-    <a class="col-md-auto"><button id="delete-project" type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-      data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button></a>
-
-    <a class="col-md-auto"><button id="save-projects" type="button" class="btn btn-sm btn-success">Save Projects 
-        <i class="fas fa-save"></i></button></a> 
-  </nav>
-
   <!-- Nav-bar -->
-  <nav class="col-md-1 d-none d-md-block bg-light sidebar">
+  <nav class="d-none d-md-block bg-light sidebar" style='width: 15em;'>
     <div class="sidebar-static">
       
       <ul class="nav flex-column">
-      <!-- This is for when integrated with DEAP
-        <li class="nav-item" style="padding-top: 50px;">
-          <a class="nav-link" href="/index.php">
-            <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
-          </a>
-        </li>
-        -->
 
-        <li class="nav-item" style="padding-top: 50px;">
+        <li class="nav-item text-center">
+          <h3>BPt</h3>
+          <hr>
+        </li>
+
+        <li class="nav-item">
           <a id="home-but" class="nav-link" href="#">
             <span><i class="fas fa-home navbutton fa-fw"></i></span> Home
           </a>
@@ -96,6 +79,20 @@
     </div>
   </nav>
 
+  <nav class="navbar fixed-top bg-light navbar-light" style="margin-left: 15em; padding: .5em; height:3.65em; border-bottom: 1px solid rgba(0,0,0,.1);">
+
+    <a id="top-text" style="margin: auto; padding-left: 12em;"></a>
+
+    <div class="d-flex flex-row-reverse">
+    <button id="save-projects" type="button" class="btn btn-sm btn-success float-right" style="margin-left: 1em;">Save Projects 
+      <i class="fas fa-save"></i></button>
+    <button id="delete-project" type="button" class="btn btn-sm btn-danger float-right" data-toggle="modal"
+      data-target="#delete-confirm" style="display:none;">Delete Project <i class="fas fa-trash-alt"></i></button>
+    
+    </div>
+  </nav>
+
+  <!-- Modal spots for params + submit -->
   <div id='params-modals'></div>
   <div id='submit-modals'></div>
 
@@ -122,37 +119,36 @@
     </div>
   </div>
 
-  <!-- Store whole main form in here -->
-  <div class="container-fluid" style="margin-top: 15px;">
-    <div class="row px-5">
+  <!-- Modal for delete project -->
+  <div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
 
-      <div class="col-md-1"></div>
+            <button class="btn" style="background-color:transparent;" data-dismiss="modal">
+              <h5><i class="fas fa-book navbutton"></i> <span id='del-project-name'></span></h5>
 
-      <!-- Modal -->
-      <div class="modal fade" id="delete-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-center" id="modal-label" style="margin: 0 auto;">
+            </button>
 
-                <button class="btn" style="background-color:transparent;" data-dismiss="modal">
-                  <h5><i class="fas fa-book navbutton"></i> <span id='del-project-name'></span></h5>
+          </h5>
+        </div>
 
-                </button>
+        <div class="modal-body text-center">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="confirm-delete-project" type="button" class="btn btn-danger">Delete Project <i
+              class="fas fa-trash-alt"></i></button>
 
-              </h5>
-            </div>
-
-            <div class="modal-body text-center">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button id="confirm-delete-project" type="button" class="btn btn-danger">Delete Project <i
-                  class="fas fa-trash-alt"></i></button>
-
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Store whole main form in here -->
+  <div class="container-fluid" style="margin-top: 3.65em; margin-left: 15em; margin-right: 0em; padding-left: 0px">
+    <div class="row px-5" style="margin-left:0px; margin-right:0px;">
+
 
       <!-- Main Body -->
       <div id="main-body" class="col-md-10">

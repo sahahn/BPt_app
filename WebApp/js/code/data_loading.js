@@ -4,6 +4,8 @@ var sets = [];
 var v_cache;
 var v_real_cache;
 var slider_keys = ["percent", "std", "cat", "percent-cat", "std-cat"];
+var valid_ops = [' - ', ' |-| ', ' + ', ' |+| ',
+                 ' %chg ', ' %dif ', ' avg ', ' |avg| ']
 
 ////////////////////
 // Set functions //
@@ -204,7 +206,13 @@ function setVariableResults(output, key, project) {
                     "searching": false,
                     "paging": false,
                     "info": false,
-                    "ordering": orderable
+                    "ordering": orderable,
+                    "preDrawCallback": function (settings) {
+                        pageScrollPos = document.documentElement.scrollTop;
+                    },
+                    "drawCallback": function (settings) {
+                        scrollTo(0, pageScrollPos);
+                    }
                 });
 
                 // Add index vals only if strat
@@ -214,7 +222,7 @@ function setVariableResults(output, key, project) {
                     var var_name = jQuery('#'+key+'-input').val();
                     var eventname = jQuery('#'+key+'-eventname').val();
                     var repr_name = getReprName(var_name, eventname);
-                    project['strat_choices'][repr_name] = Array.from(index_col).map(String);
+                    project['strat_choices'][repr_name] = JSON.parse(JSON.stringify(Array.from(index_col).map(String)));
 
                     // Add new option
                     refreshByValueChoices('filter-space', project);
@@ -226,6 +234,8 @@ function setVariableResults(output, key, project) {
 }
 
 function setSetResults(output, key, project) {
+
+    output['html_table'] = output['html_table'].replace(/edit-set-button/g, key + '-edit-set-button');
 
     // Set table
     jQuery('#'+key+'-table').append(output['html_table']);
@@ -244,17 +254,24 @@ function setSetResults(output, key, project) {
         "paging": true,
         "info": true,
         "columnDefs": [
-            { "orderable": false, "targets": -1}]
+            { "orderable": false, "targets": -1}],
+
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        }
     });
 
     // Set register every time table drawn
     jQuery('#'+key+'-real-table').on('draw.dt', function() {
 
         // Remove any previous
-        jQuery('.edit-set-button').off('click');
+        jQuery('.' +  key + '-edit-set-button').off('click');
 
         // Add edit sub-space
-        jQuery('.edit-set-button').on('click', function() {
+        jQuery('.' +  key + '-edit-set-button').on('click', function() {
 
             var data = $(this).data();
 
@@ -414,7 +431,7 @@ function updateSetCardName(key) {
     
     if (set_name.length > 0) {
         var eventname = jQuery('#'+key+'-eventname').val()
-        var repr_name = getReprName(set_name, eventname, true);
+        var repr_name = getReprName(set_name, eventname);
         jQuery('#' + key + '-header-text').append(':  <i>' + repr_name + '</i>');
     }
 }

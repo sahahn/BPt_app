@@ -20,6 +20,7 @@ def main(user_dr, job_name):
             get_splits_CV(params['eval_params'], error_output_loc,
                           ML.strat_u_name)
     except Exception as e:
+        splits, n_repeats, CV = None, None, None
         save_error('Error parsing evaluate params', error_output_loc, e)
 
     # Run Evaluate
@@ -29,17 +30,27 @@ def main(user_dr, job_name):
                               splits=splits,
                               n_repeats=n_repeats,
                               CV=CV,
-                              train_subjects='train')
+                              train_subjects='train',
+                              return_raw_preds=True)
         results['scorer_strs'] = ML.evaluator.scorer_strs
         results['n_repeats'] = n_repeats
         results['n_splits'] = ML.evaluator.n_splits_
     except Exception as e:
+        results = None
         save_error('Error starting Evaluate', error_output_loc, e)
+
+    # Save raw_preds seperate
+    raw_preds = results.pop('raw_preds')
 
     # Save results
     results_loc = os.path.join(job_dr, 'results.pkl')
     with open(results_loc, 'wb') as f:
         pkl.dump(results, f)
+
+    # Save raw preds
+    preds_loc = os.path.join(job_dr, 'raw_preds.pkl')
+    with open(preds_loc, 'wb') as f:
+        pkl.dump(raw_preds, f)
 
 
 if __name__ == "__main__":

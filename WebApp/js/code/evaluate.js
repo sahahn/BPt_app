@@ -88,7 +88,7 @@ function getEvalSubjectsHTML(key) {
     ' Non-Input variables. Note: Load/Show must have been called on the Non-Input variable during Data Loading in order for it to appear as option here. ' +
     subj_overlap_txt;
     
-    var from_strat_label = getPopLabel(key, 'Subset-Subjects by Non-Input Value ', from_strat_content);
+    var from_strat_label = getPopLabel(key, 'Subset-Subjects by Value ', from_strat_content);
 
     var html = addSubjectsInputRowHTML(key, file_input_label, from_strat_label,
                                       'eval', row_class=' mb-5 ml-5 mr-5 mt-3');
@@ -542,6 +542,9 @@ function getBaseEvalParams(key, project) {
     // Start with copy
     var params = getBaseParams(key, project);
 
+    // Replace scope with processed
+    params['-scope-input'] = processScopes(params['-scope-input'], project);
+
     // Replace target with explicit var name
     params['-target'] = getVarReprName(params['-target'], project);
 
@@ -578,6 +581,11 @@ function getBaseEvalParams(key, project) {
         if (k.startsWith(params['-pipeline'])) {
             pipeline_params[k] = getBaseParams(k, project);
 
+            // Replace scope with processed, if scope
+            if (Object.keys(pipeline_params[k]).includes('-scope-input')) {
+                pipeline_params[k]['-scope-input'] = processScopes(pipeline_params[k]['-scope-input'], project);
+            }
+
             // If contains a hyper param dist add it
             if (Object.keys(pipeline_params[k]).includes('param_dist')) {
                 pipeline_params[k]['params'] = getPieceHyperParams(pipeline_params[k]['-obj-name'],
@@ -585,7 +593,7 @@ function getBaseEvalParams(key, project) {
             }
 
             // If the param search & search type not none, get nested val params
-            if (k.includes('-parameter_search-space-parameter_search')) {
+            if (k.includes('-parameterSearch-space-parameterSearch')) {
                 if (pipeline_params[k]['-search-type'] !== 'None') {
                     var p_v_strat_key = pipeline_params[k]['val-strategy-key'];
                     pipeline_params[k]['val_params'] = getValParams(p_v_strat_key, project);

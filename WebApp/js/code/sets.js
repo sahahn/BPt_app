@@ -24,10 +24,12 @@ function getBaseSetCardsHTML() {
 function getBaseSetsHTML() {
 
     var html = '' +
+    '<div style="margin-top: 1em">' +
     '<label for="set-dataset">Select a source dataset to view / edit sets for:\u00A0</label>' +
     '<select id="set-dataset" class="form-control" data-width="60%"></select>' +
+    '</div>' +
 
-    '<div id="card-sets" style="margin-top: 5%;">' +
+    '<div id="card-sets" style="margin-top: 3em;">' +
     '</div>';
 
     return html;
@@ -102,6 +104,12 @@ function registerSetTable(set_id, variables) {
         searching: true,
         lengthChange: true,
         lengthMenu: [[5, 10, 25, 50, -1, 0], [5, 10, 25, 50, "All", 0]],
+        "preDrawCallback": function (settings) {
+            pageScrollPos = document.documentElement.scrollTop;
+        },
+        "drawCallback": function (settings) {
+            scrollTo(0, pageScrollPos);
+        }
     });
 
 

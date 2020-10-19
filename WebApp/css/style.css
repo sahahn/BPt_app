@@ -191,3 +191,8 @@ ul { padding-left: 1.2em; }
 .popover {
   max-width: 33%; /* Max Width of the popover (depending on the container!) */
 }
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}

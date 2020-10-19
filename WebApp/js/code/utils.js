@@ -87,9 +87,9 @@ function jump(h){
 
 function addScrollTo(key, to_id) {
     
-    jQuery('#'+key+'-collapse').on('shown.bs.collapse', function() {
-        jump(to_id);
-    });
+    //jQuery('#'+key+'-collapse').on('shown.bs.collapse', function() {
+    //    jump(to_id);
+    //});
 
     jQuery('#'+key+'-collapse').collapse("show");
 }
@@ -223,17 +223,36 @@ function registerAddNewStratVar(key, project) {
 // Eventname related code //
 ///////////////////////////
 
-function getReprName(name, eventname, is_set_name=false) {
+function getReprName(name, eventname) {
 
     var event_mapping = settings['event_mapping'];
     var event_default = settings['event_default'];
 
     var ext = '';
+
+    // Check if any of valid operators in eventname
+    var op_ind = valid_ops.map(op => eventname.includes(op)).indexOf(true);
+
+    // If no eventname, set to default
     if ((eventname == undefined) || (eventname.length == 0)) {
         ext = event_mapping[event_default];
     }
+
+    // If a specific eventname, find the mapping entry
     else if (Object.keys(event_mapping).includes(eventname)) {
         ext = event_mapping[eventname];
+    }
+
+    else if ((eventname.startsWith('(')) && 
+             (eventname.endsWith(')')) && 
+             (op_ind !== -1)) {
+
+        var op = valid_ops[op_ind];
+        var op_ind = eventname.indexOf(op);
+        var e1 = eventname.slice(0, op_ind).replace(/[(]/, '');
+        var e2 = eventname.slice(op_ind+op.length).replace(/[)]/, '');
+        ext = event_mapping[e1] + op.replace(/ /g, '') + event_mapping[e2];
+
     }
 
     // Return just base name if no ext
@@ -241,13 +260,8 @@ function getReprName(name, eventname, is_set_name=false) {
         return name;
     }
 
-    // Otherwise, return name w/ ext based on if set or not
-    if (is_set_name == true) {
-        return name + ' - ' + ext;
-    }
-    else {
-        return name + '.' + ext;
-    }
+    // Otherwise, return name w/ ext
+    return name + ' [' + ext + ']';
 }
 
 function getVarReprName(key, project) {
@@ -262,20 +276,10 @@ function getBaseName(repr_name) {
         reverse_mapping[settings['event_mapping'][k]] = k;
     });
 
-    Object.keys(reverse_mapping).forEach(e_key => {
-
-        if (e_key !== '') {
-        
-            var options = [' - ', '.'];
-            options.forEach(pre_key => {
-
-                var replace_key = pre_key + e_key;
-                if (repr_name.endsWith(replace_key)) {
-                    repr_name = repr_name.replace(replace_key, '');
-                }
-            });
-        }
-    });
+    var ext_check = repr_name.indexOf(' [');
+    if (ext_check !== -1) {
+        repr_name = repr_name.slice(0, ext_check);
+    }
 
     return repr_name;
 }
@@ -296,7 +300,7 @@ function getTargetType(key, project) {
     var target_type =  project['data'][key]['-type'];
 
     // Default float
-    if (target_type == undefined) {
+    if ((target_type == undefined) || (target_type == null)) {
         target_type = 'float';
     }
 

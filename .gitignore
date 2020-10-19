@@ -1,10 +1,9 @@
 js/old/old_data_loading.js
 .vscode/settings.json
 .vscode/launch.json
-data/bpt*
-data/tab_data/
-db/*
 data/sources/*
 !data/sources/.keep
+!data/sources/Example Dataset
 *.pyc
 .update.sh.swp
+data/bpt*
