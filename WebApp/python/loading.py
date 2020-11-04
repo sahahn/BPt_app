@@ -1748,7 +1748,7 @@ def apply_test_split(test_params, ML, output_loc):
         random_state = int(float(test_params['random_state']))
 
         try:
-            ML.Train_Test_Split(test_size=test_size, CV=cv_params,
+            ML.Train_Test_Split(test_size=test_size, cv=cv_params,
                                 random_state=random_state)
         except Exception as e:
             save_error('Error with test split', output_loc, e)

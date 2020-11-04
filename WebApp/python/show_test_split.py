@@ -46,9 +46,9 @@ def get_show(params, ML, save_loc, output_loc):
         try:
 
             display_df = ML.Show_Covars_Dist(covars=show_params['name'],
-                                            subjects='both',
-                                            show=False, cat_type='Frequency',
-                                            return_display_dfs=True)
+                                             subjects='both',
+                                             show=False, cat_type='Frequency',
+                                             return_display_dfs=True)
 
         except Exception as e:
             save_error('Error creating variable dist', output_loc, e)
@@ -58,9 +58,9 @@ def get_show(params, ML, save_loc, output_loc):
         try:
 
             display_df = ML.Show_Targets_Dist(targets=show_params['name'],
-                                            subjects='both',
-                                            show=False, cat_type='Frequency',
-                                            return_display_dfs=True)
+                                              subjects='both',
+                                              show=False, cat_type='Frequency',
+                                              return_display_dfs=True)
 
         except Exception as e:
             save_error('Error creating target dist', output_loc, e)

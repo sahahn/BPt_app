@@ -38,7 +38,7 @@ def main(user_dr, n):
 
     # Obtain the CV splits from the BPt object
     try:
-        cv, df = ML._get_CV(cv_params, show=True,
+        cv, df = ML._get_cv(cv_params, show=True,
                             show_original=True, return_df=True)
     except Exception as e:
         save_error('Error generating CV splits info', output_loc, e)

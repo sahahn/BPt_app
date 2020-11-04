@@ -426,8 +426,8 @@ def get_splits_CV(ps, error_output_loc, strat_u_name):
         splits = ps['-group-text']
         n_repeats = 1
 
-    CV = get_CV_from_params(ps['val_params'], error_output_loc, strat_u_name)
-    return splits, n_repeats, CV
+    cv = get_CV_from_params(ps['val_params'], error_output_loc, strat_u_name)
+    return splits, n_repeats, cv
 
 
 def get_param_search(p_params, error_output_loc, strat_u_name):
@@ -442,11 +442,11 @@ def get_param_search(p_params, error_output_loc, strat_u_name):
     n_iter = int(float(ps['-n-iter']))
     scorer = ps['-metric']
 
-    splits, n_repeats, CV = get_splits_CV(ps, error_output_loc, strat_u_name)
+    splits, n_repeats, cv = get_splits_CV(ps, error_output_loc, strat_u_name)
 
     return Param_Search(search_type=search_type,
                         splits=splits, n_repeats=n_repeats,
-                        n_iter=n_iter, CV=CV,
+                        n_iter=n_iter, cv=cv,
                         scorer=scorer, weight_scorer=False)
 
 
