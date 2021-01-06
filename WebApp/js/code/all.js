@@ -562,6 +562,9 @@ function isReady(data) {
 // On document load
 jQuery(document).ready(function() {
 
+    // Use the select2 bootstrap theme
+    $.fn.select2.defaults.set("theme", "bootstrap4");
+
     // Run setup db / data
     jQuery.post('php/setup_db.php');
 
@@ -573,37 +576,34 @@ jQuery(document).ready(function() {
 
          // Load the User's param dists
         getParamDists();
+    
+        // Run once in this loop, so waits for finish
+        jQuery.getJSON('php/check_db_ready.php', function (data) {
+
+            var status = JSON.parse(data['status']);
+
+            // If ready, call isReady
+            if (status == '1') {
+                isReady(data);
+            }
+
+            else if (status == '-1') {
+                alert('Creating/Updating Data failed with error message: ' +
+                data['error_msg'] + ' Try to fix this error and then refresh the page to try again');
+            }
+
+            // If not ready, set load and start check loop
+            else {
+                jQuery("#body-db-loading").css('display', 'block');
+
+                // Start loop to check if db ready
+                var db_interval = setInterval(function() {
+                    checkDBReady(db_interval);
+                }, 750);
+            }
+        });
     });
-
-    // Use the select2 bootstrap theme
-    $.fn.select2.defaults.set("theme", "bootstrap4");
-
-    // Run once in this loop, so waits for finish
-    jQuery.getJSON('php/check_db_ready.php', function (data) {
-
-        var status = JSON.parse(data['status']);
-
-        // If ready, call isReady
-        if (status == '1') {
-            isReady(data);
-        }
-
-        else if (status == '-1') {
-            alert('Creating/Updating Data failed with error message: ' +
-            data['error_msg'] + ' Try to fix this error and then refresh the page to try again');
-        }
-
-        // If not ready, set load and start check loop
-        else {
-            jQuery("#body-db-loading").css('display', 'block');
-
-             // Start loop to check if db ready
-            var db_interval = setInterval(function() {
-                checkDBReady(db_interval);
-            }, 750);
-        }
-    });
-
+    
 });
 
 
