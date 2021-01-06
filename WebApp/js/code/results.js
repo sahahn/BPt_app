@@ -390,6 +390,8 @@ function refreshBar(entry, project) {
     var job_name = data['jobname'];
     var job = project['jobs'][job_name];
 
+    console.log(job);
+
     var progress = job['progress'];
     var ext = data['ext'];
     var key = data['key'];
