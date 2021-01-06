@@ -1595,6 +1595,10 @@ def load_all_data(params, output_loc, user_dr, n):
     # Proc inc/excl + nested defaults
     params = init_proc_params(params, output_loc, inc_exc=True)
 
+    # Add event mapping and dataset from params to the cache
+    params['event_mapping'] = settings['event_mapping']
+    params['dataset'] = settings['dataset']
+
     # Check cache
     param_hash = check_loaded_cache(params, output_loc, user_dr, n)
 
