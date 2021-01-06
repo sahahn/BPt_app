@@ -17,11 +17,8 @@ $cmd_p2 = "/opt/conda/envs/ML/bin/python ".$python_loc.$_POST['params']['script'
 $cmd_p3 = $user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
 $cmd = $cmd_p1.$cmd_p2.$cmd_p3;
 
+exec($cmd);
 
-
-// exec($cmd);
-
-
-// Return just blank
+// Return command
 echo json_encode([$cmd]);;
 ?>

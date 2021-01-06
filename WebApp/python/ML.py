@@ -1,4 +1,3 @@
-
 import os
 import json
 from utils import save_error
@@ -414,7 +413,7 @@ def get_ensemble(model_name, p_params):
                     single_estimator=single_estimator)
 
 
-def get_splits_CV(ps, error_output_loc, strat_u_name):
+def get_splits_cv(ps, error_output_loc, strat_u_name):
 
     if ps['split-type'] == 'kfold':
         splits = int(float(ps['-if-kfold']))
