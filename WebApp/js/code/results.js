@@ -110,6 +110,8 @@ function getJobStatusHTML(key, job_name) {
 /////////////////
 
 function parseProgress(output, job) {
+    
+    console.log('ParseProgress')
 
     // Parse the progress
     // returns the percent done, but also
@@ -191,12 +193,14 @@ function updateJobs(project) {
 
                 // Check for error
                 if ((output["error"] !== undefined) || (status == 'NaN')) {
+                    console.log('Error!')
                     job['status'] = "-1";
                     job['error_msg'] = output["error"];
                 }
 
                 // If done, set to done / 1
                 else if (output == 'done') {
+                    console.log('Job Done!')
                     job['status'] = "1";
                 }
 
