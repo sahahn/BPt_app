@@ -200,9 +200,6 @@ function getType(project, key) {
 
 function getByTypeOptions(project, obj, key) {
     
-    console.log(obj)
-    console.log(key)
-
     var type = getType(project, key);
     return ML_options[obj][type];
 
