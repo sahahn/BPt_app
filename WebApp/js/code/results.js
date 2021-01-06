@@ -391,7 +391,7 @@ function refreshBar(entry, project) {
     var job_name = data['jobname'];
     var job = project['jobs'][job_name];
     
-    // If job hasn't started, skip
+    // If job hasn't been parsed yet,s skip
     if (job["status"] == 0) {
         return;
     }
