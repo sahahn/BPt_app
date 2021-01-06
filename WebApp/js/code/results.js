@@ -461,6 +461,11 @@ function refreshJobLogs(project) {
         var job_name = data['jobname'];
         var job = project['jobs'][job_name];
 
+        // If not yet parsed
+        if (job['logs'] == undefined) {
+            return;
+        }
+
         if ((data['prev_length'] == undefined) || (data['prev_length'] !== job['logs'].length)) {
             data['prev_length'] = job['logs'].length;
 
