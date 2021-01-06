@@ -39,7 +39,7 @@ function ifEvents() {
     var eventname_txt = "Placeholder";
     var eventname_label = getPopLabel(undefined, "<b>Eventname</b> ", eventname_txt);
 
-    var header_html = '<div class="row form-group" style="margin-top: 1em">' +
+    var header_html = '<div class="row form-group" style="margin-top: 2em">' +
         '<div class="col-sm-1"></div>' +
         '<div class="col-sm-5">' +
         eventname_label + 
