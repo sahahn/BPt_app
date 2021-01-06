@@ -18,6 +18,8 @@ $cmd_p3 = $user_dr." '".$_POST['params']['n']."' > /dev/null &\"";
 $cmd = $cmd_p1.$cmd_p2.$cmd_p3;
 exec($cmd);
 
+echo $cmd;
+
 // Return just blank
 echo json_encode([]);;
 ?>
