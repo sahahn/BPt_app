@@ -290,8 +290,7 @@ def init_ML(user_dr, output_loc, params, n=0):
                     log_dr=temp_dr,
                     existing_log='overwrite',
                     verbose=False, notebook=False,
-                    use_abcd_subject_ids=False, dpi=200,
-                    n_jobs=1, mp_context='spawn')
+                    dpi=200, n_jobs=1)
 
         if user_dr is not None:
             log_dr = os.path.join(temp_dr, 'ML_Logs_' + str(n))
