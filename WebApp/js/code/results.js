@@ -110,8 +110,6 @@ function getJobStatusHTML(key, job_name) {
 /////////////////
 
 function parseProgress(output, job) {
-    
-    console.log('ParseProgress')
 
     // Parse the progress
     // returns the percent done, but also
@@ -193,14 +191,13 @@ function updateJobs(project) {
 
                 // Check for error
                 if ((output["error"] !== undefined) || (status == 'NaN')) {
-                    console.log('Error!')
+                    console.log('Error with job!')
                     job['status'] = "-1";
                     job['error_msg'] = output["error"];
                 }
 
                 // If done, set to done / 1
                 else if (output == 'done') {
-                    console.log('Job Done!')
                     job['status'] = "1";
                 }
 
@@ -393,8 +390,11 @@ function refreshBar(entry, project) {
     // Grab assoc. job
     var job_name = data['jobname'];
     var job = project['jobs'][job_name];
-
-    console.log(job);
+    
+    // If job hasn't started, skip
+    if (job["status"] == 0) {
+        return;
+    }
 
     var progress = job['progress'];
     var ext = data['ext'];
