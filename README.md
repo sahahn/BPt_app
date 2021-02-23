@@ -7,6 +7,12 @@ This is an early beta release version, so please be mindful that their will like
 
 The main python library (that serves as a backend for this application) can be found at: https://github.com/sahahn/BPt.
 
+
+<iframe width="420" height="315"
+src="https://youtu.be/kcmRPlyB4pU">
+</iframe>
+
+
 ## **Installation**
 ---------------------
 
@@ -79,4 +85,5 @@ There are two main ways to update. A faster temporary update (where the update w
 If instead you would like to do a full and lasting update, this involves re-building the whole container. It will also call git pull on your main directory, looking for changes in the docker files. To run this full update, run within BPt_app:
 
 <pre><code>bash full_update.sh</code></pre>
+
 
