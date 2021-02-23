@@ -8,9 +8,7 @@ This is an early beta release version, so please be mindful that their will like
 The main python library (that serves as a backend for this application) can be found at: https://github.com/sahahn/BPt.
 
 
-[![Everything Is AWESOME](https://img.youtu.be/kcmRPlyB4pU0/0.jpg)](https://youtu.be/kcmRPlyB4pU "Everything Is AWESOME")
-
-
+[![Everything Is AWESOME](http://img.youtube.com/vi/kcmRPlyB4pU/0.jpg)](https://youtu.be/kcmRPlyB4pU "Everything Is AWESOME")
 
 
 ## **Installation**
